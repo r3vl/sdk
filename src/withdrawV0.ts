@@ -1,14 +1,13 @@
 import { PathLibraryV0__factory } from './typechain'
 
 import { ERC20s } from "./constants/tokens"
-import { ethers } from 'ethers'
+import { communitySigner } from './utils'
 
 /**
  *  V0
  */
 export const withdrawFundsV0 = async (revPathAddress: string, walletAddress: string, isERC20?: keyof typeof ERC20s) => {
-  const goerliProvider = ethers.getDefaultProvider('goerli')
-  const signer = new ethers.Wallet('', goerliProvider) // TODO: get signer from global shared config?
+  const signer = communitySigner()
   const contract = PathLibraryV0__factory.connect(revPathAddress, signer)
 
   let tx
