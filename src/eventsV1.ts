@@ -12,7 +12,7 @@ import { communityProvider } from './utils';
  * all revenue paths V1
  */
 export const getRevenuePathsV1 = async () => {
-  const provider = communityProvider;
+  const provider = communityProvider();
   const sdk = getMainnetSdk(provider);
   const contract = sdk.reveelMainV1;
   const library = sdk.pathLibraryV1;
@@ -56,7 +56,7 @@ export const getWithdrawEventsV1 = async () => {
 }
 
 export const getWithdrawsForPath = async (address: string) => {
-  const revPath = PathLibraryV1__factory.connect(address, communityProvider);
+  const revPath = PathLibraryV1__factory.connect(address, communityProvider());
   const withdraws = await revPath.queryFilter(
     revPath.filters.EthDistributed(),
   )
@@ -64,7 +64,7 @@ export const getWithdrawsForPath = async (address: string) => {
 };
 
 export const getPaymentReleasedForPath = async (address: string) => {
-  const revPath = PathLibraryV1__factory.connect(address, communityProvider);
+  const revPath = PathLibraryV1__factory.connect(address, communityProvider());
   const withdraws = await revPath.queryFilter(
     revPath.filters.PaymentReleased(),
   )
