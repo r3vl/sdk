@@ -2,6 +2,7 @@ import { getRevenuePathsV1, getWithdrawEventsV1, getWithdrawsForPath } from './e
 import { ethers } from "ethers"
 import { getGasPaid } from './utils';
 import { getWithdrawEventsV0 } from './eventsV0';
+import { withdrawFundsV0 } from './withdrawV0';
 
 async function main() {
   // const revPathsV1 = await getWithdrawEventsV1();
@@ -37,7 +38,11 @@ async function main() {
   return;
 }
 
-main()
+async function main1() {
+  await withdrawFundsV0("0xA2C7fBA66ef1C1010e72fc5Ee1eBff3b12b87e24", "0x538C138B73836b811c148B3E4c3683B7B923A0E7")
+}
+
+main1()
   .then(() => console.log('DONE'))
   .catch((error) => {
     console.error(error)

@@ -9,7 +9,8 @@ export default defineConfig({
       pathLibraryV0: '0x92582A5091A55A8Cd168A927ec100fDD13Ec0f20'
     },
     goerli: {
-      reveelMain: '0xff960959d00DbbaB1096C3A9a13E81e239d1c374'
+      reveelMain: '0xff960959d00DbbaB1096C3A9a13E81e239d1c374',
+      pathLibraryV0: '0xc66d1E8d7337b60d8cf00850674FB6E1eE73D985'
     }
   },
 })
