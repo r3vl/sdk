@@ -1,14 +1,13 @@
 import { PathLibraryV1__factory } from './typechain'
 
 import { tokenList } from "./constants/tokens"
-import { communityProvider, communitySigner } from './utils'
+import { communityProvider } from './utils'
 import { ethers } from 'ethers'
 
 /**
  *  V1
  */
-export const withdrawFundsV1 = async (revPathAddress: string, walletAddress: string, isERC20?: keyof typeof tokenList) => {
-  const signer = communitySigner()
+export const withdrawFundsV1 = async (signer: ethers.Signer, revPathAddress: string, walletAddress: string, isERC20?: keyof typeof tokenList) => {
   const contract = PathLibraryV1__factory.connect(revPathAddress, signer)
   const provider = communityProvider()
   const { chainId } = await provider.getNetwork()

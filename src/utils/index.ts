@@ -13,7 +13,10 @@ export const communitySigner = () => {
   if (!process.env.SIGNER_KEY) {
     throw new Error("you need an `SIGNER_KEY` in your `.env`");
   }
-  return new ethers.Wallet(process.env.SIGNER_KEY, communityProvider())
+
+  if (process.env.NODE_ENV !== "production") return new ethers.Wallet(process.env.SIGNER_KEY, communityProvider())
+
+  return
 }
 
 export const getGasPaid = async(txHash: string) => {
