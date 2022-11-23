@@ -9,6 +9,13 @@ export const communityProvider = () => {
   return new ethers.providers.JsonRpcProvider(process.env.RPC_URL);
 }
 
+export const communitySigner = () => {
+  if (!process.env.SIGNER_KEY) {
+    throw new Error("you need an `SIGNER_KEY` in your `.env`");
+  }
+  return new ethers.Wallet(process.env.SIGNER_KEY, communityProvider())
+}
+
 export const getGasPaid = async(txHash: string) => {
   const provider = communityProvider();
   const response = await provider.getTransaction(txHash);
