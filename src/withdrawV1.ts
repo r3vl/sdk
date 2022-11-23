@@ -12,18 +12,9 @@ export const withdrawFundsV1 = async (revPathAddress: string, walletAddress: str
   const contract = PathLibraryV1__factory.connect(revPathAddress, signer)
   
   try {
-    let tx
-
-    if (isERC20) {
-      const withdraw = contract.functions.releaseERC20
-
-      tx = await withdraw(ERC20s[isERC20], walletAddress)
-    } else {
-      const withdraw = contract.functions.release
-
-      tx = await withdraw(walletAddress)
-    }
-
+    const tx = isERC20 ?
+      await contract.releaseERC20(ERC20s[isERC20], walletAddress) :
+      await contract.release(walletAddress)
     const result = await tx?.wait()
     const [event] = result?.events || [{ args: [] }]
     
