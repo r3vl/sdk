@@ -35,7 +35,7 @@ export const withdrawableV0 = async (revPathAddress: string, walletAddress: stri
       })
       .reduce((prev, curr: { args: any[] }) => prev + parseFloat(ethers.utils.formatEther(curr?.args[1])), 0)
 
-    console.log("Withdrawable:::...", depositsReceived - paymentsReceived)
+    return depositsReceived - paymentsReceived
   } catch (error) {
     console.error(error)
   }
