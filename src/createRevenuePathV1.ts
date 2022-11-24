@@ -30,8 +30,17 @@ export const createRevenuePathV1 = async (
 
     const result = await tx?.wait()
 
-    console.log(result, 'createdRevenuePathV1 Result');
+    console.log(result, 'actualResult');
+
+    const formatedData = {
+      revPathAddress: result.logs[0]?.address,
+      transactionHash: result.transactionHash,
+      blockNumber: result.blockNumber,
+    }    
+
+    console.log(formatedData, 'returned Result');
     
+    return formatedData
   } catch (error) {
     console.error(error, 'createRevenuePathV1 Error')
   }
