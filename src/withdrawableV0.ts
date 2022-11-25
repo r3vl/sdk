@@ -19,7 +19,7 @@ export const withdrawableV0 = async (revPathAddress: string, walletAddress: stri
     const walletShare = await revPath.shares(walletAddress)
     
     if (isERC20) {
-      const sdk = getGoerliSdk(provider)
+      const sdk = getMainnetSdk(provider)
 
       const released = await revPath['released(address,address)'](tokenList[isERC20][chainId], walletAddress)
       const totalReceived = await sdk[isERC20].balanceOf(revPathAddress)
