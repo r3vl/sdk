@@ -23,7 +23,7 @@ export const updateErc20Distribution = async (
 
     const result = await tx?.wait()
 
-    console.log(result, 'updateErc20Distribution actualResult');
+    console.log(result, 'updateErc20Distribution Result');
 
     return result
 

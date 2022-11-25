@@ -14,7 +14,7 @@ export const updateRevenueTierV1 = async (
 ) => {
   const contract = PathLibraryV1__factory.connect(revPathAddress, signer)
 
-  const formatedTierLimit = BigInt(ethers.utils.parseEther(tierLimit.toString()).toString())
+  const formatedTierLimit = ethers.utils.parseEther(tierLimit.toString())
   const formatedDistribution = distribution.map(item => Number(ethers.utils.parseUnits(item.toString(), 5).toString()))
 
   try {

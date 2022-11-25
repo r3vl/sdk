@@ -10,7 +10,7 @@ export const updateFinalFund = async (
   distribution: number[], 
   tierNumber: number,
 ) => {
-  const trx = await updateRevenueTierV1(
+  const updateRevenueTierResult = await updateRevenueTierV1(
     signer,
     revPathAddress,
     walletList,
@@ -19,10 +19,15 @@ export const updateFinalFund = async (
     tierNumber
   )
 
-  if(trx?.status === 1) {
-    console.log('updateFinalFund success');
-    
-    updateErc20Distribution(signer, revPathAddress, walletList, distribution)
+  if(updateRevenueTierResult?.status === 1) {
+    const updateErc20Result = await updateErc20Distribution(signer, revPathAddress, walletList, distribution)
+
+    if(updateErc20Result?.status === 1) {
+      console.log('updateFinalFund success');
+    } else {
+      console.log('updateFinalFund fail');
+    }
+
   } else {
     console.log('updateFinalFund error');
   }
