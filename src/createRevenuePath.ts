@@ -1,4 +1,3 @@
-import { ethers } from 'ethers'
 import { createRevenuePathV1 } from './createRevenuePathV1'
 
 async function main() {
@@ -12,19 +11,21 @@ async function main() {
       ]
     ],
     [
-      [
-        Number(ethers.utils.parseUnits('100', 5).toString())
-      ],
-      [
-        Number(ethers.utils.parseUnits('100', 5).toString())
-      ]
+      [ 100 ],
+      [ 100 ]
     ],
-    [
-      BigInt(ethers.utils.parseEther('0.1').toString())
-    ],
+    [ 2 ],
     "revPath new",
     false
 )
+
+// await createRevenuePathV1(
+//   [ ["0x14706ad7bEf1c8d76c4a4495d4c16B6AeA43D4D8"] ],
+//   [ [100] ],
+//   [],
+//   "revPath new",
+//   false
+// )
 
   return
 }

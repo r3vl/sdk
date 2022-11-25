@@ -1,6 +1,6 @@
 import { getGoerliSdk } from '@dethcrypto/eth-sdk-client' // yay, our SDK! It's tailored especially for our needs
 import { communitySigner } from './utils';
-import { BigNumberish } from 'ethers'
+import { ethers } from 'ethers'
 
 /**
  *  V1
@@ -8,7 +8,7 @@ import { BigNumberish } from 'ethers'
 export const createRevenuePathV1 = async (
   walletList: string[][],
   distribution: number[][], 
-  tierLimit: BigNumberish[],
+  tierLimits: number[],
   name: string,
   mutabilityEnabled: boolean
 ) => {
@@ -16,11 +16,20 @@ export const createRevenuePathV1 = async (
   const sdk = getGoerliSdk(signer);
   const contract = sdk.reveelMain;
 
+  const formatedTierLimits = tierLimits.map(limit => ethers.utils.parseEther(limit.toString()).toString())
+
+  const formatedDistribution = distribution.map(item => {
+     return item.map(el => {
+      return Number(ethers.utils.parseUnits(el.toString(), 5).toString())
+     })
+  }) 
+
+
   try {
     const tx = await contract.createRevenuePath(
       walletList,
-      distribution, 
-      tierLimit,
+      formatedDistribution, 
+      formatedTierLimits,
       name,
       mutabilityEnabled,
       {
@@ -30,17 +39,9 @@ export const createRevenuePathV1 = async (
 
     const result = await tx?.wait()
 
-    console.log(result, 'actualResult');
-
-    const formatedData = {
-      revPathAddress: result.logs[0]?.address,
-      transactionHash: result.transactionHash,
-      blockNumber: result.blockNumber,
-    }    
-
-    console.log(formatedData, 'returned Result');
+    console.log(result, 'createRevenuePathV1 Result');
     
-    return formatedData
+    return result
   } catch (error) {
     console.error(error, 'createRevenuePathV1 Error')
   }
