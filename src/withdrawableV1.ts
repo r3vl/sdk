@@ -6,7 +6,7 @@ import { communityProvider } from './utils'
 
 
 /**
- *  V0
+ *  V1
  */
 export const withdrawableV1 = async (revPathAddress: string, walletAddress: string, isERC20?: keyof typeof tokenList) => {
   const provider = communityProvider()
