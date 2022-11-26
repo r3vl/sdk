@@ -17,8 +17,8 @@ export const withdrawFundsV1 = async (signer: ethers.Signer, revPathAddress: str
       await contract.release(walletAddress)
     const result = await tx?.wait()
     const [event] = result?.events || [{ args: [] }]
-    
-    console.log("Withdraw result:::...", event?.args && ethers.utils.formatEther(event?.args[1]))
+
+    return event?.args && ethers.utils.formatEther(event?.args[1])
   } catch (error) {
     console.error(error)
   }
