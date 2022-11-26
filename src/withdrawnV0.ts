@@ -7,7 +7,7 @@ import { communityProvider, getChainId } from './utils'
 /**
  *  V0
  */
-export const withdrawnV0 = async (revPathAddress: string, walletAddress: string, isERC20?: 'weth') => {
+export const withdrawnV0 = async (revPathAddress: string, walletAddress: string, isERC20?: keyof typeof tokenList) => {
   const provider = communityProvider()
   const chainId = await getChainId()
 
