@@ -12,14 +12,28 @@ async function main() {
 
   // await addRevenueTierV1(
   //   signer,
-  //   '0x767ece24C44f1A58be4eaF105ea7029f6F76fdA1',
+  //   '0xC3267ba29975f998F5Bb1b393BAbe59B36A28f94',
   //   [ 
-  //     ['armen.eth'],
+  //     ['0x909e4e8fFE57e77f4851F6Ec24b037B562967833'],
   //   ],
   //   [ [100] ],
   //   [ 3 ],
-  //   ['0x909e4e8fFE57e77f4851F6Ec24b037B562967833', '0x14706ad7bEf1c8d76c4a4495d4c16B6AeA43D4D8'],
-  //   [ 60, 40 ],
+  //   [ '0x14706ad7bEf1c8d76c4a4495d4c16B6AeA43D4D8' ],
+  //   [ 100 ],
+  //   0
+  // )
+
+  // await addRevenueTierV1(
+  //   signer,
+  //   '0xC3267ba29975f998F5Bb1b393BAbe59B36A28f94',
+  //   [ 
+  //     ['0x1334645C23Cb98c246332149F7dFbB5Eee123B07'],
+  //     ['0x909e4e8fFE57e77f4851F6Ec24b037B562967833'],
+  //   ],
+  //   [ [100], [100] ],
+  //   [ 5, 6 ],
+  //   [ '0x14706ad7bEf1c8d76c4a4495d4c16B6AeA43D4D8' ],
+  //   [ 100 ],
   //   3
   // )
 
@@ -33,27 +47,27 @@ async function main() {
   //     ['0x14706ad7bEf1c8d76c4a4495d4c16B6AeA43D4D8']
   //   ],
   //   [
-  //     [Number(ethers.utils.parseUnits('100', 5).toString())],
-  //     [Number(ethers.utils.parseUnits('100', 5).toString())]
+  //     [100],
+  //     [100]
   //   ],
   //   [7, 8],
   //   ['0x909e4e8fFE57e77f4851F6Ec24b037B562967833', '0x14706ad7bEf1c8d76c4a4495d4c16B6AeA43D4D8'],
   //   [
-  //     Number(ethers.utils.parseUnits('80', 5).toString()),
-  //     Number(ethers.utils.parseUnits('20', 5).toString())
+  //     80,
+  //     20
   //   ],
   //   6
   // )
 
   // updateRevenueTierV1 Example
-  await updateRevenueTierV1(
-    signer,
-    '0xC728713EE2FC255582C5683608BB7AAF9a52D5ba',
-    [ "aram.eth" ],
-    [ 100 ],
-    3,
-    1
-  )
+  // await updateRevenueTierV1(
+  //   signer,
+  //   '0xC728713EE2FC255582C5683608BB7AAF9a52D5ba',
+  //   [ "aram.eth" ],
+  //   [ 100 ],
+  //   3,
+  //   1
+  // )
 
   // await updateRevenueTierV1(
   //   signer,

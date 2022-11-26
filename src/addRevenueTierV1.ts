@@ -15,7 +15,7 @@ export const addRevenueTierV1 = async (
 ) => {
   const contract = PathLibraryV1__factory.connect(revPathAddress, signer)
 
-  const tierLimits = [...newAddedTierLimits.slice(0, -1), newAddedTierLimits[0]].reverse()
+  const tierLimits = [newAddedTierLimits[0], ...newAddedTierLimits.slice(1).reverse()]
   .map(num => ethers.utils.parseEther(num.toString()))
 
   // new added wallets slice(1) & final fund wallets
