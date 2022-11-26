@@ -1,24 +1,29 @@
-export const chainIds = {
-  mainnet: 1,
-  ropsten: 3,
-  rinkeby: 4,
-  goerli: 5,
-  kovan: 42,
-  sepolia: 11155111,
-  optimism: 10,
-  optimismKovan: 69,
-  optimismGoerli: 420,
-  polygon: 137,
-  polygonMumbai: 80001,
-  arbitrum: 42161,
-  arbitrumRinkeby: 421611,
-  arbitrumGoerli: 421613,
-  localhost: 1337,
-  hardhat: 31337,
-  foundry: 31337,
+export declare const chainIds: {
+  readonly mainnet: 1
+  readonly ropsten: 3
+  readonly rinkeby: 4
+  readonly goerli: 5
+  readonly kovan: 42
+  readonly sepolia: 11155111
+  readonly optimism: 10
+  readonly optimismKovan: 69
+  readonly optimismGoerli: 420
+  readonly polygon: 137
+  readonly polygonMumbai: 80001
+  readonly arbitrum: 42161
+  readonly arbitrumRinkeby: 421611
+  readonly arbitrumGoerli: 421613
+  readonly localhost: 1337
+  readonly hardhat: 31337
+  readonly foundry: 31337
 }
 
-// typeof chainIds[keyof typeof chainIds]
+export type ChainIds = typeof chainIds[keyof typeof chainIds]
+export type ChainIdType = { [key in ChainIds]: string }
+
+export type Token = ChainIdType & {
+  name: string
+}
 
 export const tokenList = {
   gor: {
@@ -43,8 +48,9 @@ export const tokenList = {
     [chainIds.mainnet]: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
   },
 } as {
-  [x: string]: {
-    name: string
-    [x: string]: string
-  }
+  gor: Token
+  eth: Token
+  weth: Token
+  dai: Token
+  usdc: Token
 }

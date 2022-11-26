@@ -1,7 +1,7 @@
 import { PathLibraryV0__factory } from './typechain'
 
 import { tokenList } from "./constants/tokens"
-import { communityProvider } from './utils'
+import { communityProvider, getChainId } from './utils'
 import { ethers } from 'ethers'
 
 /**
@@ -10,7 +10,7 @@ import { ethers } from 'ethers'
 export const withdrawFundsV0 = async (signer: ethers.Signer, revPathAddress: string, walletAddress: string, isERC20?: keyof typeof tokenList) => {
   const contract = PathLibraryV0__factory.connect(revPathAddress, signer)
   const provider = communityProvider()
-  const { chainId } = await provider.getNetwork()
+  const chainId = await getChainId()
   
   try {
     const tx = isERC20 ?

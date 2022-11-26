@@ -2,16 +2,15 @@ import { ethers } from 'ethers'
 
 import { PathLibraryV0__factory } from './typechain'
 import { tokenList } from "./constants/tokens"
-import { communityProvider } from './utils'
-import { getMainnetSdk, getGoerliSdk } from '@dethcrypto/eth-sdk-client'
-
+import { communityProvider, getChainId } from './utils'
+import { getMainnetSdk } from '@dethcrypto/eth-sdk-client'
 
 /**
  *  V0
  */
-export const withdrawableV0 = async (revPathAddress: string, walletAddress: string, isERC20?: 'weth') => {
+export const withdrawableV0 = async (revPathAddress: string, walletAddress: string, isERC20?: keyof typeof tokenList) => {
   const provider = communityProvider()
-  const { chainId } = await provider.getNetwork()
+  const chainId = await getChainId()
 
   try {
     const revPath = PathLibraryV0__factory.connect(revPathAddress, provider)
@@ -20,9 +19,20 @@ export const withdrawableV0 = async (revPathAddress: string, walletAddress: stri
     
     if (isERC20) {
       const sdk = getMainnetSdk(provider)
+      const tokenAddress = tokenList[isERC20][chainId]
+      let tokenSdk
 
-      const released = await revPath['released(address,address)'](tokenList[isERC20][chainId], walletAddress)
-      const totalReceived = await sdk[isERC20].balanceOf(revPathAddress)
+      switch (isERC20) {
+        case 'weth':
+            tokenSdk = sdk.weth
+          break
+        default:
+            tokenSdk = sdk.weth
+          break
+      }
+
+      const released = await revPath['released(address,address)'](tokenAddress, walletAddress)
+      const totalReceived = await tokenSdk.balanceOf(revPathAddress)
       const totalAccounted = parseFloat(ethers.utils.formatEther(totalReceived)) + parseFloat(ethers.utils.formatEther(released))
 
       return (totalAccounted * walletShare.toNumber() / 10000) - parseFloat(ethers.utils.formatEther(released))
