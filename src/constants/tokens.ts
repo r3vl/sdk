@@ -1,4 +1,4 @@
-export declare const chainIds: {
+export declare const chainIdTypes: {
   readonly mainnet: 1
   readonly ropsten: 3
   readonly rinkeby: 4
@@ -18,11 +18,31 @@ export declare const chainIds: {
   readonly foundry: 31337
 }
 
-export type ChainIds = typeof chainIds[keyof typeof chainIds]
+export type ChainIds = typeof chainIdTypes[keyof typeof chainIdTypes]
 export type ChainIdType = { [key in ChainIds]: string }
 
 export type Token = ChainIdType & {
   name: string
+}
+
+const chainIds = {
+  mainnet: 1,
+  ropsten: 3,
+  rinkeby: 4,
+  goerli: 5,
+  kovan: 42,
+  sepolia: 11155111,
+  optimism: 10,
+  optimismKovan: 69,
+  optimismGoerli: 420,
+  polygon: 137,
+  polygonMumbai: 80001,
+  arbitrum: 42161,
+  arbitrumRinkeby: 421611,
+  arbitrumGoerli: 421613,
+  localhost: 1337,
+  hardhat: 31337,
+  foundry: 31337,
 }
 
 export const tokenList = {
