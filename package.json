@@ -8,7 +8,7 @@
     "prepare": "yarn build",
     "build": "tsc",
     "get-abis": "eth-sdk",
-    "typechain": "typechain --target ethers-v5 --out-dir src/typechain './src/eth-sdk/abis/goerli/*.json'"
+    "typechain": "typechain --target ethers-v5 --out-dir src/typechain './src/eth-sdk/abis/mainnet/*.json'"
   },
   "license": "MIT",
   "devDependencies": {
