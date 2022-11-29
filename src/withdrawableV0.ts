@@ -26,6 +26,12 @@ export const withdrawableV0 = async (revPathAddress: string, walletAddress: stri
         case 'weth':
             tokenSdk = sdk.weth
           break
+        case 'usdc':
+            tokenSdk = sdk.usdc
+          break
+        case 'dai':
+            tokenSdk = sdk.dai
+          break
         default:
             tokenSdk = sdk.weth
           break
