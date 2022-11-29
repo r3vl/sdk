@@ -1,5 +1,5 @@
 import { getGoerliSdk } from '@dethcrypto/eth-sdk-client' // yay, our SDK! It's tailored especially for our needs
-import { constants, ethers, utils } from 'ethers'
+import { BigNumberish, constants, ethers, utils } from 'ethers'
 import { tokenList } from './constants/tokens';
 import { getChainId } from './utils'
 
@@ -10,7 +10,7 @@ export const createRevenuePathV2 = async (
   signer: ethers.Signer,
   walletList: string[][],
   distribution: number[][], 
-  tierLimits: number[][],
+  tiers: { token: string, limits: number[] }[],
   name: string,
   mutabilityEnabled: boolean
 ) => {
@@ -19,17 +19,32 @@ export const createRevenuePathV2 = async (
 
   const chainId = await getChainId()
 
-  const formatedTierLimits = tierLimits.map((item, index)  => {
-    return item.map(limit => {
-      switch (index) {
-        case 0: 
-          return utils.parseEther(limit.toString())
-        case 3: 
-          return utils.parseUnits(limit.toString(), 18)
-        default:
-          return utils.parseUnits(limit.toString())
+  const formatedLimits: BigNumberish[][] = []
+  const formatedTokens: string[] = []
+  
+  tiers.forEach((item) => {
+    switch (item.token) {
+      case 'eth': {
+        formatedLimits.push(item.limits.map(limit => utils.parseEther(limit.toString())))
+        formatedTokens.push(constants.AddressZero)
+        break
       }
-    })
+      case 'weth': {
+        formatedLimits.push(item.limits.map(limit => utils.parseUnits(limit.toString())))
+        formatedTokens.push(tokenList.weth[chainId])
+        break
+      }
+      case 'usdc': {
+        formatedLimits.push(item.limits.map(limit => utils.parseUnits(limit.toString())))
+        formatedTokens.push(tokenList.usdc[chainId])
+        break
+      }
+      case 'dai': {
+        formatedLimits.push(item.limits.map(limit => utils.parseUnits(limit.toString(), 18)))
+        formatedTokens.push(tokenList.dai[chainId])
+        break
+      }
+    } 
   })
 
   const formatedDistribution = distribution.map(item => {
@@ -38,19 +53,12 @@ export const createRevenuePathV2 = async (
      })
   }) 
 
-  const formatedTokenList = [
-    constants.AddressZero, 
-    tokenList.weth[chainId],
-    tokenList.usdc[chainId],
-    tokenList.dai[chainId]
-  ]
-
   try {
     const tx = await contract.createRevenuePath(
       walletList,
       formatedDistribution, 
-      formatedTokenList,
-      formatedTierLimits,
+      formatedTokens,
+      formatedLimits,
       name,
       mutabilityEnabled,
       {
