@@ -1,7 +1,15 @@
 import { createRevenuePathV1 } from './createRevenuePathV1'
+import { communitySigner } from './utils';
 
 async function main() {
+  const signer = communitySigner()
+
+  if(!signer) {
+    return
+  }
+
   await createRevenuePathV1(
+    signer, 
     [
       [
         "0x1334645C23Cb98c246332149F7dFbB5Eee123B07"

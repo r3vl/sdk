@@ -1,18 +1,18 @@
 import { getGoerliSdk } from '@dethcrypto/eth-sdk-client' // yay, our SDK! It's tailored especially for our needs
-import { communitySigner } from './utils';
+
 import { ethers } from 'ethers'
 
 /**
  *  V1
  */
 export const createRevenuePathV1 = async (
+  signer: ethers.Signer,
   walletList: string[][],
   distribution: number[][], 
   tierLimits: number[],
   name: string,
   mutabilityEnabled: boolean
 ) => {
-  const signer = communitySigner()
   const sdk = getGoerliSdk(signer);
   const contract = sdk.reveelMain;
 
