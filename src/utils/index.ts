@@ -1,5 +1,6 @@
 import { ethers } from "ethers";
 import * as dotenv from 'dotenv'; // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
+import { ChainIds } from "../constants/tokens";
 dotenv.config()
 
 export const communityProvider = () => {
@@ -17,6 +18,12 @@ export const communitySigner = () => {
   if (process.env.NODE_ENV !== "production") return new ethers.Wallet(process.env.SIGNER_KEY, communityProvider())
 
   return
+}
+
+export const getChainId = async () => {
+  const { chainId } = await communityProvider().getNetwork()
+
+  return chainId as ChainIds
 }
 
 export const getGasPaid = async(txHash: string) => {
