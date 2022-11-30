@@ -1,4 +1,4 @@
-import { BigNumberish, ethers, utils } from 'ethers'
+import { BigNumberish, constants, ethers, utils } from 'ethers'
 import { tokenList } from './constants/tokens';
 import { PathLibraryV2__factory } from './typechain'; 
 import { getChainId } from './utils';
@@ -23,7 +23,7 @@ export const updateLimitsV2 = async (
     switch (item) {
       case 'eth': {
         formatedLimits.push(utils.parseEther(newLimits[index].toString()))
-        formatedTokens.push(tokenList.eth[chainId])
+        formatedTokens.push(constants.AddressZero)
         break
       }
       case 'weth': {
@@ -56,11 +56,11 @@ export const updateLimitsV2 = async (
 
     const result = await tx?.wait()
 
-    console.log(result, 'updateRevenueTiersV2 Result');
+    console.log(result, 'updateLimitsV2 Result');
     
     return result
   } catch (error) {
-    console.error(error, 'updateRevenueTiersV2 Error')
+    console.error(error, 'updateLimitsV2 Error')
   }
 }
 
