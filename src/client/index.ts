@@ -2,14 +2,15 @@
 import Base from "./base"
 
 import { withdrawableV0, FnArgs as WithdrawableV0Args } from '../withdrawableV0'
-// import { withdrawableV1 } from '../withdrawableV1'
+import { withdrawableV1, FnArgs as WithdrawableV1Args } from '../withdrawableV1'
 
 import type { SplitsClientConfig } from '../types'
-import { PathLibraryV0 } from '../typechain'
+import { PathLibraryV0, PathLibraryV1 } from '../typechain'
 import { MainnetSdk, GoerliSdk } from "@dethcrypto/eth-sdk-client"
 
 export class R3vlClient extends Base {
   revPathV0: PathLibraryV0 | undefined
+  revPathV1: PathLibraryV1 | undefined
   sdk: MainnetSdk | GoerliSdk | undefined
 
   constructor({
@@ -44,7 +45,13 @@ export class R3vlClient extends Base {
 
   get v1() {
     return {
-      // withdrawable: () => withdrawableV1.call(this)
+      init: () => {
+        const { revPathV1, sdk } = this._initV1RevPath()
+
+        this.revPathV1 = revPathV1
+        this.sdk = sdk
+      },
+      withdrawable: (args: WithdrawableV1Args) => withdrawableV1.call(this, args)
     }
   }
 }
