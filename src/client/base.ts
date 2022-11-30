@@ -7,17 +7,22 @@ import {
   MissingSignerError
 } from '../errors'
 
-import type { SplitsClientConfig } from '../types'
+import { MISSING_SIGNER } from '../types'
 
-const MISSING_SIGNER = ''
+import type { MISSING_SIGNER as MISSING_SIGNER_TYPE, SplitsClientConfig } from '../types'
+import { ChainIds } from '../constants/tokens'
+import { PathLibraryV0__factory } from '../typechain'
+import { getMainnetSdk, getGoerliSdk } from '@dethcrypto/eth-sdk-client'
 
 export default class Base {
-  protected readonly _chainId: number
+  protected readonly _chainId: ChainIds
   protected readonly _ensProvider: Provider | undefined
   // TODO: something better we can do here to handle typescript check for missing signer?
-  protected readonly _signer: Signer | typeof MISSING_SIGNER
-  private readonly _provider: Provider | undefined
+  protected readonly _signer: Signer | typeof MISSING_SIGNER_TYPE
+  private readonly _provider: Provider
   protected readonly _includeEnsNames: boolean
+  protected readonly _revPathAddress: string
+
 
   constructor({
     chainId,
@@ -25,6 +30,7 @@ export default class Base {
     ensProvider,
     signer,
     includeEnsNames = false,
+    revPathAddress
   }: SplitsClientConfig) {
     if (includeEnsNames && !provider && !ensProvider)
       throw new InvalidConfigError(
@@ -36,6 +42,17 @@ export default class Base {
     this._chainId = chainId
     this._signer = signer ?? MISSING_SIGNER
     this._includeEnsNames = includeEnsNames
+    this._revPathAddress = revPathAddress
+  }
+
+  protected _initV0RevPath() {
+    const revPathV0 = PathLibraryV0__factory.connect(this._revPathAddress, this._provider)
+    const sdk = getGoerliSdk(this._provider)
+
+    return {
+      revPathV0,
+      sdk
+    }
   }
 
   protected _requireProvider() {
