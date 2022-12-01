@@ -61,6 +61,11 @@ export class R3vlClient extends Base {
       withdrawable: (args: WithdrawableV1Args) => withdrawableV1.call(this, args),
       withdrawn: (args: WithdrawnV1Args) => withdrawnV1.call(this, args),
       withdrawEvents: () => getWithdrawEventsV1.call(this),
+      requireSigner: () => {
+        const { sdk } = this._requireSigner()
+
+        this.sdk = sdk
+      },
       createRevenuePath: (args: CreateRevenuePathV1Args) => createRevenuePathV1.call(this, args)
     }
   }

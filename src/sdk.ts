@@ -38,6 +38,34 @@ async function sdkMain() {
 
   console.log("RESULT V1:::...", result1)
 
+  const clientV1RequireSigner = new R3vlClient({
+    chainId,
+    provider,
+    signer,
+  })
+
+  clientV1RequireSigner.v1.requireSigner()
+
+  const createResult = await clientV1RequireSigner.v1.createRevenuePath({
+    walletList: [
+      [
+        "0x1334645C23Cb98c246332149F7dFbB5Eee123B07"
+      ],
+      [
+        "0x14706ad7bEf1c8d76c4a4495d4c16B6AeA43D4D8"
+      ]
+    ],
+    distribution: [
+      [ 100 ],
+      [ 100 ]
+    ], 
+    tierLimits: [ 2 ], 
+    name: "revPath new", 
+    mutabilityEnabled: false 
+  })
+
+  console.log(createResult, 'createResult');
+
   return
 }
 

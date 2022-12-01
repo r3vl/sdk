@@ -21,7 +21,7 @@ export default class Base {
   protected readonly _signer: Signer | typeof MISSING_SIGNER_TYPE
   private readonly _provider: Provider
   protected readonly _includeEnsNames: boolean
-  protected readonly _revPathAddress: string
+  protected readonly _revPathAddress: string | undefined
 
 
   constructor({
@@ -46,7 +46,7 @@ export default class Base {
   }
 
   protected _initV0RevPath() {
-    const revPathV0 = PathLibraryV0__factory.connect(this._revPathAddress, this._provider)
+    const revPathV0 = this._revPathAddress ? PathLibraryV0__factory.connect(this._revPathAddress, this._provider) : undefined
     const sdk = getMainnetSdk(this._provider)
 
     return {
@@ -56,7 +56,7 @@ export default class Base {
   }
 
   protected _initV1RevPath() {
-    const revPathV1 = PathLibraryV1__factory.connect(this._revPathAddress, this._provider)
+    const revPathV1 = this._revPathAddress ? PathLibraryV1__factory.connect(this._revPathAddress, this._provider) : undefined
     const sdk = getMainnetSdk(this._provider)
 
     return {
@@ -74,9 +74,16 @@ export default class Base {
 
   protected _requireSigner() {
     this._requireProvider()
-    if (!this._signer)
+    if (!this._signer) {
       throw new MissingSignerError(
         'Signer required to perform this action, please update your call to the constructor',
       )
+    }
+
+    const sdk = getMainnetSdk(this._signer)
+
+    return {
+      sdk
+    }
   }
 }
