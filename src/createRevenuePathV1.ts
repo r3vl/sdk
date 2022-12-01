@@ -1,20 +1,32 @@
-import { getGoerliSdk } from '@dethcrypto/eth-sdk-client' // yay, our SDK! It's tailored especially for our needs
-
 import { ethers } from 'ethers'
+import { R3vlClient } from './client'
 
-/**
- *  V1
- */
-export const createRevenuePathV1 = async (
-  signer: ethers.Signer,
+export type FnArgs = {
   walletList: string[][],
   distribution: number[][], 
   tierLimits: number[],
   name: string,
   mutabilityEnabled: boolean
-) => {
-  const sdk = getGoerliSdk(signer);
-  const contract = sdk.reveelMain;
+}
+
+/**
+ *  V1
+ */
+export async function createRevenuePathV1 (
+  this: R3vlClient, 
+  { 
+    walletList, 
+    distribution, 
+    tierLimits, 
+    name, 
+    mutabilityEnabled 
+  } : FnArgs,
+) {
+  const { sdk } = this
+
+  if (!sdk) return
+
+  const contract = sdk.reveelMainV1;
 
   const formatedTierLimits = tierLimits.map(limit => ethers.utils.parseEther(limit.toString()).toString())
 
@@ -23,7 +35,6 @@ export const createRevenuePathV1 = async (
       return Number(ethers.utils.parseUnits(el.toString(), 5).toString())
      })
   }) 
-
 
   try {
     const tx = await contract.createRevenuePath(

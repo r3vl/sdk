@@ -11,6 +11,7 @@ import { withdrawableV1, FnArgs as WithdrawableV1Args } from '../withdrawableV1'
 import { withdrawnV1, FnArgs as WithdrawnV1Args } from '../withdrawnV1'
 import { getWithdrawEventsV0 } from "../eventsV0"
 import { getWithdrawEventsV1 } from "../eventsV1"
+import { createRevenuePathV1, FnArgs as CreateRevenuePathV1Args } from "../createRevenuePathV1"
 
 export class R3vlClient extends Base {
   revPathV0: PathLibraryV0 | undefined
@@ -59,7 +60,8 @@ export class R3vlClient extends Base {
       },
       withdrawable: (args: WithdrawableV1Args) => withdrawableV1.call(this, args),
       withdrawn: (args: WithdrawnV1Args) => withdrawnV1.call(this, args),
-      withdrawEvents: () => getWithdrawEventsV1.call(this)
+      withdrawEvents: () => getWithdrawEventsV1.call(this),
+      createRevenuePath: (args: CreateRevenuePathV1Args) => createRevenuePathV1.call(this, args)
     }
   }
 }
