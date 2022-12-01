@@ -13,6 +13,7 @@ import { withdrawnV1, FnArgs as WithdrawnV1Args } from '../withdrawnV1'
 import { withdrawnFundsV2, FnArgs as WithdrawnV2Args } from "../withdrawnV2"
 import { withdrawFundsV0, FnArgs as WithdrawV0Args } from "../withdrawV0"
 import { withdrawFundsV1, FnArgs as WithdrawV1Args } from "../withdrawV1"
+import { withdrawFundsV2, FnArgs as WithdrawV2Args } from "../withdrawV2"
 import { getRevPathWithdrawEventsV0 } from "../eventsV0"
 import { getRevPathWithdrawEventsV1 } from "../eventsV1"
 
@@ -80,6 +81,7 @@ export class R3vlClient extends Base {
       },
       withdrawable: (args: WithdrawableV2Args) => withdrawableV2.call(this, args),
       withdrawn: (args: WithdrawnV2Args) => withdrawnFundsV2.call(this, args),
+      withdraw: (args: WithdrawV2Args) => withdrawFundsV2.call(this, args)
     }
   }
 }
