@@ -1,19 +1,26 @@
 import { ethers } from 'ethers'
-import { PathLibraryV1__factory } from './typechain'
+import { R3vlClient } from './client'
 
-
-export const updateErc20Distribution = async (
-  signer: ethers.Signer,
-  revPathAddress: string,
+export type UpdateErc20DistributionArgs = {
   walletList: string[],
   distribution: number[], 
-) => {
-  const contract = PathLibraryV1__factory.connect(revPathAddress, signer)
+}
+
+export async function updateErc20Distribution (
+  this: R3vlClient, 
+  { 
+    walletList,
+    distribution,
+  } : UpdateErc20DistributionArgs
+) {
+  const { revPathV1, sdk } = this
+
+  if (!revPathV1 || !sdk) return false
 
   const formatedDistribution = distribution.map(item => Number(ethers.utils.parseUnits(item.toString(), 5).toString()))
 
   try {
-    const tx = await contract.updateErc20Distribution(
+    const tx = await revPathV1.updateErc20Distribution(
       walletList,
       formatedDistribution, 
       {

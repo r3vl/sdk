@@ -1,19 +1,30 @@
 import { ethers } from 'ethers'
 import { updateRevenueTierV1 } from './updateRevenueTierV1'
-import { PathLibraryV1__factory } from './typechain'
+import { R3vlClient } from './client'
 
-
-export const addRevenueTierV1 = async (
-  signer: ethers.Signer,
-  revPathAddress: string,
+export type AddRevenueTierV1Args = {
   walletList: string[][], 
   distribution: number[][], 
   newAddedTierLimits: number[], 
   finalFundWalletList: string[],
   finalFundDistribution: number[],
   finalFundIndex: number,
-) => {
-  const contract = PathLibraryV1__factory.connect(revPathAddress, signer)
+}
+
+export async function addRevenueTierV1 (
+  this: R3vlClient, 
+  { 
+    walletList,
+    distribution,
+    newAddedTierLimits,
+    finalFundWalletList,
+    finalFundDistribution,
+    finalFundIndex
+  } : AddRevenueTierV1Args
+) {
+  const { revPathV1, sdk } = this
+
+  if (!revPathV1 || !sdk) return false
 
   const tierLimits = [newAddedTierLimits[0], ...newAddedTierLimits.slice(1).reverse()]
   .map(num => ethers.utils.parseEther(num.toString()))
@@ -27,7 +38,7 @@ export const addRevenueTierV1 = async (
   })
   
   try {
-    const addTx = await contract.addRevenueTier(
+    const addTx = await revPathV1.addRevenueTier(
       addedWalletList,
       addedDistribution, 
       tierLimits,
@@ -43,23 +54,22 @@ export const addRevenueTierV1 = async (
     let finalResult;
 
     if(addedResult.status === 1) {
-      finalResult = await updateRevenueTierV1( 
-        signer,
-        revPathAddress,
-        walletList[0],
-        distribution[0], 
-        newAddedTierLimits[0],
-        finalFundIndex
-      )
+      finalResult = await updateRevenueTierV1.call(this, 
+       { 
+        walletList: walletList[0],
+        distribution: distribution[0], 
+        tierLimit: newAddedTierLimits[0],
+        tierNumber: finalFundIndex
+      })
     }
+    
+    // if(finalResult?.status === 1) {
+    //   console.error('addRevenueTier Success')
+    // } else {
+    //   console.error('addRevenueTier Fail')
+    // }
 
-    if(finalResult?.status === 1) {
-      console.error('addRevenueTier Success')
-
-      return finalResult
-    } else {
-      console.error('addRevenueTier Fail')
-    }
+    return finalResult
 
   } catch (error) {
     console.error(error, 'addRevenueTierV1 Error')
