@@ -12,7 +12,7 @@ export type FnArgs = {
  *  V0
  */
 export async function withdrawableV0(this: R3vlClient, { walletAddress, isERC20 }: FnArgs) {
-  const { revPathV0, sdk, _chainId, _revPathAddress } = this // TODO: Find a better way to declare shape of class context
+  const { revPathV0, sdk, _chainId, _revPathAddress } = this
 
   if (!revPathV0 || !sdk) return false
 

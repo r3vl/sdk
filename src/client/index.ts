@@ -2,7 +2,9 @@
 import Base from "./base"
 
 import { withdrawableV0, FnArgs as WithdrawableV0Args } from '../withdrawableV0'
+import { withdrawnV0, FnArgs as WithdrawnV0Args } from '../withdrawnV0'
 import { withdrawableV1, FnArgs as WithdrawableV1Args } from '../withdrawableV1'
+import { withdrawnV1, FnArgs as WithdrawnV1Args } from '../withdrawnV1'
 
 import type { SplitsClientConfig } from '../types'
 import { PathLibraryV0, PathLibraryV1 } from '../typechain'
@@ -39,7 +41,8 @@ export class R3vlClient extends Base {
         this.revPathV0 = revPathV0
         this.sdk = sdk
       },
-      withdrawable: (args: WithdrawableV0Args) => withdrawableV0.call(this, args)
+      withdrawable: (args: WithdrawableV0Args) => withdrawableV0.call(this, args),
+      withdrawn: (args: WithdrawnV0Args) => withdrawnV0.call(this, args)
     }
   }
 
@@ -51,7 +54,8 @@ export class R3vlClient extends Base {
         this.revPathV1 = revPathV1
         this.sdk = sdk
       },
-      withdrawable: (args: WithdrawableV1Args) => withdrawableV1.call(this, args)
+      withdrawable: (args: WithdrawableV1Args) => withdrawableV1.call(this, args),
+      withdrawn: (args: WithdrawnV1Args) => withdrawnV1.call(this, args)
     }
   }
 }
