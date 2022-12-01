@@ -9,6 +9,7 @@ import { withdrawableV0, FnArgs as WithdrawableV0Args } from '../withdrawableV0'
 import { withdrawnV0, FnArgs as WithdrawnV0Args } from '../withdrawnV0'
 import { withdrawableV1, FnArgs as WithdrawableV1Args } from '../withdrawableV1'
 import { withdrawnV1, FnArgs as WithdrawnV1Args } from '../withdrawnV1'
+import { withdrawFundsV0, FnArgs as WithdraV1Args } from "../withdrawV0"
 import { getWithdrawEventsV0 } from "../eventsV0"
 import { getWithdrawEventsV1 } from "../eventsV1"
 
@@ -45,7 +46,8 @@ export class R3vlClient extends Base {
       },
       withdrawable: (args: WithdrawableV0Args) => withdrawableV0.call(this, args),
       withdrawn: (args: WithdrawnV0Args) => withdrawnV0.call(this, args),
-      withdrawEvents: () => getWithdrawEventsV0.call(this)
+      withdrawEvents: () => getWithdrawEventsV0.call(this),
+      withdraw: (args: WithdraV1Args) => withdrawFundsV0.call(this, args)
     }
   }
 
