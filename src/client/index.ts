@@ -11,8 +11,8 @@ import { withdrawableV1, FnArgs as WithdrawableV1Args } from '../withdrawableV1'
 import { withdrawnV1, FnArgs as WithdrawnV1Args } from '../withdrawnV1'
 import { withdrawFundsV0, FnArgs as WithdrawV0Args } from "../withdrawV0"
 import { withdrawFundsV1, FnArgs as WithdrawV1Args } from "../withdrawV1"
-import { getWithdrawEventsV0 } from "../eventsV0"
-import { getWithdrawEventsV1 } from "../eventsV1"
+import { getRevPathWithdrawEventsV0 } from "../eventsV0"
+import { getRevPathWithdrawEventsV1 } from "../eventsV1"
 
 export class R3vlClient extends Base {
   revPathV0: PathLibraryV0 | undefined
@@ -47,7 +47,7 @@ export class R3vlClient extends Base {
       },
       withdrawable: (args: WithdrawableV0Args) => withdrawableV0.call(this, args),
       withdrawn: (args: WithdrawnV0Args) => withdrawnV0.call(this, args),
-      withdrawEvents: () => getWithdrawEventsV0.call(this),
+      withdrawEvents: () => getRevPathWithdrawEventsV0.call(this),
       withdraw: (args: WithdrawV0Args) => withdrawFundsV0.call(this, args)
     }
   }
@@ -62,7 +62,7 @@ export class R3vlClient extends Base {
       },
       withdrawable: (args: WithdrawableV1Args) => withdrawableV1.call(this, args),
       withdrawn: (args: WithdrawnV1Args) => withdrawnV1.call(this, args),
-      withdrawEvents: () => getWithdrawEventsV1.call(this),
+      withdrawEvents: () => getRevPathWithdrawEventsV1.call(this),
       withdraw: (args: WithdrawV1Args) => withdrawFundsV1.call(this, args)
     }
   }
