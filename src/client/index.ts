@@ -3,11 +3,12 @@ import { MainnetSdk, GoerliSdk } from "@dethcrypto/eth-sdk-client"
 import Base from "./base"
 
 import type { SplitsClientConfig } from '../types'
-import { PathLibraryV0, PathLibraryV1 } from '../typechain'
+import { PathLibraryV0, PathLibraryV1, PathLibraryV2 } from '../typechain'
 
 import { withdrawableV0, FnArgs as WithdrawableV0Args } from '../withdrawableV0'
 import { withdrawnV0, FnArgs as WithdrawnV0Args } from '../withdrawnV0'
 import { withdrawableV1, FnArgs as WithdrawableV1Args } from '../withdrawableV1'
+import { withdrawableV2, FnArgs as WithdrawableV2Args } from "../withdrawableV2"
 import { withdrawnV1, FnArgs as WithdrawnV1Args } from '../withdrawnV1'
 import { withdrawFundsV0, FnArgs as WithdrawV0Args } from "../withdrawV0"
 import { withdrawFundsV1, FnArgs as WithdrawV1Args } from "../withdrawV1"
@@ -17,6 +18,7 @@ import { getRevPathWithdrawEventsV1 } from "../eventsV1"
 export class R3vlClient extends Base {
   revPathV0: PathLibraryV0 | undefined
   revPathV1: PathLibraryV1 | undefined
+  revPathV2: PathLibraryV2 | undefined
   sdk: MainnetSdk | undefined
 
   constructor({
@@ -64,6 +66,18 @@ export class R3vlClient extends Base {
       withdrawn: (args: WithdrawnV1Args) => withdrawnV1.call(this, args),
       withdrawEvents: () => getRevPathWithdrawEventsV1.call(this),
       withdraw: (args: WithdrawV1Args) => withdrawFundsV1.call(this, args)
+    }
+  }
+
+  get v2() {
+    return {
+      init: () => {
+        const { revPathV2, sdk } = this._initV2RevPath()
+
+        this.revPathV2 = revPathV2
+        this.sdk = sdk
+      },
+      withdrawable: (args: WithdrawableV2Args) => withdrawableV2.call(this, args),
     }
   }
 }

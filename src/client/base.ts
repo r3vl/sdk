@@ -11,7 +11,7 @@ import { MISSING_SIGNER } from '../types'
 
 import type { MISSING_SIGNER as MISSING_SIGNER_TYPE, SplitsClientConfig } from '../types'
 import { ChainIds } from '../constants/tokens'
-import { PathLibraryV0__factory, PathLibraryV1__factory } from '../typechain'
+import { PathLibraryV0__factory, PathLibraryV1__factory, PathLibraryV2__factory } from '../typechain'
 import { getMainnetSdk, getGoerliSdk } from '@dethcrypto/eth-sdk-client'
 
 export default class Base {
@@ -61,6 +61,16 @@ export default class Base {
 
     return {
       revPathV1,
+      sdk
+    }
+  }
+
+  protected _initV2RevPath() {
+    const revPathV2 = PathLibraryV2__factory.connect(this._revPathAddress, this._provider)
+    const sdk = getMainnetSdk(this._provider)
+
+    return {
+      revPathV2,
       sdk
     }
   }
