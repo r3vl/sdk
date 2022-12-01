@@ -9,20 +9,20 @@ export type FnArgs = {
 }
 
 /**
- *  V1
+ *  V0
  */
-export async function withdrawableV2(this: R3vlClient, { walletAddress, isERC20 }: FnArgs) {
-  const { revPathV2, sdk, _chainId } = this
+export async function withdrawnFundsV2(this: R3vlClient, { walletAddress, isERC20 }: FnArgs) {
+  const { revPathV2, _chainId } = this
 
-  if (!revPathV2 || !sdk) return false
+  if (!revPathV2) return false
 
   try {
-    const pendingBalance = await revPathV2.getWithdrawableToken(
+    const released = await revPathV2.getTokenWithdrawn(
       isERC20 ? tokenList[isERC20][_chainId] : ethers.constants.AddressZero,
       walletAddress
     )
 
-    return parseFloat(ethers.utils.formatEther(pendingBalance))
+    return parseFloat(ethers.utils.formatEther(released))
   } catch (error) {
     console.error(error)
   }
