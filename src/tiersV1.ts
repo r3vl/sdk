@@ -1,8 +1,10 @@
 import { ethers } from 'ethers'
 
-import { PathLibraryV1__factory } from './typechain'
-import { tokenList } from "./constants/tokens"
-import { communityProvider, getChainId } from './utils'
+import { R3vlClient } from './client'
+
+export type FnArgs = {
+  walletAddress?: string
+}
 
 type TierType = {
   limitAmount: number
@@ -14,20 +16,19 @@ type TierType = {
 /**
  *  V0
  */
-export const tiersV1 = async (revPathAddress: string, walletAddress: string, isERC20?: keyof typeof tokenList): Promise<TierType[]> => {
-  const provider = communityProvider()
-  const chainId = await getChainId()
+export async function tiersV1(this: R3vlClient, { walletAddress }: FnArgs): Promise<TierType[] | undefined> {
+  const { revPathV1 } = this
+
+  if (!revPathV1) return
 
   try {
-    const revPath = PathLibraryV1__factory.connect(revPathAddress, provider)
-
-    const tiersNumber = await revPath.getTotalRevenueTiers()
-    const currentTier = await revPath.getCurrentTier()
+    const tiersNumber = await revPathV1.getTotalRevenueTiers()
+    const currentTier = await revPathV1.getCurrentTier()
     const tiers = []
 
     for (let i = 0; i < tiersNumber?.toNumber(); i++) {
-      const [limitAmount, walletList] = await revPath.getRevenueTier(i)
-      const distributedAmount = await revPath.getTierDistributedAmount(i)
+      const [limitAmount, walletList] = await revPathV1.getRevenueTier(i)
+      const distributedAmount = await revPathV1.getTierDistributedAmount(i)
 
       tiers.push({
         limitAmount: parseFloat(ethers.utils.formatEther(limitAmount)),
@@ -37,12 +38,8 @@ export const tiersV1 = async (revPathAddress: string, walletAddress: string, isE
       })
     }
 
-    console.log(tiers)
-
     return tiers
   } catch (error) {
     console.error(error)
-
-    return []
   }
 }
