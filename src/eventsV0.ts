@@ -1,5 +1,6 @@
 import { getMainnetSdk, MainnetSdk } from '@dethcrypto/eth-sdk-client' // yay, our SDK! It's tailored especially for our needs
 import { ethers } from 'ethers'
+import { R3vlClient } from './client';
 import { PathLibraryV0__factory } from './typechain';
 import { PaymentReleasedEvent } from './typechain/PathLibraryV0';
 import { communityProvider } from './utils';
@@ -11,10 +12,14 @@ import { communityProvider } from './utils';
 /**
  * all revenue paths V0
  */
-export const getRevenuePathsV0 = async () => {
-  const provider = communityProvider();
-  console.log("community", provider);
-  const sdk = getMainnetSdk(provider);
+export const getRevenuePathsV0 = async (ctx: R3vlClient) => {
+  const { sdk } = ctx
+  // const provider = communityProvider();
+  // console.log("community", provider);
+  // const sdk = getMainnetSdk(provider);
+
+  if (!sdk) return
+
   const contract = sdk.reveelMainV0;
   const library = sdk.pathLibraryV0;
   const allPaths = await contract.queryFilter(
@@ -44,8 +49,10 @@ export const getRevenuePathsV0 = async () => {
 /**
  * withdraw events for V0
  */
-export const getWithdrawEventsV0 = async () => {
-  const revPaths = await getRevenuePathsV0();
+export async function getWithdrawEventsV0(this: R3vlClient) {
+  const revPaths = await getRevenuePathsV0(this);
+
+  if (!revPaths?.length) return
 
   console.log("revPaths.length", revPaths.length);
   const withdrawEvents = (await Promise.all(revPaths.map(async (revPath) => {

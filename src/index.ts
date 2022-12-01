@@ -18,19 +18,19 @@ async function main() {
   // }));
   // console.log(formattedV1);
 
-  const revPathsV0 = await getWithdrawEventsV0();
-  const formattedV0 = await Promise.all(revPathsV0.map(async (path) => {
-    const rawGasPaid = await getGasPaid(path.transactionHash);
-    const gasPaid = rawGasPaid ? ethers.utils.formatEther(rawGasPaid) : ethers.BigNumber.from("0")
-    return [
-      path.blockNumber,
-      path.address,
-      path.transactionHash,
-      Number(gasPaid),
-      Number(ethers.utils.formatEther(path.args.amount))
-    ]
-  }));
-  console.log(formattedV0);
+  // const revPathsV0 = await getWithdrawEventsV0();
+  // const formattedV0 = await Promise.all(revPathsV0.map(async (path) => {
+  //   const rawGasPaid = await getGasPaid(path.transactionHash);
+  //   const gasPaid = rawGasPaid ? ethers.utils.formatEther(rawGasPaid) : ethers.BigNumber.from("0")
+  //   return [
+  //     path.blockNumber,
+  //     path.address,
+  //     path.transactionHash,
+  //     Number(gasPaid),
+  //     Number(ethers.utils.formatEther(path.args.amount))
+  //   ]
+  // }));
+  // console.log(formattedV0);
 
   // const formatted = (await getGasPaid("0xa9d1d52d50b7c1752452954100692473d0419d97238ff32f3a492e6ffef46eba")) || ethers.BigNumber.from("0");
   // console.log(ethers.utils.formatEther(formatted));
