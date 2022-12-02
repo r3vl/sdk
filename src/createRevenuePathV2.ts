@@ -1,24 +1,34 @@
-import { getGoerliSdk } from '@dethcrypto/eth-sdk-client' // yay, our SDK! It's tailored especially for our needs
 import { BigNumberish, constants, ethers, utils } from 'ethers'
 import { tokenList } from './constants/tokens';
-import { getChainId } from './utils'
+import { R3vlClient } from './client'
 
-/**
- *  V2
- */
-export const createRevenuePathV2 = async (
-  signer: ethers.Signer,
+export type FnArgs = {
   walletList: string[][],
   distribution: number[][], 
   tiers: { token: string, limits: number[] }[],
   name: string,
   mutabilityEnabled: boolean
-) => {
-  const sdk = getGoerliSdk(signer);
+}
+
+/**
+ *  V2
+ */
+export async function createRevenuePathV2 (
+  this: R3vlClient, 
+  { 
+    walletList, 
+    distribution, 
+    tiers, 
+    name, 
+    mutabilityEnabled 
+  } : FnArgs,
+) {
+  const { sdk, _chainId } = this
+
+  if (!sdk) return
+
   const contract = sdk.reveelMainV2;
-
-  const chainId = await getChainId()
-
+  
   const formatedLimits: BigNumberish[][] = []
   const formatedTokens: string[] = []
   
@@ -31,17 +41,17 @@ export const createRevenuePathV2 = async (
       }
       case 'weth': {
         formatedLimits.push(item.limits.map(limit => utils.parseUnits(limit.toString())))
-        formatedTokens.push(tokenList.weth[chainId])
+        formatedTokens.push(tokenList.weth[_chainId])
         break
       }
       case 'usdc': {
         formatedLimits.push(item.limits.map(limit => utils.parseUnits(limit.toString())))
-        formatedTokens.push(tokenList.usdc[chainId])
+        formatedTokens.push(tokenList.usdc[_chainId])
         break
       }
       case 'dai': {
         formatedLimits.push(item.limits.map(limit => utils.parseUnits(limit.toString(), 18)))
-        formatedTokens.push(tokenList.dai[chainId])
+        formatedTokens.push(tokenList.dai[_chainId])
         break
       }
     } 

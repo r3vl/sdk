@@ -12,7 +12,7 @@ export type SplitsClientConfig = {
   // ensProvider can be used to fetch ens names when provider is not on mainnet (reverseRecords
   // only works on mainnet).
   ensProvider?: Provider
-  revPathAddress: string
+  revPathAddress?: string
 }
 
 export const MISSING_SIGNER = ''

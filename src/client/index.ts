@@ -18,6 +18,7 @@ import { getRevPathWithdrawEventsV0 } from "../eventsV0"
 import { getRevPathWithdrawEventsV1 } from "../eventsV1"
 import { getRevPathWithdrawEventsV2 } from "../eventsV2"
 import { tiersV1, FnArgs as TiersV1Args } from "../tiersV1"
+import { createRevenuePathV2, FnArgs as CreateRevenuePathV2Args } from "../createRevenuePathV2"
 
 export class R3vlClient extends Base {
   revPathV0: PathLibraryV0 | undefined
@@ -85,7 +86,13 @@ export class R3vlClient extends Base {
       withdrawable: (args: WithdrawableV2Args) => withdrawableV2.call(this, args),
       withdrawn: (args: WithdrawnV2Args) => withdrawnFundsV2.call(this, args),
       withdrawEvents: () => getRevPathWithdrawEventsV2.call(this),
-      withdraw: (args: WithdrawV2Args) => withdrawFundsV2.call(this, args)
+      withdraw: (args: WithdrawV2Args) => withdrawFundsV2.call(this, args),
+      requireSigner: () => {
+        const { sdk } = this._requireSigner()
+
+        this.sdk = sdk
+      },
+      createRevenuePath: (args: CreateRevenuePathV2Args) => createRevenuePathV2.call(this, args)
     }
   }
 }

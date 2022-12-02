@@ -38,6 +38,32 @@ async function sdkMain() {
 
   console.log("RESULT V1:::...", result1)
 
+  const clientV2 = new R3vlClient({
+    chainId,
+    provider,
+    signer,
+  })
+
+  clientV2.v2.requireSigner()
+
+  const createRevenuePathV2Result = await clientV2.v2.createRevenuePath({
+    walletList: [
+      ['aram.eth'],
+      ['0x14706ad7bEf1c8d76c4a4495d4c16B6AeA43D4D8']
+    ], 
+    distribution: [ [100], [100] ], 
+    tiers: [
+      { token: 'eth', limits: [1] },
+      { token: 'weth', limits: [2] },
+      { token: 'usdc', limits: [3] },
+      { token: 'dai', limits: [4] }
+    ], 
+    name: 'path-v2', 
+    mutabilityEnabled: false,
+  })
+
+  console.log(createRevenuePathV2Result, 'createRevenuePathV2Result');
+  
   return
 }
 
