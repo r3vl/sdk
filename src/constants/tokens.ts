@@ -1,3 +1,4 @@
+
 export const chainIds = {
   mainnet: 1,
   ropsten: 3,
@@ -15,10 +16,15 @@ export const chainIds = {
   arbitrumGoerli: 421613,
   localhost: 1337,
   hardhat: 31337,
-  foundry: 31337,
+  foundry: 31337
 }
 
-// typeof chainIds[keyof typeof chainIds]
+export type ChainIds = typeof chainIds[keyof typeof chainIds]
+export type ChainIdType = { [key in ChainIds]: string }
+
+export type Token = ChainIdType & {
+  name: string
+}
 
 export const tokenList = {
   gor: {
@@ -43,8 +49,9 @@ export const tokenList = {
     [chainIds.mainnet]: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
   },
 } as {
-  [x: string]: {
-    name: string
-    [x: string]: string
-  }
+  gor: Token
+  eth: Token
+  weth: Token
+  dai: Token
+  usdc: Token
 }
