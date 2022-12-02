@@ -1,31 +1,5 @@
-export declare const chainIdTypes: {
-  readonly mainnet: 1
-  readonly ropsten: 3
-  readonly rinkeby: 4
-  readonly goerli: 5
-  readonly kovan: 42
-  readonly sepolia: 11155111
-  readonly optimism: 10
-  readonly optimismKovan: 69
-  readonly optimismGoerli: 420
-  readonly polygon: 137
-  readonly polygonMumbai: 80001
-  readonly arbitrum: 42161
-  readonly arbitrumRinkeby: 421611
-  readonly arbitrumGoerli: 421613
-  readonly localhost: 1337
-  readonly hardhat: 31337
-  readonly foundry: 31337
-}
 
-export type ChainIds = typeof chainIdTypes[keyof typeof chainIdTypes]
-export type ChainIdType = { [key in ChainIds]: string }
-
-export type Token = ChainIdType & {
-  name: string
-}
-
-const chainIds = {
+export const chainIds = {
   mainnet: 1,
   ropsten: 3,
   rinkeby: 4,
@@ -42,7 +16,14 @@ const chainIds = {
   arbitrumGoerli: 421613,
   localhost: 1337,
   hardhat: 31337,
-  foundry: 31337,
+  foundry: 31337
+}
+
+export type ChainIds = typeof chainIds[keyof typeof chainIds]
+export type ChainIdType = { [key in ChainIds]: string }
+
+export type Token = ChainIdType & {
+  name: string
 }
 
 export const tokenList = {
@@ -59,7 +40,7 @@ export const tokenList = {
   },
   dai: {
     name: "DAI",
-    [chainIds.goerli]: "0x41e38e70a36150D08A8c97aEC194321b5eB545A5",
+    [chainIds.goerli]: "0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60",
     [chainIds.mainnet]: "0x6B175474E89094C44Da98b954EedeAC495271d0F",
   },
   usdc: {
