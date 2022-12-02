@@ -38,6 +38,47 @@ async function sdkMain() {
 
   console.log("RESULT V1:::...", result1)
 
+  const clientV2 = new R3vlClient({
+    chainId,
+    provider,
+    signer,
+    revPathAddress: '0x9fe8E2770F99D7c2Bcc555c3e952CDc5b95154CF'
+  })
+
+  clientV2.v2.requireSigner()
+
+  // const updateTierResult = await clientV2.v2.updateRevenueTiers({
+  //   walletList: [
+  //     ['0x14706ad7bEf1c8d76c4a4495d4c16B6AeA43D4D8']
+  //   ],
+  //   distribution: [ [100] ],
+  //   tierNumbers: [ 0 ],
+  // })
+
+  // const updateLimitResult = await clientV2.v2.updateLimits({
+  //   tokens: [
+  //     'dai'
+  //   ],
+  //   newLimits: [ 2 ],
+  //   tier: 0
+  // })
+
+  // const updateLimitResult = await clientV2.v2.addRevenueTiers({
+  //   walletList: [['0x909e4e8fFE57e77f4851F6Ec24b037B562967833'], ['0x1334645C23Cb98c246332149F7dFbB5Eee123B07']],
+  //   distribution: [[100], [100]],
+  //   tiers: [
+  //     { token: 'eth', limits: [1, 2] },
+  //     { token: 'weth', limits: [1, 2] },
+  //     { token: 'usdc', limits: [1, 2] },
+  //     { token: 'dai', limits: [1, 2] }
+  //   ],
+  //   finalFundWalletList: ['0x14706ad7bEf1c8d76c4a4495d4c16B6AeA43D4D8'],
+  //   finalFundDistribution: [100],
+  //   finalFundIndex: 1
+  // })
+
+  // console.log(updateLimitResult, 'updateLimitResult');
+
   return
 }
 

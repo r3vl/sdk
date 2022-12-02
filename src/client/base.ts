@@ -88,5 +88,13 @@ export default class Base {
       throw new MissingSignerError(
         'Signer required to perform this action, please update your call to the constructor',
       )
+
+    const revPathV2 = PathLibraryV2__factory.connect(this._revPathAddress, this._signer)
+    const sdk = getMainnetSdk(this._provider)
+  
+    return {
+      revPathV2,
+      sdk
+    }
   }
 }

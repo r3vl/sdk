@@ -61,21 +61,21 @@ async function main() {
   //   7,
   // )
 
-  await addRevenueTiersV2(
-    signer,
-    '0xdf8A8666C68Eed6cfbf213A46dB246a6749C0Bf4',
-    [['armen.eth'], ['aram.eth']],
-    [[100], [100]],
-    [
-      { token: 'eth', limits: [1, 2] },
-      { token: 'weth', limits: [1, 2] },
-      { token: 'usdc', limits: [1, 2] },
-      { token: 'dai', limits: [1, 2] }
-    ],
-    ['0x14706ad7bEf1c8d76c4a4495d4c16B6AeA43D4D8'],
-    [100],
-    8,
-  )
+  // await addRevenueTiersV2(
+  //   signer,
+  //   '0xdf8A8666C68Eed6cfbf213A46dB246a6749C0Bf4',
+  //   [['armen.eth'], ['aram.eth']],
+  //   [[100], [100]],
+  //   [
+  //     { token: 'eth', limits: [1, 2] },
+  //     { token: 'weth', limits: [1, 2] },
+  //     { token: 'usdc', limits: [1, 2] },
+  //     { token: 'dai', limits: [1, 2] }
+  //   ],
+  //   ['0x14706ad7bEf1c8d76c4a4495d4c16B6AeA43D4D8'],
+  //   [100],
+  //   8,
+  // )
 
   return;
 }

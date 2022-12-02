@@ -1,20 +1,27 @@
-import { BigNumberish, constants, ethers, utils } from 'ethers'
+import { BigNumberish, constants, utils } from 'ethers'
 import { tokenList } from './constants/tokens';
-import { PathLibraryV2__factory } from './typechain'; 
-import { getChainId } from './utils';
+import { R3vlClient } from './client'
+
+export type FnArgs = {
+  tokens: string[],
+  newLimits: number[], 
+  tier: number,
+}
 
 /**
  *  V2
  */
-export const updateLimitsV2 = async (
-  signer: ethers.Signer,
-  address: string,
-  tokens: string[],
-  newLimits: number[], 
-  tier: number,
-) => {
-  const contract = PathLibraryV2__factory.connect(address, signer)
-  const chainId = await getChainId()
+export async function updateLimitsV2 (
+  this: R3vlClient, 
+  {
+    tokens,
+    newLimits,
+    tier
+  } : FnArgs
+) {
+  const { revPathV2, sdk, _chainId } = this
+  
+  if (!revPathV2 || !sdk) return false
 
   const formatedLimits: BigNumberish[] = []
   const formatedTokens: string[] = []
@@ -28,24 +35,24 @@ export const updateLimitsV2 = async (
       }
       case 'weth': {
         formatedLimits.push(utils.parseUnits(newLimits[index].toString()))
-        formatedTokens.push(tokenList.weth[chainId])
+        formatedTokens.push(tokenList.weth[_chainId])
         break
       }
       case 'usdc': {
         formatedLimits.push(utils.parseUnits(newLimits[index].toString()))
-        formatedTokens.push(tokenList.usdc[chainId])
+        formatedTokens.push(tokenList.usdc[_chainId])
         break
       }
       case 'dai': {
         formatedLimits.push(utils.parseUnits(newLimits[index].toString(), 18))
-        formatedTokens.push(tokenList.dai[chainId])
+        formatedTokens.push(tokenList.dai[_chainId])
         break
       }
     } 
   })
 
   try {
-    const tx = await contract.updateLimits(
+    const tx = await revPathV2.updateLimits(
       formatedTokens,
       formatedLimits, 
       tier,

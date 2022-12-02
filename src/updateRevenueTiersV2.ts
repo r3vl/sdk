@@ -1,17 +1,26 @@
 import { ethers } from 'ethers'
-import { PathLibraryV2__factory } from './typechain'; 
+import { R3vlClient } from './client'
+
+export type FnArgs = {
+  walletList: string[][],
+  distribution: number[][], 
+  tierNumbers: number[],
+}
 
 /**
  *  V2
  */
-export const updateRevenueTiersV2 = async (
-  signer: ethers.Signer,
-  address: string,
-  walletList: string[][],
-  distribution: number[][], 
-  tierNumbers: number[],
-) => {
-  const contract = PathLibraryV2__factory.connect(address, signer)
+export async function updateRevenueTiersV2 (
+  this: R3vlClient, 
+  {
+    walletList,
+    distribution,
+    tierNumbers
+  } : FnArgs
+) {
+  const { revPathV2, sdk } = this
+
+  if (!revPathV2 || !sdk) return false
 
   const formatedDistribution = distribution.map(item => {
      return item.map(el => {
@@ -20,7 +29,7 @@ export const updateRevenueTiersV2 = async (
   }) 
 
   try {
-    const tx = await contract.updateRevenueTiers(
+    const tx = await revPathV2.updateRevenueTiers(
       walletList,
       formatedDistribution, 
       tierNumbers,

@@ -1,22 +1,34 @@
-import { ethers } from 'ethers'
-import { PathLibraryV2__factory } from './typechain'; 
-import { updateLimitsV2 } from './updateLimitsV2';
+import { ContractReceipt, ethers } from 'ethers' 
+import { updateLimitsV2, FnArgs as UpdateLimitsV2Args } from './updateLimitsV2';
 import { updateRevenueTiersV2 } from './updateRevenueTiersV2';
+import { R3vlClient } from './client'
 
-/**
- *  V2
- */
-export const addRevenueTiersV2 = async (
-  signer: ethers.Signer,
-  address: string,
+export type FnArgs = {
   walletList: string[][],
   distribution: number[][], 
   tiers: { token: string, limits: number[] }[],
   finalFundWalletList: string[],
   finalFundDistribution: number[],
   finalFundIndex: number,
-) => {
-  const contract = PathLibraryV2__factory.connect(address, signer)
+}
+
+/**
+ *  V2
+ */
+export async function addRevenueTiersV2 (
+  this: R3vlClient, 
+  {
+    walletList,
+    distribution,
+    tiers,
+    finalFundWalletList,
+    finalFundDistribution,
+    finalFundIndex
+  } : FnArgs
+) {
+  const { revPathV2, sdk } = this
+  
+  if (!revPathV2 || !sdk) return false
 
   // new added wallets slice(1) & final fund wallets
   const addedWalletList = [...walletList.slice(1), finalFundWalletList]
@@ -45,7 +57,7 @@ export const addRevenueTiersV2 = async (
   })
   
   try {
-    const addTx = await contract.addRevenueTiers(
+    const addTx = await revPathV2.addRevenueTiers(
       addedWalletList,
       addedDistribution,
       {
@@ -58,32 +70,35 @@ export const addRevenueTiersV2 = async (
     let updateResult;
 
     if(addedResult.status === 1) {
-      updateResult = await updateRevenueTiersV2( 
-        signer,
-        address,
-        [walletList[0]],
-        [distribution[0]], 
-        [finalFundIndex],
+      updateResult = await updateRevenueTiersV2.call( 
+        this,
+        {
+          walletList: [walletList[0]],
+          distribution: [distribution[0]], 
+          tierNumbers: [finalFundIndex],
+        }
+
       )
     }
 
     let finalResult 
     
-    if(updateResult?.status === 1) {
+    if(updateResult) {
 
       const mapPromises = async(
         args: {limits: number[], index: number}[], 
-        fn: (signer: ethers.Signer, address: string, tokens: string[], newLimits: number[], tier: number) => Promise<ethers.ContractReceipt | undefined>
+        fn: (this: R3vlClient, { tokens, newLimits, tier }: UpdateLimitsV2Args) => Promise<false | ContractReceipt | undefined>
         ) => {
         const results = []
       
         for (const item of args) {
-          results.push(await fn( 
-            signer,
-            address,
-            tokens,
-            item.limits,
-            item.index, 
+          results.push(await fn.call( 
+            this,
+            {
+              tokens,
+              newLimits: item.limits,
+              tier: item.index, 
+            }
           ))
         }
       
