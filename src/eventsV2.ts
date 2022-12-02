@@ -1,8 +1,8 @@
 import { getMainnetSdk, MainnetSdk } from '@dethcrypto/eth-sdk-client' // yay, our SDK! It's tailored especially for our needs
 import { ethers } from 'ethers'
 import { R3vlClient } from './client';
-import { PathLibraryV1__factory } from './typechain';
-import { EthDistributedEvent, PaymentReleasedEvent } from './typechain/PathLibraryV1';
+import { PathLibraryV2__factory } from './typechain';
+import { DepositETHEvent, PaymentReleasedEvent } from './typechain/PathLibraryV2';
 import { communityProvider } from './utils';
 
 /**
@@ -12,11 +12,11 @@ import { communityProvider } from './utils';
 /**
  * all revenue paths V1
  */
-export const getRevenuePathsV1 = async () => {
+export const getRevenuePathsV2 = async () => {
   const provider = communityProvider();
   const sdk = getMainnetSdk(provider);
-  const contract = sdk.reveelMainV1;
-  const library = sdk.pathLibraryV1;
+  const contract = sdk.reveelMainV2;
+  const library = sdk.pathLibraryV2;
   const allPaths = await contract.queryFilter(
     contract.filters.RevenuePathCreated(),
   )
@@ -30,8 +30,8 @@ export const getRevenuePathsV1 = async () => {
     }
   }
 
-  const revPaths: {contract: MainnetSdk["pathLibraryV1"], address: string}[] = uniquePathAddresses.map((revPathAddress) => {
-    const contract: MainnetSdk["pathLibraryV1"] = library.connect(revPathAddress)  
+  const revPaths: {contract: MainnetSdk["pathLibraryV2"], address: string}[] = uniquePathAddresses.map((revPathAddress) => {
+    const contract: MainnetSdk["pathLibraryV2"] = library.connect(revPathAddress)  
     return {
         contract,
         address: revPathAddress,
@@ -45,7 +45,7 @@ export const getRevenuePathsV1 = async () => {
  * withdraw events for V1
  */
 export const getWithdrawEventsV1 = async () => {
-  const revPaths = await getRevenuePathsV1();
+  const revPaths = await getRevenuePathsV2();
 
   console.log("revPaths.length", revPaths.length);
   const withdrawEvents = (await Promise.all(revPaths.map(async (revPath) => {
@@ -57,28 +57,28 @@ export const getWithdrawEventsV1 = async () => {
 }
 
 export const getWithdrawsForPath = async (address: string) => {
-  const revPath = PathLibraryV1__factory.connect(address, communityProvider());
+  const revPath = PathLibraryV2__factory.connect(address, communityProvider());
   const withdraws = await revPath.queryFilter(
-    revPath.filters.EthDistributed(),
+    revPath.filters.DepositETH(),
   )
   return withdraws;
 };
 
 export const getPaymentReleasedForPath = async (address: string) => {
-  const revPath = PathLibraryV1__factory.connect(address, communityProvider());
+  const revPath = PathLibraryV2__factory.connect(address, communityProvider());
   const withdraws = await revPath.queryFilter(
     revPath.filters.PaymentReleased(),
   )
   return withdraws;
 };
 
-export async function getRevPathWithdrawEventsV1(this: R3vlClient) {
-  const { revPathV1 } = this
+export async function getRevPathWithdrawEventsV2(this: R3vlClient) {
+  const { revPathV2 } = this
 
-  if (!revPathV1) return
+  if (!revPathV2) return
 
-  const withdraws = await revPathV1.queryFilter(
-    revPathV1.filters.PaymentReleased(),
+  const withdraws = await revPathV2.queryFilter(
+    revPathV2.filters.PaymentReleased(),
   )
   return withdraws
 }
