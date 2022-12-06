@@ -47,7 +47,7 @@ export default class Base {
 
   protected _initV0RevPath() {
     const revPathV0 = PathLibraryV0__factory.connect(this._revPathAddress, this._provider)
-    const sdk = getMainnetSdk(this._provider)
+    const sdk =  this._chainId === 5 ? getGoerliSdk(this._provider) : getMainnetSdk(this._provider)
 
     return {
       revPathV0,
@@ -57,7 +57,7 @@ export default class Base {
 
   protected _initV1RevPath() {
     const revPathV1 = PathLibraryV1__factory.connect(this._revPathAddress, this._provider)
-    const sdk = getMainnetSdk(this._provider)
+    const sdk =  this._chainId === 5 ? getGoerliSdk(this._provider) : getMainnetSdk(this._provider)
 
     return {
       revPathV1,
@@ -67,7 +67,7 @@ export default class Base {
 
   protected _initV2RevPath() {
     const revPathV2 = PathLibraryV2__factory.connect(this._revPathAddress, this._provider)
-    const sdk = getMainnetSdk(this._provider)
+    const sdk =  this._chainId === 5 ? getGoerliSdk(this._provider) : getMainnetSdk(this._provider)
 
     return {
       revPathV2,

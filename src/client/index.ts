@@ -35,7 +35,8 @@ export class R3vlClient extends Base {
   revPathV0: PathLibraryV0 | undefined
   revPathV1: PathLibraryV1 | undefined
   revPathV2: PathLibraryV2 | undefined
-  sdk: MainnetSdk | undefined
+  sdk: MainnetSdk | GoerliSdk | undefined
+  initialized = false
 
   constructor({
     chainId,
@@ -62,6 +63,7 @@ export class R3vlClient extends Base {
 
         this.revPathV0 = revPathV0
         this.sdk = sdk
+        this.initialized = true
       },
       withdrawable: (args: WithdrawableV0Args) => withdrawableV0.call(this, args),
       withdrawn: (args: WithdrawnV0Args) => withdrawnV0.call(this, args),
@@ -77,6 +79,7 @@ export class R3vlClient extends Base {
 
         this.revPathV1 = revPathV1
         this.sdk = sdk
+        this.initialized = true
       },
       withdrawable: (args: WithdrawableV1Args) => withdrawableV1.call(this, args),
       withdrawn: (args: WithdrawnV1Args) => withdrawnV1.call(this, args),
@@ -93,6 +96,7 @@ export class R3vlClient extends Base {
 
         this.revPathV2 = revPathV2
         this.sdk = sdk
+        this.initialized = true
       },
       withdrawable: (args: WithdrawableV2Args) => withdrawableV2.call(this, args),
       withdrawn: (args: WithdrawnV2Args) => withdrawnFundsV2.call(this, args),

@@ -1,3 +1,5 @@
+import "@testing-library/jest-dom/extend-expect"
+
 import { MainnetSdk } from '@dethcrypto/eth-sdk-client'
 import type { Provider } from '@ethersproject/abstract-provider'
 import type { Signer } from '@ethersproject/abstract-signer'
