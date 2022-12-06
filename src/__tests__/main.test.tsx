@@ -1,15 +1,22 @@
 import React from "react"
-import { render } from "@testing-library/react"
+import { render, screen } from "@testing-library/react"
 import { communityProvider, communitySigner, getChainId } from "../utils"
 import { R3vlClient } from "../client"
+import { R3vlProvider } from "../react"
+import useBalances from "../react/hooks/withdrawn"
 
 describe('Main', () => {
-  test(' - ', async () => {
-    const provider = communityProvider()
-    const signer = communitySigner()
-    const chainId = await getChainId()
+  let provider
+  let signer
+  let chainId
+  let clientV1: R3vlClient
 
-    const clientV1 = new R3vlClient({
+  beforeAll(async () => {
+    provider = communityProvider()
+    signer = communitySigner()
+    chainId = await getChainId()
+
+    clientV1 = new R3vlClient({
       chainId,
       provider,
       signer,
@@ -17,7 +24,30 @@ describe('Main', () => {
     })
 
     clientV1.v1.init()
+  })
 
+  test('Test Sdk class is initializing correctly', async () => {
     expect(clientV1.initialized).toBeTruthy()
+  })
+
+  test('Test useBalances', async () => {
+    const HookTester = () => {
+      const balances = useBalances({ walletAddress: "0x538C138B73836b811c148B3E4c3683B7B923A0E7" })
+
+      if (!balances.earnings) return null
+
+      return <div>
+        Earnings: {balances.earnings}
+      </div>
+    }
+    const Provider = () => {
+      return <R3vlProvider client={clientV1.v1}>
+        <HookTester />
+      </R3vlProvider>
+    }
+
+    render(<Provider />)
+
+    expect(screen.findByText(/Earnings: /)).toBeInTheDocument()
   })
 })

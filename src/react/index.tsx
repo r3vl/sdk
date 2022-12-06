@@ -3,7 +3,9 @@ import { createContext, useState } from 'react'
 
 import type { RevenuePath } from "../client"
 
-export const R3vlContext = createContext({})
+export const R3vlContext = createContext({} as {
+  _client: RevenuePath
+})
 
 export const R3vlProvider = ({ children, client: _client }: {
   children: React.ReactNode
