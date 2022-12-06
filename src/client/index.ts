@@ -17,7 +17,19 @@ import { withdrawFundsV2, FnArgs as WithdrawV2Args } from "../withdrawV2"
 import { getRevPathWithdrawEventsV0 } from "../eventsV0"
 import { getRevPathWithdrawEventsV1 } from "../eventsV1"
 import { getRevPathWithdrawEventsV2 } from "../eventsV2"
-import { tiersV1, FnArgs as TiersV1Args } from "../tiersV1"
+import { tiersV1, TierType as TierTypeV1, FnArgs as TiersV1Args } from "../tiersV1"
+import { PaymentReleasedEvent as PaymentReleasedEventV0 } from "src/typechain/PathLibraryV0"
+import { PaymentReleasedEvent as PaymentReleasedEventV1 } from "src/typechain/PathLibraryV1"
+import { PaymentReleasedEvent as PaymentReleasedEventV2 } from "src/typechain/PathLibraryV2"
+
+export type RevenuePath = {
+  init: () => void,
+  withdrawable: (args: WithdrawableV1Args) => Promise<number | false | undefined>,
+  withdrawn: (args: WithdrawnV1Args) => Promise<number | false | undefined>,
+  withdrawEvents: () => Promise<PaymentReleasedEventV0[] | PaymentReleasedEventV1[] | PaymentReleasedEventV2[] | undefined>,
+  withdraw: (args: WithdrawV1Args) => void,
+  tiers?: (args: TiersV1Args) => Promise<TierTypeV1[] | undefined>
+}
 
 export class R3vlClient extends Base {
   revPathV0: PathLibraryV0 | undefined

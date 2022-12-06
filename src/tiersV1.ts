@@ -6,7 +6,7 @@ export type FnArgs = {
   walletAddress?: string
 }
 
-type TierType = {
+export type TierType = {
   limitAmount: number
   walletList: string[]
   isCurrentTier: boolean
