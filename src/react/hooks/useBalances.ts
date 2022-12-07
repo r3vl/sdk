@@ -12,7 +12,7 @@ const useBalances = ({ walletAddress, isERC20 }: {
   isERC20?: keyof typeof tokenList
 }) => {
   const { client } = useContext(R3vlContext)
-  const query = useQuery(['/balances'], async () => {
+  const query = useQuery(['/balances', walletAddress, isERC20], async () => {
     const payload = isERC20 ? { walletAddress, isERC20 } : { walletAddress }
     const withdrawn = await client.withdrawn(payload)
     const withdrawable = await client.withdrawable(payload)

@@ -1,9 +1,6 @@
 import React from "react"
 import { render, screen, waitFor } from "@testing-library/react"
 import {
-  useQuery,
-  useMutation,
-  useQueryClient,
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
@@ -12,7 +9,8 @@ import {
 import { communityProvider, communitySigner, getChainId } from "../utils"
 import { R3vlClient } from "../client"
 import { R3vlProvider } from "../react"
-import useBalances from "../react/hooks/withdrawn"
+import useBalances from "../react/hooks/useBalances"
+import useWithdraw from "../react/hooks/useWithdraw"
 
 describe('Main', () => {
   let provider
@@ -67,5 +65,28 @@ describe('Main', () => {
     )
 
     await waitFor(() => expect(screen.getByText(/Earnings: /)).toBeInTheDocument())
+  })
+
+  test('Test useWithdraw', async () => {
+    const HookTester = () => {
+      const { withdraw, isLoading } = useWithdraw()
+
+      return <div>
+        <button onClick={() => withdraw({
+          walletAddress: "0x538C138B73836b811c148B3E4c3683B7B923A0E7"
+        })}>
+          Withdraw Funds
+        </button>
+        {isLoading && <div>Is loading...</div>}
+      </div>
+    }
+
+    render(
+      <Providers>
+        <HookTester />
+      </Providers>
+    )
+
+    expect(screen.getByText(/Withdraw Funds/)).toBeInTheDocument()
   })
 })
