@@ -1,5 +1,5 @@
 import React from "react"
-import { render, screen } from "@testing-library/react"
+import { render, screen, waitFor } from "@testing-library/react"
 import { communityProvider, communitySigner, getChainId } from "../utils"
 import { R3vlClient } from "../client"
 import { R3vlProvider } from "../react"
@@ -34,7 +34,7 @@ describe('Main', () => {
     const HookTester = () => {
       const balances = useBalances({ walletAddress: "0x538C138B73836b811c148B3E4c3683B7B923A0E7" })
 
-      if (!balances.earnings) return null
+      if (balances.earnings === 0) return null
 
       return <div>
         Earnings: {balances.earnings}
@@ -48,6 +48,6 @@ describe('Main', () => {
 
     render(<Provider />)
 
-    expect(screen.findByText(/Earnings: /)).toBeInTheDocument()
+    await waitFor(() => expect(screen.getByText(/Earnings: /)).toBeInTheDocument())
   })
 })

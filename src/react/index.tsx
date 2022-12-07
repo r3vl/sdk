@@ -4,17 +4,19 @@ import { createContext, useState } from 'react'
 import type { RevenuePath } from "../client"
 
 export const R3vlContext = createContext({} as {
-  _client: RevenuePath
+  client: RevenuePath
 })
 
 export const R3vlProvider = ({ children, client: _client }: {
   children: React.ReactNode
   client: RevenuePath
 }) => {
-  const [client] = useState<RevenuePath | null>()
+  const [client, setClient] = useState<RevenuePath | null>()
 
   useEffect(() => {
     if (!_client) return
+
+    setClient(_client)
   }, [])
 
   if (!client) return null
@@ -22,7 +24,7 @@ export const R3vlProvider = ({ children, client: _client }: {
   return (
     <R3vlContext.Provider
       value={{
-        _client,
+        client,
       }}
     >
       {children}
