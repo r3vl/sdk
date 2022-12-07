@@ -1,28 +1,31 @@
-import { useContext, useEffect, useState } from "react"
+import { useContext } from "react"
+import {
+  useQuery
+} from '@tanstack/react-query'
+
 import { R3vlContext } from ".."
+import { tokenList } from "../../constants/tokens"
 
-const useBalances = ({ walletAddress }: { walletAddress: string }) => {
+
+const useBalances = ({ walletAddress, isERC20 }: {
+  walletAddress: string,
+  isERC20?: keyof typeof tokenList
+}) => {
   const { client } = useContext(R3vlContext)
-  const [withdrawn, setWithdrawn] = useState<number>(0)
-  const [withdrawable, setWithdrawable] = useState<number>(0)
+  const query = useQuery(['/balances'], async () => {
+    const payload = isERC20 ? { walletAddress, isERC20 } : { walletAddress }
+    const withdrawn = await client.withdrawn(payload)
+    const withdrawable = await client.withdrawable(payload)
+    const earnings = withdrawn && withdrawable ? withdrawn + withdrawable : 0
 
-  useEffect(() => {
-    const requestData = async () => {
-      const _withdrawn = await client.withdrawn({ walletAddress })
-      const _withdrawable = await client.withdrawable({ walletAddress })
-
-      if (_withdrawn) setWithdrawn(_withdrawn)
-      if (_withdrawable) setWithdrawable(_withdrawable)
+    return {
+      withdrawn,
+      withdrawable,
+      earnings
     }
+  })
 
-    requestData()
-  }, [])
-
-  return {
-    withdrawn,
-    withdrawable,
-    earnings: withdrawn + withdrawable
-  }
+  return query
 }
 
 export default useBalances
