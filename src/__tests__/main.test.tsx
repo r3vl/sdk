@@ -11,6 +11,8 @@ import { R3vlClient } from "../client"
 import { R3vlProvider } from "../react"
 import useBalances from "../react/hooks/useBalances"
 import useWithdraw from "../react/hooks/useWithdraw"
+import useEvents from "../react/hooks/useEvents"
+import { PaymentReleasedEvent as PaymentReleasedEventV1 } from "../typechain/PathLibraryV1"
 
 describe('Main', () => {
   let provider
@@ -88,5 +90,29 @@ describe('Main', () => {
     )
 
     expect(screen.getByText(/Withdraw Funds/)).toBeInTheDocument()
+  })
+
+  test('Test useEvents', async () => {
+    const HookTester = () => {
+      const { data, isFetched, isLoading } = useEvents<PaymentReleasedEventV1>()
+
+      if (isLoading) return <div>
+        loading....
+      </div>
+
+      if (!data && isFetched) return null
+
+      return <div>
+        {data && data?.length > 0 && data?.map(e => <p>wallet: {e.args.account}</p>)}
+      </div>
+    }
+
+    render(
+      <Providers>
+        <HookTester />
+      </Providers>
+    )
+
+    await waitFor(() => expect(screen.getAllByText(/wallet/).length).toBeGreaterThan(0))
   })
 })

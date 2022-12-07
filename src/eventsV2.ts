@@ -80,5 +80,6 @@ export async function getRevPathWithdrawEventsV2(this: R3vlClient) {
   const withdraws = await revPathV2.queryFilter(
     revPathV2.filters.PaymentReleased(),
   )
+
   return withdraws
 }
