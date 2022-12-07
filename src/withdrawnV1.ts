@@ -1,26 +1,29 @@
 import { ethers } from 'ethers'
 
-import { PathLibraryV1__factory } from './typechain'
 import { tokenList } from "./constants/tokens"
-import { communityProvider, getChainId } from './utils'
+import { R3vlClient } from './client'
+
+export type FnArgs = {
+  walletAddress: string
+  isERC20?: keyof typeof tokenList
+}
 
 /**
  *  V0
  */
-export const withdrawnV1 = async (revPathAddress: string, walletAddress: string, isERC20?: keyof typeof tokenList) => {
-  const provider = communityProvider()
-  const chainId = await getChainId()
+export async function withdrawnV1(this: R3vlClient, { walletAddress, isERC20 }: FnArgs) {
+  const { revPathV1, _chainId } = this
+
+  if (!revPathV1) return false
 
   try {
-    const revPath = PathLibraryV1__factory.connect(revPathAddress, provider)
-
     if (isERC20) {
-      const released = await revPath.getERC20Released(tokenList[isERC20][chainId], walletAddress)
+      const released = await revPathV1.getERC20Released(tokenList[isERC20][_chainId], walletAddress)
 
       return parseFloat(ethers.utils.formatEther(released))
     }
 
-    const released = await revPath.getEthWithdrawn(walletAddress)
+    const released = await revPathV1.getEthWithdrawn(walletAddress)
 
     return parseFloat(ethers.utils.formatEther(released))
   } catch (error) {

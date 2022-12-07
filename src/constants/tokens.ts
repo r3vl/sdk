@@ -1,21 +1,22 @@
-export declare const chainIds: {
-  readonly mainnet: 1
-  readonly ropsten: 3
-  readonly rinkeby: 4
-  readonly goerli: 5
-  readonly kovan: 42
-  readonly sepolia: 11155111
-  readonly optimism: 10
-  readonly optimismKovan: 69
-  readonly optimismGoerli: 420
-  readonly polygon: 137
-  readonly polygonMumbai: 80001
-  readonly arbitrum: 42161
-  readonly arbitrumRinkeby: 421611
-  readonly arbitrumGoerli: 421613
-  readonly localhost: 1337
-  readonly hardhat: 31337
-  readonly foundry: 31337
+
+export const chainIds = {
+  mainnet: 1,
+  ropsten: 3,
+  rinkeby: 4,
+  goerli: 5,
+  kovan: 42,
+  sepolia: 11155111,
+  optimism: 10,
+  optimismKovan: 69,
+  optimismGoerli: 420,
+  polygon: 137,
+  polygonMumbai: 80001,
+  arbitrum: 42161,
+  arbitrumRinkeby: 421611,
+  arbitrumGoerli: 421613,
+  localhost: 1337,
+  hardhat: 31337,
+  foundry: 31337
 }
 
 export type ChainIds = typeof chainIds[keyof typeof chainIds]
