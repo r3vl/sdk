@@ -42,29 +42,46 @@ async function sdkMain() {
     chainId,
     provider,
     signer,
+    revPathAddress: '0xc0684Ef0f5786649C11f78D57339e18Ec869bb4D'
   })
 
   clientV1RequireSigner.v1.requireSigner()
 
-  const createResult = await clientV1RequireSigner.v1.createRevenuePath({
-    walletList: [
-      [
-        "0x1334645C23Cb98c246332149F7dFbB5Eee123B07"
-      ],
-      [
-        "0x14706ad7bEf1c8d76c4a4495d4c16B6AeA43D4D8"
-      ]
-    ],
-    distribution: [
-      [ 100 ],
-      [ 100 ]
-    ], 
-    tierLimits: [ 2 ], 
-    name: "revPath new", 
-    mutabilityEnabled: false 
+  const updateRevenueTierResult = await clientV1RequireSigner.v1.updateRevenueTier({
+    walletList: ['0x909e4e8fFE57e77f4851F6Ec24b037B562967833'],
+    distribution: [100],
+    tierLimit: 3,
+    tierNumber: 0
+  })
+  
+  const updateFinalFundResult = await clientV1RequireSigner.v1.updateFinalFund({
+    walletList: ['0x909e4e8fFE57e77f4851F6Ec24b037B562967833'],
+    distribution: [100],
+    tierNumber: 9
   })
 
-  console.log(createResult, 'createResult');
+  const addRevenueTierResult = await clientV1RequireSigner.v1.addRevenueTier({
+    walletList: [ 
+      ['0x1334645C23Cb98c246332149F7dFbB5Eee123B07'],
+      ['0x14706ad7bEf1c8d76c4a4495d4c16B6AeA43D4D8']
+    ],
+    distribution: [
+      [100],
+      [100]
+    ],
+    newAddedTierLimits: [9, 10],
+    finalFundWalletList: ['0x909e4e8fFE57e77f4851F6Ec24b037B562967833'],
+    finalFundDistribution: [
+      100
+    ],
+    finalFundIndex: 13
+  })
+
+  console.log({
+    updateRevenueTierResult,
+    updateFinalFundResult,
+    addRevenueTierResult
+  });
 
   return
 }

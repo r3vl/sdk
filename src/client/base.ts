@@ -11,7 +11,7 @@ import { MISSING_SIGNER } from '../types'
 
 import type { MISSING_SIGNER as MISSING_SIGNER_TYPE, SplitsClientConfig } from '../types'
 import { ChainIds } from '../constants/tokens'
-import { PathLibraryV0__factory, PathLibraryV1__factory } from '../typechain'
+import { PathLibraryV0__factory, PathLibraryV1__factory, PathLibraryV2__factory } from '../typechain'
 import { getMainnetSdk, getGoerliSdk } from '@dethcrypto/eth-sdk-client'
 
 export default class Base {
@@ -65,6 +65,16 @@ export default class Base {
     }
   }
 
+  protected _initV2RevPath() {
+    const revPathV2 = this._revPathAddress ? PathLibraryV2__factory.connect(this._revPathAddress, this._provider) : undefined
+    const sdk = getMainnetSdk(this._provider)
+
+    return {
+      revPathV2,
+      sdk
+    }
+  }
+
   protected _requireProvider() {
     if (!this._provider)
       throw new MissingProviderError(
@@ -78,11 +88,12 @@ export default class Base {
       throw new MissingSignerError(
         'Signer required to perform this action, please update your call to the constructor',
       )
-    }
 
-    const sdk = getMainnetSdk(this._signer)
-
+    const revPathV2 = PathLibraryV2__factory.connect(this._revPathAddress, this._signer)
+    const sdk = getMainnetSdk(this._provider)
+  
     return {
+      revPathV2,
       sdk
     }
   }

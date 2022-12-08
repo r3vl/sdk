@@ -3,3 +3,4 @@ typechain/
 dist/
 
 .env
+.DS_Store

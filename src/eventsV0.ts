@@ -12,14 +12,10 @@ import { communityProvider } from './utils';
 /**
  * all revenue paths V0
  */
-export const getRevenuePathsV0 = async (ctx: R3vlClient) => {
-  const { sdk } = ctx
-  // const provider = communityProvider();
-  // console.log("community", provider);
-  // const sdk = getMainnetSdk(provider);
-
-  if (!sdk) return
-
+export const getRevenuePathsV0 = async () => {
+  const provider = communityProvider();
+  console.log("community", provider);
+  const sdk = getMainnetSdk(provider);
   const contract = sdk.reveelMainV0;
   const library = sdk.pathLibraryV0;
   const allPaths = await contract.queryFilter(
@@ -49,10 +45,8 @@ export const getRevenuePathsV0 = async (ctx: R3vlClient) => {
 /**
  * withdraw events for V0
  */
-export async function getWithdrawEventsV0(this: R3vlClient) {
-  const revPaths = await getRevenuePathsV0(this);
-
-  if (!revPaths?.length) return
+export const getWithdrawEventsV0 = async () => {
+  const revPaths = await getRevenuePathsV0();
 
   console.log("revPaths.length", revPaths.length);
   const withdrawEvents = (await Promise.all(revPaths.map(async (revPath) => {
@@ -78,3 +72,14 @@ export const getPaymentReleasedForPath = async (address: string) => {
   )
   return withdraws;
 };
+
+export async function getRevPathWithdrawEventsV0(this: R3vlClient) {
+  const { revPathV0 } = this
+
+  if (!revPathV0) return
+
+  const withdraws = await revPathV0.queryFilter(
+    revPathV0.filters.PaymentReleased(),
+  )
+  return withdraws
+}
