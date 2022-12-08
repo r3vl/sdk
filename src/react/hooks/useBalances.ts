@@ -1,16 +1,22 @@
 import { useContext } from "react"
 import {
-  useQuery
+  useQuery,
+  QueryOptions
 } from '@tanstack/react-query'
 
 import { R3vlContext } from ".."
 import { tokenList } from "../../constants/tokens"
 
+type QueryResult = {
+  withdrawn: number | false | undefined
+  withdrawable: number | false | undefined
+  earnings: number
+}
 
 const useBalances = ({ walletAddress, isERC20 }: {
   walletAddress: string,
   isERC20?: keyof typeof tokenList
-}) => {
+}, queryOpts?: QueryOptions<QueryResult>) => {
   const { client } = useContext(R3vlContext)
   const query = useQuery(['/balances', walletAddress, isERC20], async () => {
     const payload = isERC20 ? { walletAddress, isERC20 } : { walletAddress }
@@ -23,7 +29,7 @@ const useBalances = ({ walletAddress, isERC20 }: {
       withdrawable,
       earnings
     }
-  })
+  }, queryOpts)
 
   return query
 }
