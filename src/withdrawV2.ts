@@ -9,17 +9,17 @@ export type FnArgs = {
 }
 
 /**
- *  V0
+ *  V1
  */
-export async function withdrawFundsV0(this: R3vlClient, { walletAddress, isERC20 }: FnArgs) {
-  const { revPathV0, _chainId } = this
+export async function withdrawFundsV2(this: R3vlClient, { walletAddress, isERC20 }: FnArgs) {
+  const { revPathV2, _chainId } = this
 
-  if (!revPathV0) return false
+  if (!revPathV2) return false
 
   try {
     const tx = isERC20 ?
-      await revPathV0['release(address,address)'](tokenList[isERC20][_chainId], walletAddress) :
-      await revPathV0['release(address)'](walletAddress)
+      await revPathV2.release(tokenList[isERC20][_chainId], walletAddress) :
+      await revPathV2.release(ethers.constants.AddressZero, walletAddress)
     const result = await tx?.wait()
     const [event] = result?.events || [{ args: [] }]
 
