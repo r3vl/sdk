@@ -29,7 +29,6 @@ import { updateRevenueTiersV2, FnArgs as UpdateRevenueTiersV2Args } from "../upd
 import { updateLimitsV2, FnArgs as UpdateLimitsV2Args } from "../updateLimitsV2"
 import { addRevenueTiersV2, FnArgs as AddRevenueTiersV2Args } from "../addRevenueTiersV2"
 
-
 export class R3vlClient extends Base {
   revPathV0: PathLibraryV0 | undefined
   revPathV1: PathLibraryV1 | undefined
