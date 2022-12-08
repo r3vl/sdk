@@ -24,6 +24,9 @@ import { getRevPathWithdrawEventsV0 } from "../eventsV0"
 import { getRevPathWithdrawEventsV1 } from "../eventsV1"
 import { getRevPathWithdrawEventsV2 } from "../eventsV2"
 import { tiersV1, FnArgs as TiersV1Args } from "../tiersV1"
+import { updateRevenueTiersV2, FnArgs as UpdateRevenueTiersV2Args } from "../updateRevenueTiersV2"
+import { updateLimitsV2, FnArgs as UpdateLimitsV2Args } from "../updateLimitsV2"
+import { addRevenueTiersV2, FnArgs as AddRevenueTiersV2Args } from "../addRevenueTiersV2"
 
 
 export class R3vlClient extends Base {
@@ -102,7 +105,16 @@ export class R3vlClient extends Base {
       withdrawable: (args: WithdrawableV2Args) => withdrawableV2.call(this, args),
       withdrawn: (args: WithdrawnV2Args) => withdrawnFundsV2.call(this, args),
       withdrawEvents: () => getRevPathWithdrawEventsV2.call(this),
-      withdraw: (args: WithdrawV2Args) => withdrawFundsV2.call(this, args)
+      withdraw: (args: WithdrawV2Args) => withdrawFundsV2.call(this, args),
+      requireSigner: () => {
+        const { revPathV2, sdk } = this._requireSigner()
+
+        this.revPathV2 = revPathV2
+        this.sdk = sdk
+      },
+      updateRevenueTiers: (args: UpdateRevenueTiersV2Args) => updateRevenueTiersV2.call(this, args),
+      updateLimits: (args: UpdateLimitsV2Args) => updateLimitsV2.call(this, args),
+      addRevenueTiers: (args: AddRevenueTiersV2Args) => addRevenueTiersV2.call(this, args),
     }
   }
 }
