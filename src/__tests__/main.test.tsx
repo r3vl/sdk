@@ -71,10 +71,10 @@ describe('Main', () => {
 
   test('Test useWithdraw', async () => {
     const HookTester = () => {
-      const { withdraw, isLoading } = useWithdraw()
+      const { mutate, isLoading } = useWithdraw()
 
       return <div>
-        <button onClick={() => withdraw({
+        <button onClick={() => mutate({
           walletAddress: "0x538C138B73836b811c148B3E4c3683B7B923A0E7"
         })}>
           Withdraw Funds
