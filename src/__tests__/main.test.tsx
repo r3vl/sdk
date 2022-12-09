@@ -12,6 +12,8 @@ import { R3vlProvider } from "../react"
 import useBalances from "../react/hooks/useBalances"
 import useWithdraw from "../react/hooks/useWithdraw"
 import useEvents from "../react/hooks/useEvents"
+import useCreateRevenuePath from "../react/hooks/useCreateRevenuePath"
+import { FnArgs as CreateRevenuePathV1Args } from "../createRevenuePathV1"
 import { PaymentReleasedEvent as PaymentReleasedEventV1 } from "../typechain/PathLibraryV1"
 
 describe('Main', () => {
@@ -114,5 +116,35 @@ describe('Main', () => {
     )
 
     await waitFor(() => expect(screen.getAllByText(/wallet/).length).toBeGreaterThan(0))
+  })
+
+  test('Test useCreateRevenuePath', async () => {
+    const HookTester = () => {
+      const mutation = useCreateRevenuePath<CreateRevenuePathV1Args>()
+
+      if (mutation?.isLoading) return <div>
+        loading....
+      </div>
+
+      return <div>
+        <button onClick={() => {
+          mutation?.mutate({
+            walletList: [['0x538C138B73836b811c148B3E4c3683B7B923A0E7']],
+            distribution: [[101]], 
+            tierLimits: [10],
+            name: 'utest rev path v1',
+            mutabilityEnabled: true
+          })
+        }}>Create Revenue Path V1</button>
+      </div>
+    }
+
+    render(
+      <Providers>
+        <HookTester />
+      </Providers>
+    )
+
+    expect(screen.getByText(/Create Revenue Path V1/)).toBeInTheDocument()
   })
 })

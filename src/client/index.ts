@@ -1,3 +1,4 @@
+import { ethers } from "ethers"
 import { MainnetSdk, GoerliSdk } from "@dethcrypto/eth-sdk-client"
 
 import Base from "./base"
@@ -24,9 +25,15 @@ import { getRevPathWithdrawEventsV0 } from "../eventsV0"
 import { getRevPathWithdrawEventsV1 } from "../eventsV1"
 import { getRevPathWithdrawEventsV2 } from "../eventsV2"
 import { tiersV1, TierType as TierTypeV1, FnArgs as TiersV1Args } from "../tiersV1"
+import { updateRevenueTiersV2, FnArgs as UpdateRevenueTiersV2Args } from "../updateRevenueTiersV2"
+import { updateLimitsV2, FnArgs as UpdateLimitsV2Args } from "../updateLimitsV2"
+import { addRevenueTiersV2, FnArgs as AddRevenueTiersV2Args } from "../addRevenueTiersV2"
+import { createRevenuePathV1, FnArgs as CreateRevenuePathV1Args } from "../createRevenuePathV1"
+import { createRevenuePathV2, FnArgs as CreateRevenuePathV2Args } from "../createRevenuePathV2"
 import { PaymentReleasedEvent as PaymentReleasedEventV0 } from "../typechain/PathLibraryV0"
 import { PaymentReleasedEvent as PaymentReleasedEventV1 } from "../typechain/PathLibraryV1"
 import { PaymentReleasedEvent as PaymentReleasedEventV2 } from "../typechain/PathLibraryV2"
+
 
 export type RevenuePath = {
   v: number
@@ -36,13 +43,8 @@ export type RevenuePath = {
   withdrawEvents: () => Promise<PaymentReleasedEventV0[] | PaymentReleasedEventV1[] | PaymentReleasedEventV2[] | undefined>
   withdraw: (args: WithdrawV1Args) => void
   tiers?: (args: TiersV1Args) => Promise<TierTypeV1[] | undefined>
+  createRevenuePath?: (args: CreateRevenuePathV1Args | CreateRevenuePathV2Args | any /* TODO: remove any */) => Promise<ethers.ContractReceipt | undefined>
 }
-
-import { updateRevenueTiersV2, FnArgs as UpdateRevenueTiersV2Args } from "../updateRevenueTiersV2"
-import { updateLimitsV2, FnArgs as UpdateLimitsV2Args } from "../updateLimitsV2"
-import { addRevenueTiersV2, FnArgs as AddRevenueTiersV2Args } from "../addRevenueTiersV2"
-import { createRevenuePathV1, FnArgs as CreateRevenuePathV1Args } from "src/createRevenuePathV1"
-import { createRevenuePathV2, FnArgs as CreateRevenuePathV2Args } from "src/createRevenuePathV2"
 
 export class R3vlClient extends Base {
   revPathV0: PathLibraryV0 | undefined
