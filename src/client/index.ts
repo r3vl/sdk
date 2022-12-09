@@ -41,6 +41,8 @@ export type RevenuePath = {
 import { updateRevenueTiersV2, FnArgs as UpdateRevenueTiersV2Args } from "../updateRevenueTiersV2"
 import { updateLimitsV2, FnArgs as UpdateLimitsV2Args } from "../updateLimitsV2"
 import { addRevenueTiersV2, FnArgs as AddRevenueTiersV2Args } from "../addRevenueTiersV2"
+import { createRevenuePathV1, FnArgs as CreateRevenuePathV1Args } from "src/createRevenuePathV1"
+import { createRevenuePathV2, FnArgs as CreateRevenuePathV2Args } from "src/createRevenuePathV2"
 
 export class R3vlClient extends Base {
   revPathV0: PathLibraryV0 | undefined
@@ -96,6 +98,7 @@ export class R3vlClient extends Base {
       },
       withdrawable: (args: WithdrawableV1Args) => withdrawableV1.call(this, args),
       withdrawn: (args: WithdrawnV1Args) => withdrawnV1.call(this, args),
+      createRevenuePath: (args: CreateRevenuePathV1Args) => createRevenuePathV1.call(this, args),
       updateRevenueTier: (args: UpdateRevenueTierV1Args) => updateRevenueTierV1.call(this, args),
       updateErc20Distribution: (args: UpdateErc20DistributionArgs) => updateErc20Distribution.call(this, args),
       updateFinalFund: (args: UpdateFinalFundArgs) => updateFinalFund.call(this, args),
@@ -120,6 +123,7 @@ export class R3vlClient extends Base {
       withdrawn: (args: WithdrawnV2Args) => withdrawnFundsV2.call(this, args),
       withdrawEvents: () => getRevPathWithdrawEventsV2.call(this),
       withdraw: (args: WithdrawV2Args) => withdrawFundsV2.call(this, args),
+      createRevenuePath: (args: CreateRevenuePathV2Args) => createRevenuePathV2.call(this, args),
       updateRevenueTiers: (args: UpdateRevenueTiersV2Args) => updateRevenueTiersV2.call(this, args),
       updateLimits: (args: UpdateLimitsV2Args) => updateLimitsV2.call(this, args),
       addRevenueTiers: (args: AddRevenueTiersV2Args) => addRevenueTiersV2.call(this, args),
