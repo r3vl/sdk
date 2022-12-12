@@ -15,7 +15,7 @@ export async function updateErc20Distribution (
 ) {
   const { revPathV1, sdk } = this
 
-  if (!revPathV1 || !sdk) return false
+  if (!revPathV1 || !sdk) return
 
   const formatedDistribution = distribution.map(item => Number(ethers.utils.parseUnits(item.toString(), 5).toString()))
 

@@ -44,6 +44,13 @@ export type RevenuePath = {
   withdraw: (args: WithdrawV1Args) => void
   tiers?: (args: TiersV1Args) => Promise<TierTypeV1[] | undefined>
   createRevenuePath?: (args: CreateRevenuePathV1Args | CreateRevenuePathV2Args | any /* TODO: remove any */) => Promise<ethers.ContractReceipt | undefined>
+  updateRevenueTier?: (args: UpdateRevenueTierV1Args) => Promise<ethers.ContractReceipt | undefined>
+  updateErc20Distribution?: (args: UpdateErc20DistributionArgs) => Promise<ethers.ContractReceipt | undefined>
+  updateFinalFund?: (args: UpdateFinalFundArgs) => Promise<void>
+  addRevenueTiers?: (args: AddRevenueTiersV2Args) => Promise<ethers.ContractReceipt | undefined>
+  updateLimits?: (args: UpdateLimitsV2Args) => Promise<ethers.ContractReceipt | undefined>
+  addRevenueTier?: (args: AddRevenueTierV1Args) => Promise<ethers.ContractReceipt | undefined>
+  updateRevenueTiers?: (args: UpdateRevenueTiersV2Args) => Promise<ethers.ContractReceipt | undefined>
 }
 
 export class R3vlClient extends Base {

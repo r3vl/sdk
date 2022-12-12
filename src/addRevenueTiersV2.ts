@@ -28,7 +28,7 @@ export async function addRevenueTiersV2 (
 ) {
   const { revPathV2, sdk } = this
   
-  if (!revPathV2 || !sdk) return false
+  if (!revPathV2 || !sdk) return
 
   // new added wallets slice(1) & final fund wallets
   const addedWalletList = [...walletList.slice(1), finalFundWalletList]

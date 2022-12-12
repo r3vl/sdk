@@ -24,7 +24,7 @@ export async function addRevenueTierV1 (
 ) {
   const { revPathV1, sdk } = this
 
-  if (!revPathV1 || !sdk) return false
+  if (!revPathV1 || !sdk) return
 
   const tierLimits = [newAddedTierLimits[0], ...newAddedTierLimits.slice(1).reverse()]
   .map(num => ethers.utils.parseEther(num.toString()))

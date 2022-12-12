@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { render, screen, waitFor } from "@testing-library/react"
 import {
   QueryClient,
@@ -13,6 +13,7 @@ import useBalances from "../react/hooks/useBalances"
 import useWithdraw from "../react/hooks/useWithdraw"
 import useEvents from "../react/hooks/useEvents"
 import useCreateRevenuePath from "../react/hooks/useCreateRevenuePath"
+import useUpdateRevenuePath from "../react/hooks/useUpdateRevenuePath"
 import { FnArgs as CreateRevenuePathV1Args } from "../createRevenuePathV1"
 import { PaymentReleasedEvent as PaymentReleasedEventV1 } from "../typechain/PathLibraryV1"
 
@@ -146,5 +147,42 @@ describe('Main', () => {
     )
 
     expect(screen.getByText(/Create Revenue Path V1/)).toBeInTheDocument()
+  })
+
+  test('Test useUpdateRevenuePath', async () => {
+    const HookTester = () => {
+      const { updateErc20Distribution, updateLimits } = useUpdateRevenuePath()
+
+      if (updateErc20Distribution?.isLoading) return <div>
+        loading....
+      </div>
+
+      useEffect(() => {
+        const fn = async () => {
+          const response = await updateLimits.mutateAsync({ tokens: [], newLimits: [], tier: 1 })
+
+          return response
+        }
+
+        fn()
+      }, [])
+
+      return <div>
+        <button onClick={() => {
+          updateErc20Distribution.mutate({
+            walletList: ['0x0'],
+            distribution: [10]
+          })
+        }}>Update V1 Rev Path</button>
+      </div>
+    }
+
+    render(
+      <Providers>
+        <HookTester />
+      </Providers>
+    )
+
+    expect(screen.getByText(/Update V1 Rev Path/)).toBeInTheDocument()
   })
 })
