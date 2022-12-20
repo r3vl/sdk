@@ -1,7 +1,4 @@
-import { communitySigner } from './utils';
-import { updateRevenueTiersV2 } from './updateRevenueTiersV2';
-import { updateLimitsV2 } from './updateLimitsV2';
-import { addRevenueTiersV2 } from './addRevenueTiersV2';
+import { communitySigner } from "./utils";
 
 
 async function main() {

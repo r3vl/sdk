@@ -42,7 +42,7 @@ export async function addRevenueTiersV2 (
   const tokens: string[] = tiers.map(tier => tier.token)
   const limits: number[][] =  tiers.map(tier => tier.limits)
 
-  const sortedLimits = [...Array(limits[0].length).keys()].map(i => [])
+  const sortedLimits = [...Array(limits[0].length).keys()].map(() => [])
   .map((arr: number[], arrIdx: number) => {
     return limits.map((limit, limitIdx) => {
       return arr[limitIdx] = limit[arrIdx]

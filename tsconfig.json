@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "moduleResolution": "node",
-    "jsx": "react",
+    "jsx": "react-jsx",
     "target": "es2018", /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019', 'ES2020', or 'ESNEXT'. */
     "module": "commonjs", /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', 'es2020', or 'ESNext'. */
     "strict": true, /* Enable all strict type-checking options. */
@@ -12,6 +12,18 @@
     "outDir": "./dist",
     "typeRoots": ["./node_modules/@types", "./src/types"],
     "baseUrl": ".",
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ES2016"
+    ],
+    "allowJs": false,
+    "sourceMap": true,
+    "noUnusedParameters": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "incremental": true
   },
-  "exclude": ["jest.config.ts"]
+  "include": ["src"],
+  "exclude": ["node_modules", "jest.config.ts", "src/testing", "src/__tests__"]
 }

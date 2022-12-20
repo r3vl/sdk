@@ -1,6 +1,6 @@
+import { withdrawFundsV0 } from '../withdrawV0'
+import { withdrawFundsV1 } from '../withdrawV1'
 import { communitySigner } from './utils'
-import { withdrawFundsV0 } from './withdrawV0'
-import { withdrawFundsV1 } from './withdrawV1'
 
 async function main() {
   const signer = communitySigner()

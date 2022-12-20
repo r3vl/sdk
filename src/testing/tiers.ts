@@ -1,4 +1,4 @@
-import { R3vlClient } from './client'
+import { R3vlClient } from '../client'
 import { communityProvider, communitySigner, getChainId } from './utils'
 
 async function main() {

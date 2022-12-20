@@ -1,7 +1,7 @@
 import { useContext, useEffect } from "react"
-import { R3vlClient } from "src/client"
-import { SplitsClientConfig } from "src/types"
-import { R3vlContext } from "src/react"
+import { R3vlClient } from "../../client"
+import { SplitsClientConfig } from "../../types"
+import { R3vlContext } from "../../react"
 
 export const useR3vlClient = (config: SplitsClientConfig) => {
   const context = useContext(R3vlContext)

@@ -1,5 +1,5 @@
 {
-  "name": "@r3vl/r3vl-sdk",
+  "name": "@r3vl/sdk",
   "version": "0.0.1",
   "description": "an sdk for interacting with reveel",
   "main": "dist/index.js",
@@ -35,7 +35,6 @@
     "typechain": "^8.1.1",
     "typescript": "*"
   },
-  "author": "appleseed-iii <appleseed-iii@protonmail.com>",
   "dependencies": {
     "@dethcrypto/eth-sdk": "^0.3.3",
     "@dethcrypto/eth-sdk-client": "^0.1.6",

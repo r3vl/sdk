@@ -18,7 +18,7 @@ export type TierType = {
  */
 export async function tiersV1(this: R3vlClient, { walletAddress }: FnArgs): Promise<TierType[] | undefined> {
   const { revPathV1 } = this
-
+  walletAddress; // unused
   if (!revPathV1) return
 
   try {
