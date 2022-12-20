@@ -12,5 +12,6 @@
     "outDir": "./dist",
     "typeRoots": ["./node_modules/@types", "./src/types"],
     "baseUrl": ".",
-  }
+  },
+  "exclude": ["jest.config.ts"]
 }

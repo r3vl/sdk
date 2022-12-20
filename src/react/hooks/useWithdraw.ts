@@ -8,7 +8,7 @@ import { R3vlContext } from ".."
 import { tokenList } from "../../constants/tokens"
 
 
-const useWithdraw = (queryOpts?: QueryOptions) => {
+export const useWithdraw = (queryOpts?: QueryOptions) => {
   const { client } = useContext(R3vlContext)
   const mutation = useMutation(['/withdraw'], async ({
     walletAddress,
@@ -24,5 +24,3 @@ const useWithdraw = (queryOpts?: QueryOptions) => {
 
   return mutation
 }
-
-export default useWithdraw

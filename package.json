@@ -5,9 +5,10 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
+    "clean": "rm -rf ./dist",
     "test": "jest",
     "prepare": "yarn build",
-    "build": "tsc",
+    "build": "yarn clean && tsc",
     "get-abis": "eth-sdk",
     "typechain": "typechain --target ethers-v5 --out-dir src/typechain './src/eth-sdk/abis/mainnet/*.json'"
   },

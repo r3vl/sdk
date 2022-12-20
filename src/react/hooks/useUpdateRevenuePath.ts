@@ -13,7 +13,7 @@ import { FnArgs as UpdateLimitsV2Args } from "../../updateLimitsV2"
 import { FnArgs as AddRevenueTiersV2Args } from "../../addRevenueTiersV2"
 
 
-const useUpdateRevenuePath = <T>(queryOpts?: QueryOptions) => {
+export const useUpdateRevenuePath = <T>(queryOpts?: QueryOptions) => {
   const { client } = useContext(R3vlContext)
 
   return {
@@ -82,5 +82,3 @@ const useUpdateRevenuePath = <T>(queryOpts?: QueryOptions) => {
     )
   }
 }
-
-export default useUpdateRevenuePath

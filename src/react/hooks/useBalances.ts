@@ -13,7 +13,7 @@ type QueryResult = {
   earnings: number
 }
 
-const useBalances = ({ walletAddress, ERC20Address }: {
+export const useBalances = ({ walletAddress, ERC20Address }: {
   walletAddress: string,
   ERC20Address?: keyof typeof tokenList
 }, queryOpts?: QueryOptions<QueryResult>) => {
@@ -33,5 +33,3 @@ const useBalances = ({ walletAddress, ERC20Address }: {
 
   return query
 }
-
-export default useBalances

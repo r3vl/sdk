@@ -6,7 +6,7 @@ import {
 import { R3vlContext } from ".."
 
 
-const useCreateRevenuePath = <T>(queryOpts?: QueryOptions) => {
+export const useCreateRevenuePath = <T>(queryOpts?: QueryOptions) => {
   const { client } = useContext(R3vlContext)
 
   return useMutation(
@@ -19,5 +19,3 @@ const useCreateRevenuePath = <T>(queryOpts?: QueryOptions) => {
     queryOpts
   )
 }
-
-export default useCreateRevenuePath
