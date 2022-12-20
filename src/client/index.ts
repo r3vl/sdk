@@ -81,7 +81,6 @@ export class R3vlClient extends Base {
   async init() {
     const { v0, v1 , v2, revPathV1, revPathV2 } = this
 
-    return
     try {
       v1.init()
 

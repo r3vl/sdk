@@ -32,21 +32,16 @@ describe('Main', () => {
     )
   }
 
-  test('Test useBalances', async () => {
+  test('Test useR3vlClient', async () => {
     const HookTester = () => {
-      useR3vlClient({
+      const res = useR3vlClient({
         chainId,
         provider,
         signer,
         revPathAddress: '0xa534eE5f43893D7425cB4773024Fcc75D635E3C3'
       })
-      const result = useBalances({ walletAddress: "0x538C138B73836b811c148B3E4c3683B7B923A0E7" })
 
-      if (result.data?.earnings === 0) return null
-
-      return <div>
-        Earnings: {result.data?.earnings}
-      </div>
+      return <div>v{res?.v}</div>
     }
 
     await act(async () => {
@@ -56,9 +51,37 @@ describe('Main', () => {
         </Providers>
       )
   
-      await waitFor(() => expect(screen.getByText(/Earnings: /)).toBeInTheDocument())
+      await waitFor(() => expect(screen.getByText(/v1/)).toBeInTheDocument())
     })
   })
+
+  // test('Test useBalances', async () => {
+  //   const HookTester = () => {
+  //     useR3vlClient({
+  //       chainId,
+  //       provider,
+  //       signer,
+  //       revPathAddress: '0xa534eE5f43893D7425cB4773024Fcc75D635E3C3'
+  //     })
+  //     const result = useBalances({ walletAddress: "0x538C138B73836b811c148B3E4c3683B7B923A0E7" })
+
+  //     if (result.data?.earnings === 0) return null
+
+  //     return <div>
+  //       Earnings: {result.data?.earnings}
+  //     </div>
+  //   }
+
+  //   await act(async () => {
+  //     render(
+  //       <Providers>
+  //         <HookTester />
+  //       </Providers>
+  //     )
+  
+  //     await waitFor(() => expect(screen.getByText(/Earnings: /)).toBeInTheDocument())
+  //   })
+  // })
 
   // test('Test useWithdraw', async () => {
   //   const HookTester = () => {

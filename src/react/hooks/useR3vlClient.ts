@@ -26,6 +26,8 @@ export const useR3vlClient = (config: ClientConfig) => {
         provider,
         signer,
         revPathAddress,
+        includeEnsNames,
+        ensProvider
       })
   
       const revPath = await client.init()
