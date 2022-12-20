@@ -7,7 +7,7 @@ import type { Signer } from '@ethersproject/abstract-signer'
 import { ChainIds } from './constants/tokens'
 import { PathLibraryV0 } from './typechain'
 
-export type SplitsClientConfig = {
+export type ClientConfig = {
   chainId: ChainIds
   provider: Provider
   revPathAddress: string

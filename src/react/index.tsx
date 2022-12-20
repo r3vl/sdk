@@ -1,36 +1,36 @@
-import React, { useEffect } from 'react'
+import React, { useMemo } from 'react'
 import { createContext, useState } from 'react'
 
 import type { RevenuePath } from "../client"
 
-export const R3vlContext = createContext({} as {
-  client: RevenuePath
-})
+type R3vlContextType = {
+  client: RevenuePath | undefined
+  initClient: (client: RevenuePath) => void
+}
+
+export const R3vlContext = createContext<R3vlContextType | undefined>(undefined)
 
 interface Props {
-  client: RevenuePath
   children: React.ReactNode
 }
 
-export const R3vlProvider: React.FC<Props> = ({ children, client: _client }: {
+export const R3vlProvider: React.FC<Props> = ({ children }: {
   children: React.ReactNode
-  client: RevenuePath
 }) => {
-  const [client, setClient] = useState<RevenuePath | null>()
+  const [client, setClient] = useState<RevenuePath | undefined>()
 
-  // useEffect(() => {
-  //   if (!_client) return
+  const initClient = (revPath: RevenuePath) => {
+    setClient(revPath)
+  }
 
-  //   setClient(_client)
-  // }, [])
-
-  // if (!client) return null
+  const contextValue = useMemo(
+    () => ({ client, initClient }),
+    [client],
+  )
 
   return (
     <R3vlContext.Provider
-      value={{
-        client: _client,
-      }}
+      value={contextValue}
     >
       {children}
     </R3vlContext.Provider>
