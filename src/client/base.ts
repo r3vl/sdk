@@ -19,7 +19,7 @@ export default class Base {
   protected readonly _signer: Signer
   private readonly _provider: Provider
   protected readonly _includeEnsNames: boolean
-  protected readonly _revPathAddress: string
+  protected readonly _revPathAddress: string | undefined
 
   constructor({
     chainId,
@@ -88,5 +88,21 @@ export default class Base {
       throw new MissingProviderError(
         'Provider required to perform this action, please update your call to the constructor',
       )
+  }
+
+  protected _requireSigner() {
+    this._requireProvider()
+    if (!this._signer) {
+      throw new MissingSignerError(
+        'Signer required to perform this action, please update your call to the constructor',
+      )
+
+    const revPathV2 = PathLibraryV2__factory.connect(this._revPathAddress, this._signer)
+    const sdk = getMainnetSdk(this._provider)
+  
+    return {
+      revPathV2,
+      sdk
+    }
   }
 }

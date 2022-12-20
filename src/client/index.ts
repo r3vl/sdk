@@ -53,6 +53,10 @@ export type RevenuePath = {
   updateRevenueTiers?: (args: UpdateRevenueTiersV2Args) => Promise<ethers.ContractReceipt | undefined>
 }
 
+import { updateRevenueTiersV2, FnArgs as UpdateRevenueTiersV2Args } from "../updateRevenueTiersV2"
+import { updateLimitsV2, FnArgs as UpdateLimitsV2Args } from "../updateLimitsV2"
+import { addRevenueTiersV2, FnArgs as AddRevenueTiersV2Args } from "../addRevenueTiersV2"
+
 export class R3vlClient extends Base {
   revPathV0: PathLibraryV0 | undefined
   revPathV1: PathLibraryV1 | undefined
@@ -105,6 +109,12 @@ export class R3vlClient extends Base {
         this.sdk = sdk
         this.initialized = true
       },
+      requireSigner: () => {
+        const { revPathV1, sdk } = this._requireSigner()
+
+        this.revPathV1 = revPathV1
+        this.sdk = sdk
+      },
       withdrawable: (args: WithdrawableV1Args) => withdrawableV1.call(this, args),
       withdrawn: (args: WithdrawnV1Args) => withdrawnV1.call(this, args),
       createRevenuePath: (args: CreateRevenuePathV1Args) => createRevenuePathV1.call(this, args),
@@ -133,6 +143,12 @@ export class R3vlClient extends Base {
       withdrawEvents: () => getRevPathWithdrawEventsV2.call(this),
       withdraw: (args: WithdrawV2Args) => withdrawFundsV2.call(this, args),
       createRevenuePath: (args: CreateRevenuePathV2Args) => createRevenuePathV2.call(this, args),
+      requireSigner: () => {
+        const { revPathV2, sdk } = this._requireSigner()
+
+        this.revPathV2 = revPathV2
+        this.sdk = sdk
+      },
       updateRevenueTiers: (args: UpdateRevenueTiersV2Args) => updateRevenueTiersV2.call(this, args),
       updateLimits: (args: UpdateLimitsV2Args) => updateLimitsV2.call(this, args),
       addRevenueTiers: (args: AddRevenueTiersV2Args) => addRevenueTiersV2.call(this, args),
