@@ -1,6 +1,9 @@
+import "@testing-library/jest-dom/extend-expect"
+
 import { MainnetSdk } from '@dethcrypto/eth-sdk-client'
 import type { Provider } from '@ethersproject/abstract-provider'
 import type { Signer } from '@ethersproject/abstract-signer'
+
 import { ChainIds } from './constants/tokens'
 import { PathLibraryV0 } from './typechain'
 
@@ -12,7 +15,7 @@ export type SplitsClientConfig = {
   // ensProvider can be used to fetch ens names when provider is not on mainnet (reverseRecords
   // only works on mainnet).
   ensProvider?: Provider
-  revPathAddress: string
+  revPathAddress?: string
 }
 
 export const MISSING_SIGNER = ''
