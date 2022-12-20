@@ -21,7 +21,7 @@ export async function updateLimitsV2 (
 ) {
   const { revPathV2, sdk, _chainId } = this
   
-  if (!revPathV2 || !sdk) return false
+  if (!revPathV2 || !sdk) return
 
   const formatedLimits: BigNumberish[] = []
   const formatedTokens: string[] = []

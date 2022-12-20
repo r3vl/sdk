@@ -22,7 +22,7 @@ export async function updateRevenueTierV1 (
 ) {
   const { revPathV1, sdk } = this
 
-  if (!revPathV1 || !sdk) return false
+  if (!revPathV1 || !sdk) return
 
   const formatedTierLimit = ethers.utils.parseEther(tierLimit.toString())
   const formatedDistribution = distribution.map(item => Number(ethers.utils.parseUnits(item.toString(), 5).toString()))

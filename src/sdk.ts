@@ -45,6 +45,7 @@ async function sdkMain() {
     revPathAddress: '0xc0684Ef0f5786649C11f78D57339e18Ec869bb4D'
   })
 
+  clientV1RequireSigner.v1.init({ signer: true })
   clientV1RequireSigner.v1.requireSigner()
 
   const updateRevenueTierResult = await clientV1RequireSigner.v1.updateRevenueTier({

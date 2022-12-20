@@ -20,7 +20,7 @@ export async function updateRevenueTiersV2 (
 ) {
   const { revPathV2, sdk } = this
 
-  if (!revPathV2 || !sdk) return false
+  if (!revPathV2 || !sdk) return
 
   const formatedDistribution = distribution.map(item => {
      return item.map(el => {

@@ -1,5 +1,4 @@
 import { getMainnetSdk, MainnetSdk } from '@dethcrypto/eth-sdk-client' // yay, our SDK! It's tailored especially for our needs
-import { ethers } from 'ethers'
 import { R3vlClient } from './client';
 import { PathLibraryV0__factory } from './typechain';
 import { PaymentReleasedEvent } from './typechain/PathLibraryV0';
@@ -81,5 +80,6 @@ export async function getRevPathWithdrawEventsV0(this: R3vlClient) {
   const withdraws = await revPathV0.queryFilter(
     revPathV0.filters.PaymentReleased(),
   )
+
   return withdraws
 }
