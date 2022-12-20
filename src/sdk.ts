@@ -46,7 +46,6 @@ async function sdkMain() {
   })
 
   clientV1RequireSigner.v1.init({ signer: true })
-  clientV1RequireSigner.v1.requireSigner()
 
   const updateRevenueTierResult = await clientV1RequireSigner.v1.updateRevenueTier({
     walletList: ['0x909e4e8fFE57e77f4851F6Ec24b037B562967833'],

@@ -10,12 +10,12 @@ import { PathLibraryV0 } from './typechain'
 export type SplitsClientConfig = {
   chainId: ChainIds
   provider: Provider
+  revPathAddress: string
   signer?: Signer
   includeEnsNames?: boolean
   // ensProvider can be used to fetch ens names when provider is not on mainnet (reverseRecords
   // only works on mainnet).
   ensProvider?: Provider
-  revPathAddress?: string
 }
 
 export const MISSING_SIGNER = ''
