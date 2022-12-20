@@ -6,7 +6,7 @@ import {
 } from '@tanstack/react-query'
 
 
-import { communityProvider, communitySigner } from "../utils"
+import { communityProvider, communitySigner } from "../testing/utils"
 import { R3vlProvider } from "../react"
 import { useBalances } from "../react/hooks/useBalances"
 import { useWithdraw } from "../react/hooks/useWithdraw"
