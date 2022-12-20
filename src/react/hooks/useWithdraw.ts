@@ -9,7 +9,12 @@ import { tokenList } from "../../constants/tokens"
 
 
 export const useWithdraw = (queryOpts?: QueryOptions) => {
-  const { client } = useContext(R3vlContext)
+  const ctx = useContext(R3vlContext)
+
+  if (!ctx ) return null
+
+  const { client } = ctx
+
   const mutation = useMutation(['/withdraw'], async ({
     walletAddress,
     ERC20Address
@@ -19,7 +24,7 @@ export const useWithdraw = (queryOpts?: QueryOptions) => {
   }) => {
     const payload = ERC20Address ? { walletAddress, ERC20Address } : { walletAddress }
 
-    return await client.withdraw(payload)
+    return await client?.withdraw(payload)
   }, queryOpts)
 
   return mutation

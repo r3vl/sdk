@@ -7,7 +7,7 @@ import {
   MissingSignerError
 } from '../errors'
 
-import type { SplitsClientConfig } from '../types'
+import type { ClientConfig } from '../types'
 import { ChainIds } from '../constants/tokens'
 import { PathLibraryV0__factory, PathLibraryV1__factory, PathLibraryV2__factory } from '../typechain'
 import { getMainnetSdk, getGoerliSdk } from '@dethcrypto/eth-sdk-client'
@@ -28,7 +28,7 @@ export default class Base {
     signer,
     includeEnsNames = false,
     revPathAddress
-  }: SplitsClientConfig) {
+  }: ClientConfig) {
     if (includeEnsNames && !provider && !ensProvider)
       throw new InvalidConfigError(
         'Must include a mainnet provider if includeEnsNames is set to true',
