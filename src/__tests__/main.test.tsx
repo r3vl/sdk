@@ -5,8 +5,7 @@ import {
   QueryClientProvider,
 } from '@tanstack/react-query'
 
-
-import { communityProvider, communitySigner, getChainId } from "../utils"
+import { communityProvider, communitySigner, getChainId } from "../testing/utils"
 import { R3vlClient } from "../client"
 import { R3vlProvider } from "../react"
 import { useBalances } from "../react/hooks/useBalances"
