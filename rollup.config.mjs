@@ -4,6 +4,7 @@ import babel from "@rollup/plugin-babel"
 import externals from "rollup-plugin-node-externals"
 import del from "rollup-plugin-delete"
 import dts from "rollup-plugin-dts"
+import copy from 'rollup-plugin-copy'
 
 import pkg from "./package.json" assert { type: "json" }
 
@@ -28,6 +29,11 @@ export default [
         exclude: "**/node_modules/**",
         extensions: [".js", ".jsx", ".ts", ".tsx"]
       }),
+      copy({
+        targets: [
+          { src: 'src/eth-sdk', dest: '.' },
+        ]
+      })
     ],
     output: [
       { file: pkg.main, format: "cjs" },
