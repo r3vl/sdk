@@ -1,13 +1,10 @@
 import React, { useEffect } from "react"
 import { render, screen, waitFor, act } from "@testing-library/react"
-import {
-  QueryClient,
-  QueryClientProvider,
-} from '@tanstack/react-query'
+import { renderHook } from '@testing-library/react-hooks'
 
 
 import { communityProvider, communitySigner } from "../testing/utils"
-import { R3vlProvider } from "../react"
+import { R3vlProvider, createClient } from "../react"
 import { useBalances } from "../react/hooks/useBalances"
 import { useWithdraw } from "../react/hooks/useWithdraw"
 import { useEvents } from "../react/hooks/useEvents"
@@ -17,41 +14,57 @@ import { FnArgs as CreateRevenuePathV1Args } from "../createRevenuePathV1"
 import { PaymentReleasedEvent as PaymentReleasedEventV1 } from "../typechain/PathLibraryV1"
 import { useR3vlClient } from "../react/hooks"
 
+const client = createClient()
+
 describe('Main', () => {
   const provider = communityProvider()
   const signer = communitySigner()
   const chainId = 5
-  const queryClient = new QueryClient()
-  const Providers = ({ children }: { children: any }) => {
+  const wrapper = ({ children }: { children: any }) => {
     return (
-      <QueryClientProvider client={queryClient}>
-        <R3vlProvider>
-          {children}
-        </R3vlProvider>
-      </QueryClientProvider>
+      <R3vlProvider client={client}>
+        {children}
+      </R3vlProvider>
+    )
+  }
+  const wrapperConfig = ({ children }: { children: any }) => {
+    return (
+      <R3vlProvider client={client} config={{
+        chainId,
+        provider,
+        signer,
+        revPathAddress: '0x8EAd913DF8a741D121026424bE5e07cD1651CBd7'
+      }}>
+        {children}
+      </R3vlProvider>
     )
   }
 
   test('Test useR3vlClient', async () => {
-    const HookTester = () => {
-      const res = useR3vlClient({
+    await act(async () => {
+      const { result, waitForNextUpdate } = renderHook(() => useR3vlClient({
         chainId,
         provider,
         signer,
-        revPathAddress: '0xa534eE5f43893D7425cB4773024Fcc75D635E3C3'
-      })
+        revPathAddress: '0x8EAd913DF8a741D121026424bE5e07cD1651CBd7'
+      }), { wrapper })
 
-      return <div>v{res?.v}</div>
-    }
+      await waitForNextUpdate()
 
+      await waitFor(() => expect(result?.current?.v).toEqual(0))
+    })
+  })
+
+  test('Test useBalances', async () => {
     await act(async () => {
-      render(
-        <Providers>
-          <HookTester />
-        </Providers>
+      const { result, waitForNextUpdate } = renderHook(
+        () => useBalances({ walletAddress: "0x538C138B73836b811c148B3E4c3683B7B923A0E7" }),
+        { wrapper: wrapperConfig }
       )
-  
-      await waitFor(() => expect(screen.getByText(/v1/)).toBeInTheDocument())
+
+      await waitForNextUpdate()
+
+      await waitFor(() => expect(result?.current?.data).toEqual(0))
     })
   })
 

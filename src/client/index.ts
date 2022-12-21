@@ -83,9 +83,9 @@ export class R3vlClient extends Base {
 
     try {
       v2.init()
-      
+
       const version = await revPathV2?.VERSION()
-      
+
       if (version === 2) return v2
     } catch (error) {
       console.log("SDK Error:", error)
@@ -111,7 +111,7 @@ export class R3vlClient extends Base {
 
     throw new Error("Could not initialize Revenue Path")
   }
-  
+
   get v0() {
     return {
       v: 0,
