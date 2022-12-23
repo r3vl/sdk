@@ -1,6 +1,6 @@
 
-import { R3vlClient } from './client'
-import { communityProvider, communitySigner, getChainId } from './utils';
+import { R3vlClient } from '../client'
+import { communityProvider, communitySigner, getChainId } from './utils'
 
 async function sdkMain() {
   const provider = communityProvider()

@@ -29,16 +29,14 @@ export const useR3vlClient = (config: ClientConfig) => {
         includeEnsNames,
         ensProvider
       })
-  
-      const revPath = await client.init()
 
-      if (!revPath) throw new Error("Could not initialize Revenue Path")
+      const revPath = await client.init()
 
       initClient(revPath)
     }
 
-    initialize()
-  }, [chainId, provider, signer, includeEnsNames, ensProvider])
+    if (chainId && provider && signer) initialize()
+  }, [!!chainId, !!provider, !!signer, !!includeEnsNames, !!ensProvider])
 
   return client
 }

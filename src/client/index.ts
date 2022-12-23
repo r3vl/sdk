@@ -82,34 +82,36 @@ export class R3vlClient extends Base {
     const { v0, v1 , v2, revPathV1, revPathV2 } = this
 
     try {
-      v1.init()
-
-      const version = await revPathV1?.VERSION()
-
-      if (version === 1) return v1 as RevenuePath
-    } catch (error) {
-      console.log("SDK Error:", error)
-    }
-
-    try {
       v2.init()
 
       const version = await revPathV2?.VERSION()
 
-      if (version === 2) return v2 as RevenuePath
+      if (version === 2) return v2
     } catch (error) {
       console.log("SDK Error:", error)
     }
 
     try {
-      await v0.init()
+      v1.init()
 
-      return v0 as RevenuePath
+      const version = await revPathV1?.VERSION()
+
+      if (version === 1) return v1
     } catch (error) {
       console.log("SDK Error:", error)
     }
+
+    try {
+      v0.init()
+
+      return v0
+    } catch (error) {
+      console.log("SDK Error:", error)
+    }
+
+    throw new Error("Could not initialize Revenue Path")
   }
-  
+
   get v0() {
     return {
       v: 0,
