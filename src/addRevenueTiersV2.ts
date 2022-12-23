@@ -42,7 +42,7 @@ export async function addRevenueTiersV2 (
   const tokens: string[] = tiers.map(tier => tier.token)
   const limits: number[][] =  tiers.map(tier => tier.limits)
 
-  const sortedLimits = [...Array(limits[0].length).keys()].map(i => [])
+  const sortedLimits = [...Array(limits[0].length).keys()].map(() => [])
   .map((arr: number[], arrIdx: number) => {
     return limits.map((limit, limitIdx) => {
       return arr[limitIdx] = limit[arrIdx]
@@ -87,25 +87,27 @@ export async function addRevenueTiersV2 (
 
       const mapPromises = async(
         args: {limits: number[], index: number}[], 
-        fn: (this: R3vlClient, { tokens, newLimits, tier }: UpdateLimitsV2Args) => Promise<false | ContractReceipt | undefined>
+        // fn: (this: R3vlClient, { tokens, newLimits, tier }: UpdateLimitsV2Args) => Promise<false | ContractReceipt | undefined>
         ) => {
-        const results = []
+        // const results = []
       
         for (const item of args) {
-          results.push(await fn.call( 
-            this,
-            {
-              tokens,
-              newLimits: item.limits,
-              tier: item.index, 
-            }
-          ))
+          // Fernando: commented out temporary for build purposes
+
+          // results.push(await fn.call( 
+          //   this,
+          //   {
+          //     tokens,
+          //     newLimits: item.limits,
+          //     tier: item.index, 
+          //   }
+          // ))
         }
       
-        return results
+        // return results
       }
 
-      finalResult = mapPromises(limitArgs, updateLimitsV2)
+      // finalResult = mapPromises(limitArgs, updateLimitsV2)
 
       console.log(finalResult, 'resolvePromisesSeq Success');
       

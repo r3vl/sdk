@@ -3,7 +3,7 @@ import { MainnetSdk, GoerliSdk } from "@dethcrypto/eth-sdk-client"
 
 import Base from "./base"
 
-import type { SplitsClientConfig } from '../types'
+import type { ClientConfig } from '../types'
 import { PathLibraryV0, PathLibraryV1, PathLibraryV2 } from '../typechain'
 
 import { withdrawableV0, FnArgs as WithdrawableV0Args } from '../withdrawableV0'
@@ -67,7 +67,7 @@ export class R3vlClient extends Base {
     includeEnsNames = false,
     ensProvider,
     revPathAddress
-  }: SplitsClientConfig) {
+  }: ClientConfig) {
     super({
       chainId,
       provider,
@@ -77,7 +77,41 @@ export class R3vlClient extends Base {
       revPathAddress
     })
   }
-  
+
+  async init() {
+    const { v0, v1 , v2, revPathV1, revPathV2 } = this
+
+    try {
+      v2.init()
+
+      const version = await revPathV2?.VERSION()
+
+      if (version === 2) return v2
+    } catch (error) {
+      console.log("SDK Error:", error)
+    }
+
+    try {
+      v1.init()
+
+      const version = await revPathV1?.VERSION()
+
+      if (version === 1) return v1
+    } catch (error) {
+      console.log("SDK Error:", error)
+    }
+
+    try {
+      v0.init()
+
+      return v0
+    } catch (error) {
+      console.log("SDK Error:", error)
+    }
+
+    throw new Error("Could not initialize Revenue Path")
+  }
+
   get v0() {
     return {
       v: 0,

@@ -1,5 +1,5 @@
+import { createRevenuePathV2 } from '../createRevenuePathV2';
 import { communitySigner } from './utils';
-import { createRevenuePathV2 } from './createRevenuePathV2';
 
 
 async function main() {

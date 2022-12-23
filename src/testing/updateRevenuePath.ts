@@ -1,9 +1,4 @@
-import { ethers } from 'ethers'
-import { updateErc20Distribution } from './updateErc20Distribution'
-import { updateRevenueTierV1 } from './updateRevenueTierV1'
-import { updateFinalFund } from './updateFinalFund'
 import { communitySigner } from './utils'
-import { addRevenueTierV1 } from './addRevenueTierV1'
 
 async function main() {
   const signer = communitySigner()

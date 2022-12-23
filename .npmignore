@@ -1,0 +1,16 @@
+.env
+.env.example
+.eslintignore
+.eslintrc.json
+.gitignore
+.husky
+.prettierrc.json
+.prettierignore
+.vscode
+jest.config.ts
+tsconfig.json
+
+node_modules
+src
+
+*.tgz

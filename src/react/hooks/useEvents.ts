@@ -6,15 +6,18 @@ import {
 
 import { R3vlContext } from ".."
 
-const useEvents = <T>(queryOpts?: QueryOptions<T[]>) => {
-  const { client } = useContext(R3vlContext)
+export const useEvents = <T>(queryOpts?: QueryOptions<T[]>) => {
+  const ctx = useContext(R3vlContext)
+
+  if (!ctx ) return null
+
+  const { client } = ctx
+
   const query = useQuery(['/events'], async () => {
-    const result = await client.withdrawEvents()
+    const result = await client?.withdrawEvents()
 
     return result as T[]
   }, queryOpts)
 
   return query
 }
-
-export default useEvents

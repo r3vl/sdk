@@ -6,18 +6,20 @@ import {
 import { R3vlContext } from ".."
 
 
-const useCreateRevenuePath = <T>(queryOpts?: QueryOptions) => {
-  const { client } = useContext(R3vlContext)
+export const useCreateRevenuePath = <T>(queryOpts?: QueryOptions) => {
+  const ctx = useContext(R3vlContext)
+
+  if (!ctx ) return null
+
+  const { client } = ctx
 
   return useMutation(
     ['/createRevenuePath'],
     async (args: T) => {
-      if (!client.createRevenuePath) return
+      if (!client?.createRevenuePath) return
 
       return await client.createRevenuePath(args)
     },
     queryOpts
   )
 }
-
-export default useCreateRevenuePath
