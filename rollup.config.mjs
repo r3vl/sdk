@@ -31,7 +31,8 @@ export default [
       }),
       copy({
         targets: [
-          { src: 'src/eth-sdk', dest: '.' },
+          { src: 'src/eth-sdk', dest: 'dist' },
+          { src: './node_modules/.dethcrypto/eth-sdk', dest: 'dist' }
         ]
       })
     ],
