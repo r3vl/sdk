@@ -1,6 +1,7 @@
 import { defineConfig } from '@dethcrypto/eth-sdk'
 
 export default defineConfig({
+  outputPath: 'dist/sdk-client',
   contracts: {
     mainnet: {
       reveelMainV0: '0x1b5aa0D926ea3c4C4485Ba447c9ABd9A5A128967',
