@@ -70,15 +70,17 @@ export default class Base {
   }
 
   protected _initV2RevPath({ signer }: { signer?: boolean } = {}) {
+    const sdk =  this._chainId === 5 ? getGoerliSdk(signer ? this._signer : this._provider) : getMainnetSdk(signer ? this._signer : this._provider)
+
     if (this._revPathAddress === '') return {
-      byPass: true
+      byPass: true,
+      sdk
     }
 
     const revPathV2 = PathLibraryV2__factory.connect(
       this._revPathAddress,
       signer ? this._signer : this._provider
     )
-    const sdk =  this._chainId === 5 ? getGoerliSdk(this._provider) : getMainnetSdk(this._provider)
 
     return {
       revPathV2,

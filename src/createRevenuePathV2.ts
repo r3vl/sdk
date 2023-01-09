@@ -13,7 +13,7 @@ export type FnArgs = {
 /**
  *  V2
  */
-export async function createRevenuePathV2 (
+export async function createRevenuePathV2(
   this: R3vlClient, 
   { 
     walletList, 

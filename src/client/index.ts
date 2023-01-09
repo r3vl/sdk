@@ -82,9 +82,9 @@ export class R3vlClient extends Base {
     const { v0, v1 , v2, revPathV1, revPathV2 } = this
 
     try {
-      const byPass = v2.init()
+      const byPass = v2.init({ signer: true })
 
-      if (byPass) return v2
+      if (byPass === true) return v2
 
       const version = await revPathV2?.VERSION()
 
@@ -160,11 +160,12 @@ export class R3vlClient extends Base {
       init: ({ signer }: { signer?: boolean } = {}) => {
         const { revPathV2, sdk, byPass } = this._initV2RevPath({ signer })
 
+        this.sdk = sdk
+        this.initialized = true
+
         if (byPass) return true
 
         this.revPathV2 = revPathV2
-        this.sdk = sdk
-        this.initialized = true
       },
       withdrawable: (args: WithdrawableV2Args) => withdrawableV2.call(this, args),
       withdrawn: (args: WithdrawnV2Args) => withdrawnFundsV2.call(this, args),
