@@ -23,6 +23,20 @@ export default defineConfig({
       weth: '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6',
       usdc: '0xD87Ba7A50B2E7E660f678A895E4B72E7CB4CCd9C',
       dai: '0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60'
+    },
+    polygonMumbai: {
+      reveelMainV2: '0x5559a2d54906F8a288cD99282E1458c585866e02',
+      pathLibraryV2: '0x82AeaFc181f83a1AB53bBeFC2d8fdCc8C42a7707', // TODO: Get correct address
+      weth: '0xA6FA4fB5f76172d178d61B04b0ecd319C5d1C0aa',
+      usdc: '0xe6b8a5CF854791412c1f6EFC7CAf629f5Df1c747',
+      dai: '0x001B3B4d0F3714Ca98ba10F6042DaEbF0B1B7b6F'
+    },
+    polygon: {
+      reveelMainV2: '0xEF44D8e4eAb1ACB4922B983253B5B50386E8668E',
+      pathLibraryV2: '0x82AeaFc181f83a1AB53bBeFC2d8fdCc8C42a7707', // TODO: Get correct address
+      weth: '0xA6FA4fB5f76172d178d61B04b0ecd319C5d1C0aa',
+      usdc: '0xe6b8a5CF854791412c1f6EFC7CAf629f5Df1c747',
+      dai: '0x001B3B4d0F3714Ca98ba10F6042DaEbF0B1B7b6F'
     }
   },
 })

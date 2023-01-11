@@ -47,6 +47,7 @@
     "eslint-plugin-promise": "^6.0.0",
     "jest": "^29.3.1",
     "jest-environment-jsdom": "^29.3.1",
+    "jfile": "^1.1.12",
     "prettier": "^2.7.1",
     "replace-in-file": "^6.3.5",
     "rollup": "^3.7.5",
