@@ -17,18 +17,19 @@ export type TierType = {
  *  V0
  */
 export async function tiersV1(this: R3vlClient, { walletAddress }: FnArgs): Promise<TierType[] | undefined> {
-  const { revPathV1 } = this
+  const { revPathV1Read } = this
   walletAddress; // unused
-  if (!revPathV1) return
+
+  if (!revPathV1Read) return
 
   try {
-    const tiersNumber = await revPathV1.getTotalRevenueTiers()
-    const currentTier = await revPathV1.getCurrentTier()
+    const tiersNumber = await revPathV1Read.getTotalRevenueTiers()
+    const currentTier = await revPathV1Read.getCurrentTier()
     const tiers = []
 
     for (let i = 0; i < tiersNumber?.toNumber(); i++) {
-      const [limitAmount, walletList] = await revPathV1.getRevenueTier(i)
-      const distributedAmount = await revPathV1.getTierDistributedAmount(i)
+      const [limitAmount, walletList] = await revPathV1Read.getRevenueTier(i)
+      const distributedAmount = await revPathV1Read.getTierDistributedAmount(i)
 
       tiers.push({
         limitAmount: parseFloat(ethers.utils.formatEther(limitAmount)),

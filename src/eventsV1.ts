@@ -68,12 +68,12 @@ import { R3vlClient } from './client';
 // };
 
 export async function getRevPathWithdrawEventsV1(this: R3vlClient) {
-  const { revPathV1 } = this
+  const { revPathV1Read } = this
 
-  if (!revPathV1) return
+  if (!revPathV1Read) return
 
-  const withdraws = await revPathV1.queryFilter(
-    revPathV1.filters.PaymentReleased(),
+  const withdraws = await revPathV1Read.queryFilter(
+    revPathV1Read.filters.PaymentReleased(),
   )
 
   return withdraws

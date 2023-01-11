@@ -54,9 +54,12 @@ export type RevenuePath = {
 }
 
 export class R3vlClient extends Base {
-  revPathV0: PathLibraryV0 | undefined
-  revPathV1: PathLibraryV1 | undefined
-  revPathV2: PathLibraryV2 | undefined
+  revPathV0Read: PathLibraryV0 | undefined
+  revPathV0Write: PathLibraryV0 | undefined
+  revPathV1Read: PathLibraryV1 | undefined
+  revPathV1Write: PathLibraryV1 | undefined
+  revPathV2Read: PathLibraryV2 | undefined
+  revPathV2Write: PathLibraryV2 | undefined
   sdk: MainnetSdk | GoerliSdk | undefined
   initialized = false
 
@@ -79,14 +82,14 @@ export class R3vlClient extends Base {
   }
 
   async init() {
-    const { v0, v1 , v2, revPathV1, revPathV2 } = this
+    const { v0, v1 , v2, revPathV1Read, revPathV2Read } = this
 
     try {
-      const byPass = v2.init({ signer: true })
+      const byPass = v2.init()
 
       if (byPass === true) return v2
 
-      const version = await revPathV2?.VERSION()
+      const version = await revPathV2Read?.VERSION()
 
       if (version === 2) return v2
     } catch (error) {
@@ -96,7 +99,7 @@ export class R3vlClient extends Base {
     try {
       v1.init()
 
-      const version = await revPathV1?.VERSION()
+      const version = await revPathV1Read?.VERSION()
 
       if (version === 1) return v1
     } catch (error) {
@@ -117,10 +120,11 @@ export class R3vlClient extends Base {
   get v0() {
     return {
       v: 0,
-      init: ({ signer }: { signer?: boolean } = {}) => {
-        const { revPathV0, sdk } = this._initV0RevPath({ signer })
+      init: () => {
+        const { revPathV0Read, revPathV0Write, sdk } = this._initV0RevPath()
 
-        this.revPathV0 = revPathV0
+        this.revPathV0Read = revPathV0Read
+        this.revPathV0Write = revPathV0Write
         this.sdk = sdk
         this.initialized = true
       },
@@ -134,10 +138,11 @@ export class R3vlClient extends Base {
   get v1() {
     return {
       v: 1,
-      init: ({ signer }: { signer?: boolean } = {}) => {
-        const { revPathV1, sdk } = this._initV1RevPath({ signer })
+      init: () => {
+        const { revPathV1Read, revPathV1Write, sdk } = this._initV1RevPath()
 
-        this.revPathV1 = revPathV1
+        this.revPathV1Read = revPathV1Read
+        this.revPathV1Write = revPathV1Write
         this.sdk = sdk
         this.initialized = true
       },
@@ -157,15 +162,16 @@ export class R3vlClient extends Base {
   get v2() {
     return {
       v: 2,
-      init: ({ signer }: { signer?: boolean } = {}) => {
-        const { revPathV2, sdk, byPass } = this._initV2RevPath({ signer })
+      init: () => {
+        const { revPathV2Read, revPathV2Write, sdk, byPass } = this._initV2RevPath()
 
         this.sdk = sdk
         this.initialized = true
 
         if (byPass) return true
 
-        this.revPathV2 = revPathV2
+        this.revPathV2Read = revPathV2Read
+        this.revPathV2Write = revPathV2Write
       },
       withdrawable: (args: WithdrawableV2Args) => withdrawableV2.call(this, args),
       withdrawn: (args: WithdrawnV2Args) => withdrawnFundsV2.call(this, args),

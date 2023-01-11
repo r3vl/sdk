@@ -13,14 +13,14 @@ export async function updateErc20Distribution (
     distribution,
   } : UpdateErc20DistributionArgs
 ) {
-  const { revPathV1, sdk } = this
+  const { revPathV1Write, sdk } = this
 
-  if (!revPathV1 || !sdk) return
+  if (!revPathV1Write || !sdk) return
 
   const formatedDistribution = distribution.map(item => Number(ethers.utils.parseUnits(item.toString(), 5).toString()))
 
   try {
-    const tx = await revPathV1.updateErc20Distribution(
+    const tx = await revPathV1Write.updateErc20Distribution(
       walletList,
       formatedDistribution, 
       {

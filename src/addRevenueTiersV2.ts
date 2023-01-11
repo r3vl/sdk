@@ -26,9 +26,9 @@ export async function addRevenueTiersV2 (
     finalFundIndex
   } : FnArgs
 ) {
-  const { revPathV2, sdk } = this
+  const { revPathV2Write, sdk } = this
   
-  if (!revPathV2 || !sdk) return
+  if (!revPathV2Write || !sdk) return
 
   // new added wallets slice(1) & final fund wallets
   const addedWalletList = [...walletList.slice(1), finalFundWalletList]
@@ -57,7 +57,7 @@ export async function addRevenueTiersV2 (
   })
   
   try {
-    const addTx = await revPathV2.addRevenueTiers(
+    const addTx = await revPathV2Write.addRevenueTiers(
       addedWalletList,
       addedDistribution,
       {
@@ -70,20 +70,19 @@ export async function addRevenueTiersV2 (
     let updateResult;
 
     if(addedResult.status === 1) {
-      updateResult = await updateRevenueTiersV2.call( 
+      updateResult = await updateRevenueTiersV2.call(
         this,
         {
           walletList: [walletList[0]],
           distribution: [distribution[0]], 
           tierNumbers: [finalFundIndex],
         }
-
       )
     }
 
     let finalResult 
     
-    if(updateResult) {
+    if (updateResult) {
 
       const mapPromises = async(
         args: {limits: number[], index: number}[], 
@@ -119,4 +118,3 @@ export async function addRevenueTiersV2 (
     console.error(error, 'updateRevenueTiersV2 Error')
   }
 }
-

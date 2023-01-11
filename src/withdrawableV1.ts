@@ -12,18 +12,18 @@ export type FnArgs = {
  *  V1
  */
 export async function withdrawableV1(this: R3vlClient, { walletAddress, ERC20Address }: FnArgs) {
-  const { revPathV1, sdk, _chainId } = this
+  const { revPathV1Write, sdk, _chainId } = this
 
-  if (!revPathV1 || !sdk) return false
+  if (!revPathV1Write || !sdk) return false
 
   try {
     if (ERC20Address) {
-      const pendingBalance = await revPathV1.erc20Withdrawable(tokenList[ERC20Address][_chainId], walletAddress)
+      const pendingBalance = await revPathV1Write.erc20Withdrawable(tokenList[ERC20Address][_chainId], walletAddress)
 
       return parseFloat(ethers.utils.formatEther(pendingBalance))
     }
 
-    const pendingBalance = await revPathV1.getPendingEthBalance(walletAddress)
+    const pendingBalance = await revPathV1Write.getPendingEthBalance(walletAddress)
 
     return parseFloat(ethers.utils.formatEther(pendingBalance))
   } catch (error) {

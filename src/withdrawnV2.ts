@@ -12,12 +12,12 @@ export type FnArgs = {
  *  V0
  */
 export async function withdrawnFundsV2(this: R3vlClient, { walletAddress, isERC20 }: FnArgs) {
-  const { revPathV2, _chainId } = this
+  const { revPathV2Write, _chainId } = this
 
-  if (!revPathV2) return false
+  if (!revPathV2Write) return false
 
   try {
-    const released = await revPathV2.getTokenWithdrawn(
+    const released = await revPathV2Write.getTokenWithdrawn(
       isERC20 ? tokenList[isERC20][_chainId] : ethers.constants.AddressZero,
       walletAddress
     )
