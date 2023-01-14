@@ -43,7 +43,7 @@ export type RevenuePath = {
   withdrawEvents: () => Promise<PaymentReleasedEventV0[] | PaymentReleasedEventV1[] | PaymentReleasedEventV2[] | undefined>
   withdraw: (args: WithdrawV1Args) => void
   tiers?: (args: TiersV1Args) => Promise<TierTypeV1[] | undefined>
-  createRevenuePath?: (args: CreateRevenuePathV1Args | CreateRevenuePathV2Args | any /* TODO: remove any */) => Promise<ethers.ContractReceipt | undefined>
+  createRevenuePath?: (args: CreateRevenuePathV1Args | CreateRevenuePathV2Args | any /* TODO: remove any */, opts?: { gasLimit: number }) => Promise<ethers.ContractReceipt | undefined>
   updateRevenueTier?: (args: UpdateRevenueTierV1Args) => Promise<ethers.ContractReceipt | undefined>
   updateErc20Distribution?: (args: UpdateErc20DistributionArgs) => Promise<ethers.ContractReceipt | undefined>
   updateFinalFund?: (args: UpdateFinalFundArgs) => Promise<void>
@@ -148,7 +148,7 @@ export class R3vlClient extends Base {
       },
       withdrawable: (args: WithdrawableV1Args) => withdrawableV1.call(this, args),
       withdrawn: (args: WithdrawnV1Args) => withdrawnV1.call(this, args),
-      createRevenuePath: (args: CreateRevenuePathV1Args, opts: { gasLimit: number }) => createRevenuePathV1.call(this, args, opts),
+      createRevenuePath: (args: CreateRevenuePathV1Args, opts?: { gasLimit: number }) => createRevenuePathV1.call(this, args, opts),
       updateRevenueTier: (args: UpdateRevenueTierV1Args) => updateRevenueTierV1.call(this, args),
       updateErc20Distribution: (args: UpdateErc20DistributionArgs) => updateErc20Distribution.call(this, args),
       updateFinalFund: (args: UpdateFinalFundArgs) => updateFinalFund.call(this, args),
@@ -177,7 +177,7 @@ export class R3vlClient extends Base {
       withdrawn: (args: WithdrawnV2Args) => withdrawnFundsV2.call(this, args),
       withdrawEvents: () => getRevPathWithdrawEventsV2.call(this),
       withdraw: (args: WithdrawV2Args) => withdrawFundsV2.call(this, args),
-      createRevenuePath: (args: CreateRevenuePathV2Args, opts: { gasLimit: number }) => createRevenuePathV2.call(this, args, opts),
+      createRevenuePath: (args: CreateRevenuePathV2Args, opts?: { gasLimit: number }) => createRevenuePathV2.call(this, args, opts),
       updateRevenueTiers: (args: UpdateRevenueTiersV2Args) => updateRevenueTiersV2.call(this, args),
       updateLimits: (args: UpdateLimitsV2Args) => updateLimitsV2.call(this, args),
       addRevenueTiers: (args: AddRevenueTiersV2Args) => addRevenueTiersV2.call(this, args),
