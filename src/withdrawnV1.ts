@@ -4,26 +4,30 @@ import { tokenList } from "./constants/tokens"
 import { R3vlClient } from './client'
 
 export type FnArgs = {
-  walletAddress: string
-  ERC20Address?: keyof typeof tokenList
+  walletAddress?: string
+  isERC20?: keyof typeof tokenList
 }
 
 /**
  *  V0
  */
-export async function withdrawnV1(this: R3vlClient, { walletAddress, ERC20Address }: FnArgs) {
-  const { revPathV1Write, _chainId } = this
+export async function withdrawnV1(this: R3vlClient, payload?: FnArgs) {
+  const { revPathV1Read, _chainId } = this
 
-  if (!revPathV1Write) return false
+  if (!revPathV1Read) throw new Error("ERROR:")
+
+  const { walletAddress, isERC20 } = payload || { walletAddress: undefined, isERC20: undefined }
+
+  if (!walletAddress) return undefined // TODO: implement final solution for total balance
 
   try {
-    if (ERC20Address) {
-      const released = await revPathV1Write.getERC20Released(tokenList[ERC20Address][_chainId], walletAddress)
+    if (isERC20) {
+      const released = await revPathV1Read.getERC20Released(tokenList[isERC20][_chainId], walletAddress)
 
       return parseFloat(ethers.utils.formatEther(released))
     }
 
-    const released = await revPathV1Write.getEthWithdrawn(walletAddress)
+    const released = await revPathV1Read.getEthWithdrawn(walletAddress)
 
     return parseFloat(ethers.utils.formatEther(released))
   } catch (error) {

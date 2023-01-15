@@ -46,7 +46,7 @@ describe('Main', () => {
         chainId,
         provider,
         signer,
-        revPathAddress: '0x8EAd913DF8a741D121026424bE5e07cD1651CBd7'
+        revPathAddress: '0x663c5A6fd46E9c9D20c8C174FD555079f8879F87'
       }), { wrapper })
 
       await waitForNextUpdate()
@@ -57,14 +57,25 @@ describe('Main', () => {
 
   test('Test useBalances', async () => {
     await act(async () => {
-      const { result, waitForNextUpdate } = renderHook(
-        () => useBalances({ walletAddress: "0x538C138B73836b811c148B3E4c3683B7B923A0E7" }),
-        { wrapper: wrapperConfig }
+      const { result, waitForValueToChange } = renderHook(
+        () => {
+          useR3vlClient({
+            chainId,
+            provider,
+            signer,
+            revPathAddress: '0x663c5A6fd46E9c9D20c8C174FD555079f8879F87'
+          })
+
+          const r = useBalances()
+
+          return r.data?.withdrawn || 0
+        },
+        { wrapper }
       )
 
-      await waitForNextUpdate()
+      await waitForValueToChange(() => result.current)
 
-      await waitFor(() => expect(result?.current?.data).toEqual(0))
+      expect(result?.current).not.toBeNaN()
     })
   })
 

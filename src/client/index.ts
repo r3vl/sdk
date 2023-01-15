@@ -38,8 +38,8 @@ import { PaymentReleasedEvent as PaymentReleasedEventV2 } from "../typechain/Pat
 export type RevenuePath = {
   v: number
   init: () => void
-  withdrawable: (args: WithdrawableV1Args) => Promise<number | false | undefined>
-  withdrawn: (args: WithdrawnV1Args) => Promise<number | false | undefined>
+  withdrawable: (args?: WithdrawableV0Args | WithdrawableV1Args | WithdrawableV2Args) => Promise<number | undefined>
+  withdrawn: (args?: WithdrawnV0Args | WithdrawnV1Args | WithdrawnV2Args) => Promise<number | undefined>
   withdrawEvents: () => Promise<PaymentReleasedEventV0[] | PaymentReleasedEventV1[] | PaymentReleasedEventV2[] | undefined>
   withdraw: (args: WithdrawV1Args) => void
   tiers?: (args: TiersV1Args) => Promise<TierTypeV1[] | undefined>
@@ -82,13 +82,17 @@ export class R3vlClient extends Base {
   }
 
   async init() {
-    const { v0, v1 , v2, revPathV1Read, revPathV2Read } = this
+    const { v0, v1 , v2 } = this
+
+    const byPass = v2.init()
+    v1.init()
+    v0.init()
+
+    const { revPathV1Read, revPathV2Read } = this
+
+    if (byPass === true) return v2
 
     try {
-      const byPass = v2.init()
-
-      if (byPass === true) return v2
-
       const version = await revPathV2Read?.VERSION()
 
       if (version === 2) return v2
@@ -97,8 +101,6 @@ export class R3vlClient extends Base {
     }
 
     try {
-      v1.init()
-
       const version = await revPathV1Read?.VERSION()
 
       if (version === 1) return v1
@@ -106,15 +108,7 @@ export class R3vlClient extends Base {
       console.log("SDK Error:", error)
     }
 
-    try {
-      v0.init()
-
-      return v0
-    } catch (error) {
-      console.log("SDK Error:", error)
-    }
-
-    throw new Error("Could not initialize Revenue Path")
+    return v0
   }
 
   get v0() {
@@ -128,8 +122,8 @@ export class R3vlClient extends Base {
         this.sdk = sdk
         this.initialized = true
       },
-      withdrawable: (args: WithdrawableV0Args) => withdrawableV0.call(this, args),
-      withdrawn: (args: WithdrawnV0Args) => withdrawnV0.call(this, args),
+      withdrawable: (args?: WithdrawableV0Args) => withdrawableV0.call(this, args),
+      withdrawn: (args?: WithdrawnV0Args) => withdrawnV0.call(this, args),
       withdrawEvents: () => getRevPathWithdrawEventsV0.call(this),
       withdraw: (args: WithdrawV0Args) => withdrawFundsV0.call(this, args)
     }
@@ -146,8 +140,8 @@ export class R3vlClient extends Base {
         this.sdk = sdk
         this.initialized = true
       },
-      withdrawable: (args: WithdrawableV1Args) => withdrawableV1.call(this, args),
-      withdrawn: (args: WithdrawnV1Args) => withdrawnV1.call(this, args),
+      withdrawable: (args?: WithdrawableV1Args) => withdrawableV1.call(this, args),
+      withdrawn: (args?: WithdrawnV1Args) => withdrawnV1.call(this, args),
       createRevenuePath: (args: CreateRevenuePathV1Args, opts?: { gasLimit: number }) => createRevenuePathV1.call(this, args, opts),
       updateRevenueTier: (args: UpdateRevenueTierV1Args) => updateRevenueTierV1.call(this, args),
       updateErc20Distribution: (args: UpdateErc20DistributionArgs) => updateErc20Distribution.call(this, args),
@@ -173,8 +167,8 @@ export class R3vlClient extends Base {
         this.revPathV2Read = revPathV2Read
         this.revPathV2Write = revPathV2Write
       },
-      withdrawable: (args: WithdrawableV2Args) => withdrawableV2.call(this, args),
-      withdrawn: (args: WithdrawnV2Args) => withdrawnFundsV2.call(this, args),
+      withdrawable: (args?: WithdrawableV2Args) => withdrawableV2.call(this, args),
+      withdrawn: (args?: WithdrawnV2Args) => withdrawnFundsV2.call(this, args),
       withdrawEvents: () => getRevPathWithdrawEventsV2.call(this),
       withdraw: (args: WithdrawV2Args) => withdrawFundsV2.call(this, args),
       createRevenuePath: (args: CreateRevenuePathV2Args, opts?: { gasLimit: number }) => createRevenuePathV2.call(this, args, opts),

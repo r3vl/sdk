@@ -57,7 +57,7 @@ export default class Base {
       this._revPathAddress,
       this._signer
     )
-    const sdk =  sdks[this._chainId](this._provider)
+    const sdk =  sdks[this._chainId](this._signer)
 
     return {
       revPathV0Read,
@@ -75,7 +75,7 @@ export default class Base {
       this._revPathAddress,
       this._signer
     )
-    const sdk =  sdks[this._chainId](this._provider)
+    const sdk =  sdks[this._chainId](this._signer)
 
     return {
       revPathV1Read,
@@ -85,7 +85,7 @@ export default class Base {
   }
 
   protected _initV2RevPath() {
-    const sdk =  sdks[this._chainId](this._provider)
+    const sdk =  sdks[this._chainId](this._signer)
 
     if (this._revPathAddress === '') return {
       byPass: true,
