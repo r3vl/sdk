@@ -29,9 +29,13 @@ export type Token = ChainIdType & {
 export const tokenList = {
   gor: {
     name: "Goerli",
+    [chainIds.goerli]: "0x0000000000000000000000000000000000000000",
+    [chainIds.mainnet]: "0x0000000000000000000000000000000000000000",
   },
   eth: {
     name: "Ethereum",
+    [chainIds.goerli]: "0x0000000000000000000000000000000000000000",
+    [chainIds.mainnet]: "0x0000000000000000000000000000000000000000",
   },
   weth: {
     name: "Wrapped Ether",
