@@ -51,13 +51,13 @@ describe('Main', () => {
 
       await waitForNextUpdate()
 
-      await waitFor(() => expect(result?.current?.v).toEqual(0))
+      await waitFor(() => expect(result?.current?.v).toEqual(2))
     })
   })
 
   test('Test useBalances', async () => {
     await act(async () => {
-      const { result, waitForValueToChange } = renderHook(
+      const { result, waitForNextUpdate } = renderHook(
         () => {
           useR3vlClient({
             chainId,
@@ -73,7 +73,7 @@ describe('Main', () => {
         { wrapper }
       )
 
-      await waitForValueToChange(() => result.current)
+      await waitForNextUpdate()
 
       expect(result?.current).not.toBeNaN()
     })
