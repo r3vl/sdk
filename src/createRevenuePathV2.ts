@@ -5,7 +5,7 @@ import { R3vlClient } from './client'
 export type FnArgs = {
   walletList: string[][],
   distribution: number[][], 
-  tiers: { [x: string]: BigNumberish }[],
+  tiers: { [token: string]: BigNumberish }[],
   name: string,
   mutabilityEnabled: boolean
 }

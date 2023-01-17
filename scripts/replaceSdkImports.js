@@ -30,6 +30,34 @@ const replaceSdkClientPath = async () => {
     } catch (error) {
       console.error("Error:::", error)
     }
+
+    const options3 = {
+      files: ['dist/sdk-client/index.mjs'],
+      from: /.\/esm/g,
+      to: './esm/index.js'
+    }
+
+    try {
+      const results = await replace(options3)
+  
+      console.log("Results:::", results)
+    } catch (error) {
+      console.error("Error:::", error)
+    }
+
+    const options4 = {
+      files: ['dist/sdk-client/index.cjs'],
+      from: /.\/cjs/g,
+      to: './cjs/index.js'
+    }
+
+    try {
+      const results = await replace(options4)
+  
+      console.log("Results:::", results)
+    } catch (error) {
+      console.error("Error:::", error)
+    }
 }
 
 replaceSdkClientPath().then(() => console.log("Success 1"))
