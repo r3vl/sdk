@@ -10,11 +10,30 @@ import {
 import type { ClientConfig } from '../types'
 import { chainIds, ChainIds } from '../constants/tokens'
 import { PathLibraryV0__factory, PathLibraryV1__factory, PathLibraryV2__factory } from '../typechain'
-import { getMainnetSdk, getGoerliSdk } from '@dethcrypto/eth-sdk-client'
+import {
+  getMainnetSdk,
+  getGoerliSdk,
+  getPolygonSdk,
+  getPolygonMumbaiSdk,
+  getArbitrumOneSdk,
+  getArbitrumTestnetSdk,
+  getOptimismSdk,
+  getOptimismGoerliSdk,
+  getAuroraSdk,
+  getAuroraTestnetSdk
+} from '@dethcrypto/eth-sdk-client'
 
 const sdks = {
   [chainIds.goerli]: getGoerliSdk,
   [chainIds.mainnet]: getMainnetSdk,
+  [chainIds.polygon]: getPolygonSdk,
+  [chainIds.polygonMumbai]: getPolygonMumbaiSdk,
+  [chainIds.arbitrum]: getArbitrumOneSdk,
+  [chainIds.arbitrumGoerli]: getArbitrumTestnetSdk,
+  [chainIds.optimism]: getOptimismSdk,
+  [chainIds.optimismGoerli]: getOptimismGoerliSdk,
+  [chainIds.aurora]: getAuroraSdk,
+  [chainIds.auroraTestnet]: getAuroraTestnetSdk
 }
 
 export default class Base {

@@ -1,5 +1,5 @@
 import { ethers } from "ethers"
-import { MainnetSdk, GoerliSdk } from "@dethcrypto/eth-sdk-client"
+import { MainnetSdk, GoerliSdk, PolygonSdk, PolygonMumbaiSdk, ArbitrumOneSdk, ArbitrumTestnetSdk } from "@dethcrypto/eth-sdk-client"
 
 import Base from "./base"
 
@@ -54,13 +54,13 @@ export type RevenuePath = {
 }
 
 export class R3vlClient extends Base {
-  revPathV0Read: PathLibraryV0 | undefined
-  revPathV0Write: PathLibraryV0 | undefined
-  revPathV1Read: PathLibraryV1 | undefined
-  revPathV1Write: PathLibraryV1 | undefined
-  revPathV2Read: PathLibraryV2 | undefined
-  revPathV2Write: PathLibraryV2 | undefined
-  sdk: MainnetSdk | GoerliSdk | undefined
+  revPathV0Read?: PathLibraryV0
+  revPathV0Write?: PathLibraryV0
+  revPathV1Read?: PathLibraryV1
+  revPathV1Write?: PathLibraryV1
+  revPathV2Read?: PathLibraryV2
+  revPathV2Write?: PathLibraryV2
+  sdk?: MainnetSdk | GoerliSdk | PolygonSdk | PolygonMumbaiSdk | ArbitrumOneSdk | ArbitrumTestnetSdk
   initialized = false
 
   constructor({

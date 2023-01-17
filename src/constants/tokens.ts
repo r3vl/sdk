@@ -16,7 +16,9 @@ export const chainIds = {
   arbitrumGoerli: 421613,
   localhost: 1337,
   hardhat: 31337,
-  foundry: 31337
+  foundry: 31337,
+  aurora: 1313161554,
+  auroraTestnet: 1313161555
 }
 
 export type ChainIds = typeof chainIds[keyof typeof chainIds]
