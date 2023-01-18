@@ -1,3 +1,4 @@
+import { MainnetSdk } from '@dethcrypto/eth-sdk-client';
 import { R3vlClient } from './client';
 
 /**
@@ -7,34 +8,41 @@ import { R3vlClient } from './client';
 /**
  * all revenue paths V1
  */
-// export const getRevenuePathsV1 = async () => {
-//   const provider = communityProvider();
-//   const sdk = getMainnetSdk(provider);
-//   const contract = sdk.reveelMainV1;
-//   const library = sdk.pathLibraryV1;
-//   const allPaths = await contract.queryFilter(
-//     contract.filters.RevenuePathCreated(),
-//   )
+export async function getRevenuePathsV1(this: R3vlClient) {
+  const { sdk } = this
 
-//   const uniquePathAddresses: string[] = []
+  if (!sdk) return null
+  
+  const contract = sdk.reveelMainV1;
+  const library = (sdk as { pathLibraryV1: any }).pathLibraryV1;
 
-//   for (const path of allPaths) {
-//     const pathAddress = path.args.path
-//     if (!uniquePathAddresses.includes(pathAddress)) {
-//       uniquePathAddresses.push(pathAddress)
-//     }
-//   }
+  if (!library) return null
 
-//   const revPaths: {contract: MainnetSdk["pathLibraryV1"], address: string}[] = uniquePathAddresses.map((revPathAddress) => {
-//     const contract: MainnetSdk["pathLibraryV1"] = library.connect(revPathAddress)  
-//     return {
-//         contract,
-//         address: revPathAddress,
-//     }
-//   })
+  const allPaths = await contract.queryFilter(
+    contract.filters.RevenuePathCreated(),
+  )
 
-//   return revPaths;
-// }
+  const uniquePathAddresses: string[] = []
+
+  for (const path of allPaths) {
+    const pathAddress = path.args.path
+
+    if (!uniquePathAddresses.includes(pathAddress)) {
+      uniquePathAddresses.push(pathAddress)
+    }
+  }
+
+  const revPaths: {contract: MainnetSdk["pathLibraryV1"], address: string}[] = uniquePathAddresses.map((revPathAddress) => {
+    const contract: MainnetSdk["pathLibraryV1"] = library.connect(revPathAddress)
+
+    return {
+        contract,
+        address: revPathAddress,
+    }
+  })
+
+  return revPaths;
+}
 
 /**
  * withdraw events for V1

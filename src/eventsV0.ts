@@ -1,3 +1,4 @@
+import { MainnetSdk } from '@dethcrypto/eth-sdk-client';
 import { R3vlClient } from './client';
 /**
  * TODO(appleseed): build classes for RevenuePath & ReveelMain
@@ -6,35 +7,39 @@ import { R3vlClient } from './client';
 /**
  * all revenue paths V0
  */
-// export const getRevenuePathsV0 = async () => {
-//   const provider = communityProvider();
-//   console.log("community", provider);
-//   const sdk = getMainnetSdk(provider);
-//   const contract = sdk.reveelMainV0;
-//   const library = sdk.pathLibraryV0;
-//   const allPaths = await contract.queryFilter(
-//     contract.filters.RevenuePathCreated(),
-//   )
+export async function getRevenuePathsV0(this: R3vlClient) {
+  const { sdk } = this
 
-//   const uniquePathAddresses: string[] = []
+  if (!sdk) return null
 
-//   for (const path of allPaths) {
-//     const pathAddress = path.args._walletAddress
-//     if (!uniquePathAddresses.includes(pathAddress)) {
-//       uniquePathAddresses.push(pathAddress)
-//     }
-//   }
+  const contract = (sdk as { reveelMainV0: any }).reveelMainV0;
+  const library = (sdk as { pathLibraryV0: any }).pathLibraryV0;
 
-//   const revPaths: {contract: MainnetSdk["pathLibraryV0"], address: string}[] = uniquePathAddresses.map((revPathAddress) => {
-//     const contract: MainnetSdk["pathLibraryV0"] = library.connect(revPathAddress)  
-//     return {
-//         contract,
-//         address: revPathAddress,
-//     }
-//   })
+  const allPaths = await contract.queryFilter(
+    contract.filters.RevenuePathCreated(),
+  )
 
-//   return revPaths;
-// }
+  const uniquePathAddresses: string[] = []
+
+  for (const path of allPaths) {
+    const pathAddress = path.args._walletAddress
+
+    if (!uniquePathAddresses.includes(pathAddress)) {
+      uniquePathAddresses.push(pathAddress)
+    }
+  }
+
+  const revPaths: {contract: MainnetSdk["pathLibraryV0"], address: string}[] = uniquePathAddresses.map((revPathAddress) => {
+    const contract: MainnetSdk["pathLibraryV0"] = library.connect(revPathAddress)
+
+    return {
+        contract,
+        address: revPathAddress,
+    }
+  })
+
+  return revPaths;
+}
 
 /**
  * withdraw events for V0
