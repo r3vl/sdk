@@ -13,19 +13,18 @@ type QueryResult = {
   earnings: number
 }
 
-export const useBalances = ({ walletAddress, ERC20Address }: {
-  walletAddress: string,
+export const useBalances = (payload: {
+  walletAddress?: string,
   ERC20Address?: keyof typeof tokenList
-}, queryOpts?: Omit<UseQueryOptions<QueryResult | null>, 'queryKey' | 'queryFn' | 'initialData'>) => {
+} | undefined = undefined, queryOpts?: Omit<UseQueryOptions<QueryResult | null>, 'queryKey' | 'queryFn' | 'initialData'>) => {
   const ctx = useContext(R3vlContext)
+  const client = ctx?.client
 
-  const query = useQuery(['/balances', walletAddress, ERC20Address], async () => {
-    const payload = ERC20Address ? { walletAddress, ERC20Address } : { walletAddress }
+  const query = useQuery(['/balances', payload?.walletAddress, payload?.ERC20Address, client], async () => {
+    if (!client) return null
 
-    if (!ctx?.client) return null
-
-    const withdrawn = await ctx.client?.withdrawn(payload)
-    const withdrawable = await ctx.client?.withdrawable(payload)
+    const withdrawn = await client?.withdrawn(payload)
+    const withdrawable = await client?.withdrawable(payload)
     const earnings = withdrawn && withdrawable ? withdrawn + withdrawable : 0
 
     return {

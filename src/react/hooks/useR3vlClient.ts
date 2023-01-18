@@ -3,7 +3,11 @@ import { R3vlClient } from "../../client"
 import { ClientConfig } from "../../types"
 import { R3vlContext } from "../../react"
 
-export const useR3vlClient = (config: ClientConfig) => {
+export const useR3vlClient = (config: ClientConfig & {
+  initV0?: boolean
+  initV1?: boolean
+  initV2?: boolean
+}) => {
   const context = useContext(R3vlContext)
 
   if (context === undefined) {
@@ -30,7 +34,9 @@ export const useR3vlClient = (config: ClientConfig) => {
         ensProvider
       })
 
-      const revPath = await client.init()
+      const revPath = await client.init({
+        ...config
+      })
 
       initClient(revPath)
     }

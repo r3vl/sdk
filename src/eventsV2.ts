@@ -1,3 +1,4 @@
+import { MainnetSdk } from '@dethcrypto/eth-sdk-client';
 import { R3vlClient } from './client';
 
 /**
@@ -7,34 +8,41 @@ import { R3vlClient } from './client';
 /**
  * all revenue paths V1
  */
-// export const getRevenuePathsV2 = async () => {
-//   const provider = communityProvider();
-//   const sdk = getMainnetSdk(provider);
-//   const contract = sdk.reveelMainV2;
-//   const library = sdk.pathLibraryV2;
-//   const allPaths = await contract.queryFilter(
-//     contract.filters.RevenuePathCreated(),
-//   )
+export async function getRevenuePathsV2(this: R3vlClient) {
+  const { sdk } = this
 
-//   const uniquePathAddresses: string[] = []
+  if (!sdk) return null
+  
+  const contract = sdk.reveelMainV2;
+  const library = (sdk as { pathLibraryV2: any }).pathLibraryV2;
 
-//   for (const path of allPaths) {
-//     const pathAddress = path.args.path
-//     if (!uniquePathAddresses.includes(pathAddress)) {
-//       uniquePathAddresses.push(pathAddress)
-//     }
-//   }
+  if (!library) return null
 
-//   const revPaths: {contract: MainnetSdk["pathLibraryV2"], address: string}[] = uniquePathAddresses.map((revPathAddress) => {
-//     const contract: MainnetSdk["pathLibraryV2"] = library.connect(revPathAddress)  
-//     return {
-//         contract,
-//         address: revPathAddress,
-//     }
-//   })
+  const allPaths = await contract.queryFilter(
+    contract.filters.RevenuePathCreated(),
+  )
 
-//   return revPaths;
-// }
+  const uniquePathAddresses: string[] = []
+
+  for (const path of allPaths) {
+    const pathAddress = path.args.path
+
+    if (!uniquePathAddresses.includes(pathAddress)) {
+      uniquePathAddresses.push(pathAddress)
+    }
+  }
+
+  const revPaths: {contract: MainnetSdk["pathLibraryV2"], address: string}[] = uniquePathAddresses.map((revPathAddress) => {
+    const contract: MainnetSdk["pathLibraryV2"] = library.connect(revPathAddress)
+
+    return {
+        contract,
+        address: revPathAddress,
+    }
+  })
+
+  return revPaths;
+}
 
 /**
  * withdraw events for V1
@@ -68,12 +76,12 @@ import { R3vlClient } from './client';
 // };
 
 export async function getRevPathWithdrawEventsV2(this: R3vlClient) {
-  const { revPathV2 } = this
+  const { revPathV2Read } = this
 
-  if (!revPathV2) return
+  if (!revPathV2Read) return
 
-  const withdraws = await revPathV2.queryFilter(
-    revPathV2.filters.PaymentReleased(),
+  const withdraws = await revPathV2Read.queryFilter(
+    revPathV2Read.filters.PaymentReleased(),
   )
 
   return withdraws

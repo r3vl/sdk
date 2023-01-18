@@ -22,9 +22,9 @@ export async function addRevenueTierV1 (
     finalFundIndex
   } : AddRevenueTierV1Args
 ) {
-  const { revPathV1, sdk } = this
+  const { revPathV1Write, sdk } = this
 
-  if (!revPathV1 || !sdk) return
+  if (!revPathV1Write || !sdk) return
 
   const tierLimits = [newAddedTierLimits[0], ...newAddedTierLimits.slice(1).reverse()]
   .map(num => ethers.utils.parseEther(num.toString()))
@@ -38,7 +38,7 @@ export async function addRevenueTierV1 (
   })
   
   try {
-    const addTx = await revPathV1.addRevenueTier(
+    const addTx = await revPathV1Write.addRevenueTier(
       addedWalletList,
       addedDistribution, 
       tierLimits,
@@ -53,7 +53,7 @@ export async function addRevenueTierV1 (
 
     let finalResult;
 
-    if(addedResult.status === 1) {
+    if (addedResult.status === 1) {
       finalResult = await updateRevenueTierV1.call(this, 
        { 
         walletList: walletList[0],

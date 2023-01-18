@@ -18,9 +18,9 @@ export async function updateRevenueTiersV2 (
     tierNumbers
   } : FnArgs
 ) {
-  const { revPathV2, sdk } = this
+  const { revPathV2Write, sdk } = this
 
-  if (!revPathV2 || !sdk) return
+  if (!revPathV2Write || !sdk) return
 
   const formatedDistribution = distribution.map(item => {
      return item.map(el => {
@@ -29,7 +29,7 @@ export async function updateRevenueTiersV2 (
   }) 
 
   try {
-    const tx = await revPathV2.updateRevenueTiers(
+    const tx = await revPathV2Write.updateRevenueTiers(
       walletList,
       formatedDistribution, 
       tierNumbers,

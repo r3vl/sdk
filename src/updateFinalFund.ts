@@ -24,9 +24,9 @@ export async function updateFinalFund (
     tierNumber
   }
 
-  const { revPathV1, sdk } = this
+  const { revPathV1Write, sdk } = this
 
-  if (!revPathV1 || !sdk) return
+  if (!revPathV1Write || !sdk) return
 
   const updateRevenueTierResult = await updateRevenueTierV1.call(this, updateRevenueTierV1Args)
 

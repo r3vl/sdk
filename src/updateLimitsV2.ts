@@ -19,9 +19,9 @@ export async function updateLimitsV2 (
     tier
   } : FnArgs
 ) {
-  const { revPathV2, sdk, _chainId } = this
+  const { revPathV2Write, sdk, _chainId } = this
   
-  if (!revPathV2 || !sdk) return
+  if (!revPathV2Write || !sdk) return
 
   const formatedLimits: BigNumberish[] = []
   const formatedTokens: string[] = []
@@ -52,7 +52,7 @@ export async function updateLimitsV2 (
   })
 
   try {
-    const tx = await revPathV2.updateLimits(
+    const tx = await revPathV2Write.updateLimits(
       formatedTokens,
       formatedLimits, 
       tier,
@@ -70,4 +70,3 @@ export async function updateLimitsV2 (
     console.error(error, 'updateLimitsV2 Error')
   }
 }
-

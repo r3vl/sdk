@@ -8,9 +8,33 @@ import {
 } from '../errors'
 
 import type { ClientConfig } from '../types'
-import { ChainIds } from '../constants/tokens'
+import { chainIds, ChainIds } from '../constants/tokens'
 import { PathLibraryV0__factory, PathLibraryV1__factory, PathLibraryV2__factory } from '../typechain'
-import { getMainnetSdk, getGoerliSdk } from '@dethcrypto/eth-sdk-client'
+import {
+  getMainnetSdk,
+  getGoerliSdk,
+  getPolygonSdk,
+  getPolygonMumbaiSdk,
+  getArbitrumOneSdk,
+  getArbitrumTestnetSdk,
+  getOptimismSdk,
+  getOptimismGoerliSdk,
+  getAuroraSdk,
+  getAuroraTestnetSdk
+} from '@dethcrypto/eth-sdk-client'
+
+const sdks = {
+  [chainIds.goerli]: getGoerliSdk,
+  [chainIds.mainnet]: getMainnetSdk,
+  [chainIds.polygon]: getPolygonSdk,
+  [chainIds.polygonMumbai]: getPolygonMumbaiSdk,
+  [chainIds.arbitrum]: getArbitrumOneSdk,
+  [chainIds.arbitrumGoerli]: getArbitrumTestnetSdk,
+  [chainIds.optimism]: getOptimismSdk,
+  [chainIds.optimismGoerli]: getOptimismGoerliSdk,
+  [chainIds.aurora]: getAuroraSdk,
+  [chainIds.auroraTestnet]: getAuroraTestnetSdk
+}
 
 export default class Base {
   protected readonly _chainId: ChainIds
@@ -43,47 +67,62 @@ export default class Base {
     this._revPathAddress = revPathAddress || ''
   }
 
-  protected _initV0RevPath({ signer }: { signer?: boolean } = {}) {
-    const revPathV0 = PathLibraryV0__factory.connect(
+  protected _initV0RevPath() {
+    const revPathV0Read = PathLibraryV0__factory.connect(
       this._revPathAddress,
-      signer ? this._signer : this._provider
+      this._provider
     )
-    const sdk =  this._chainId === 5 ? getGoerliSdk(this._provider) : getMainnetSdk(this._provider)
+    const revPathV0Write = PathLibraryV0__factory.connect(
+      this._revPathAddress,
+      this._signer
+    )
+    const sdk =  sdks[this._chainId](this._signer)
 
     return {
-      revPathV0,
+      revPathV0Read,
+      revPathV0Write,
       sdk
     }
   }
 
-  protected _initV1RevPath({ signer }: { signer?: boolean } = {}) {
-    const revPathV1 = PathLibraryV1__factory.connect(
+  protected _initV1RevPath() {
+    const revPathV1Read = PathLibraryV1__factory.connect(
       this._revPathAddress,
-      signer ? this._signer : this._provider
+      this._provider
     )
-    const sdk =  this._chainId === 5 ? getGoerliSdk(this._provider) : getMainnetSdk(this._provider)
+    const revPathV1Write = PathLibraryV1__factory.connect(
+      this._revPathAddress,
+      this._signer
+    )
+    const sdk =  sdks[this._chainId](this._signer)
 
     return {
-      revPathV1,
+      revPathV1Read,
+      revPathV1Write,
       sdk
     }
   }
 
-  protected _initV2RevPath({ signer }: { signer?: boolean } = {}) {
-    const sdk =  this._chainId === 5 ? getGoerliSdk(signer ? this._signer : this._provider) : getMainnetSdk(signer ? this._signer : this._provider)
+  protected _initV2RevPath() {
+    const sdk =  sdks[this._chainId](this._signer)
 
     if (this._revPathAddress === '') return {
       byPass: true,
       sdk
     }
 
-    const revPathV2 = PathLibraryV2__factory.connect(
+    const revPathV2Read = PathLibraryV2__factory.connect(
       this._revPathAddress,
-      signer ? this._signer : this._provider
+      this._provider
+    )
+    const revPathV2Write = PathLibraryV2__factory.connect(
+      this._revPathAddress,
+      this._provider
     )
 
     return {
-      revPathV2,
+      revPathV2Read,
+      revPathV2Write,
       sdk
     }
   }

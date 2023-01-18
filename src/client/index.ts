@@ -1,5 +1,5 @@
 import { ethers } from "ethers"
-import { MainnetSdk, GoerliSdk } from "@dethcrypto/eth-sdk-client"
+import { MainnetSdk, GoerliSdk, PolygonSdk, PolygonMumbaiSdk, ArbitrumOneSdk, ArbitrumTestnetSdk } from "@dethcrypto/eth-sdk-client"
 
 import Base from "./base"
 
@@ -21,9 +21,9 @@ import { withdrawnFundsV2, FnArgs as WithdrawnV2Args } from "../withdrawnV2"
 import { withdrawFundsV0, FnArgs as WithdrawV0Args } from "../withdrawV0"
 import { withdrawFundsV1, FnArgs as WithdrawV1Args } from "../withdrawV1"
 import { withdrawFundsV2, FnArgs as WithdrawV2Args } from "../withdrawV2"
-import { getRevPathWithdrawEventsV0 } from "../eventsV0"
-import { getRevPathWithdrawEventsV1 } from "../eventsV1"
-import { getRevPathWithdrawEventsV2 } from "../eventsV2"
+import { getRevenuePathsV0, getRevPathWithdrawEventsV0 } from "../eventsV0"
+import { getRevenuePathsV1, getRevPathWithdrawEventsV1 } from "../eventsV1"
+import { getRevenuePathsV2, getRevPathWithdrawEventsV2 } from "../eventsV2"
 import { tiersV1, TierType as TierTypeV1, FnArgs as TiersV1Args } from "../tiersV1"
 import { updateRevenueTiersV2, FnArgs as UpdateRevenueTiersV2Args } from "../updateRevenueTiersV2"
 import { updateLimitsV2, FnArgs as UpdateLimitsV2Args } from "../updateLimitsV2"
@@ -34,16 +34,18 @@ import { PaymentReleasedEvent as PaymentReleasedEventV0 } from "../typechain/Pat
 import { PaymentReleasedEvent as PaymentReleasedEventV1 } from "../typechain/PathLibraryV1"
 import { PaymentReleasedEvent as PaymentReleasedEventV2 } from "../typechain/PathLibraryV2"
 
+export type RevenuePathsList = { address: string; contract: MainnetSdk["pathLibraryV0"] | MainnetSdk["pathLibraryV1"] | MainnetSdk["pathLibraryV2"] }[]
 
 export type RevenuePath = {
   v: number
   init: () => void
-  withdrawable: (args: WithdrawableV1Args) => Promise<number | false | undefined>
-  withdrawn: (args: WithdrawnV1Args) => Promise<number | false | undefined>
+  withdrawable: (args?: WithdrawableV0Args | WithdrawableV1Args | WithdrawableV2Args) => Promise<number | undefined>
+  withdrawn: (args?: WithdrawnV0Args | WithdrawnV1Args | WithdrawnV2Args) => Promise<number | undefined>
   withdrawEvents: () => Promise<PaymentReleasedEventV0[] | PaymentReleasedEventV1[] | PaymentReleasedEventV2[] | undefined>
+  revenuePaths: () => Promise<RevenuePathsList | any>
   withdraw: (args: WithdrawV1Args) => void
   tiers?: (args: TiersV1Args) => Promise<TierTypeV1[] | undefined>
-  createRevenuePath?: (args: CreateRevenuePathV1Args | CreateRevenuePathV2Args | any /* TODO: remove any */) => Promise<ethers.ContractReceipt | undefined>
+  createRevenuePath?: (args: CreateRevenuePathV1Args | CreateRevenuePathV2Args | any /* TODO: remove any */, opts?: { gasLimit: number }) => Promise<ethers.ContractReceipt | undefined>
   updateRevenueTier?: (args: UpdateRevenueTierV1Args) => Promise<ethers.ContractReceipt | undefined>
   updateErc20Distribution?: (args: UpdateErc20DistributionArgs) => Promise<ethers.ContractReceipt | undefined>
   updateFinalFund?: (args: UpdateFinalFundArgs) => Promise<void>
@@ -54,10 +56,13 @@ export type RevenuePath = {
 }
 
 export class R3vlClient extends Base {
-  revPathV0: PathLibraryV0 | undefined
-  revPathV1: PathLibraryV1 | undefined
-  revPathV2: PathLibraryV2 | undefined
-  sdk: MainnetSdk | GoerliSdk | undefined
+  revPathV0Read?: PathLibraryV0
+  revPathV0Write?: PathLibraryV0
+  revPathV1Read?: PathLibraryV1
+  revPathV1Write?: PathLibraryV1
+  revPathV2Read?: PathLibraryV2
+  revPathV2Write?: PathLibraryV2
+  sdk?: MainnetSdk | GoerliSdk | PolygonSdk | PolygonMumbaiSdk | ArbitrumOneSdk | ArbitrumTestnetSdk
   initialized = false
 
   constructor({
@@ -78,15 +83,25 @@ export class R3vlClient extends Base {
     })
   }
 
-  async init() {
-    const { v0, v1 , v2, revPathV1, revPathV2 } = this
+  async init(opts?: {
+    initV0?: boolean
+    initV1?: boolean
+    initV2?: boolean
+  }) {
+    const { v0, v1 , v2 } = this
+
+    const byPass = v2.init()
+    v1.init()
+    v0.init()
+
+    const { revPathV1Read, revPathV2Read } = this
+
+    if (byPass === true || opts?.initV2) return v2
+    if (opts?.initV1) return v1
+    if (opts?.initV0) return v0
 
     try {
-      const byPass = v2.init({ signer: true })
-
-      if (byPass === true) return v2
-
-      const version = await revPathV2?.VERSION()
+      const version = await revPathV2Read?.VERSION()
 
       if (version === 2) return v2
     } catch (error) {
@@ -94,39 +109,31 @@ export class R3vlClient extends Base {
     }
 
     try {
-      v1.init()
-
-      const version = await revPathV1?.VERSION()
+      const version = await revPathV1Read?.VERSION()
 
       if (version === 1) return v1
     } catch (error) {
       console.log("SDK Error:", error)
     }
 
-    try {
-      v0.init()
-
-      return v0
-    } catch (error) {
-      console.log("SDK Error:", error)
-    }
-
-    throw new Error("Could not initialize Revenue Path")
+    return v0
   }
 
   get v0() {
     return {
       v: 0,
-      init: ({ signer }: { signer?: boolean } = {}) => {
-        const { revPathV0, sdk } = this._initV0RevPath({ signer })
+      init: () => {
+        const { revPathV0Read, revPathV0Write, sdk } = this._initV0RevPath()
 
-        this.revPathV0 = revPathV0
+        this.revPathV0Read = revPathV0Read
+        this.revPathV0Write = revPathV0Write
         this.sdk = sdk
         this.initialized = true
       },
-      withdrawable: (args: WithdrawableV0Args) => withdrawableV0.call(this, args),
-      withdrawn: (args: WithdrawnV0Args) => withdrawnV0.call(this, args),
+      withdrawable: (args?: WithdrawableV0Args) => withdrawableV0.call(this, args),
+      withdrawn: (args?: WithdrawnV0Args) => withdrawnV0.call(this, args),
       withdrawEvents: () => getRevPathWithdrawEventsV0.call(this),
+      revenuePaths: () => getRevenuePathsV0.call(this),
       withdraw: (args: WithdrawV0Args) => withdrawFundsV0.call(this, args)
     }
   }
@@ -134,21 +141,23 @@ export class R3vlClient extends Base {
   get v1() {
     return {
       v: 1,
-      init: ({ signer }: { signer?: boolean } = {}) => {
-        const { revPathV1, sdk } = this._initV1RevPath({ signer })
+      init: () => {
+        const { revPathV1Read, revPathV1Write, sdk } = this._initV1RevPath()
 
-        this.revPathV1 = revPathV1
+        this.revPathV1Read = revPathV1Read
+        this.revPathV1Write = revPathV1Write
         this.sdk = sdk
         this.initialized = true
       },
-      withdrawable: (args: WithdrawableV1Args) => withdrawableV1.call(this, args),
-      withdrawn: (args: WithdrawnV1Args) => withdrawnV1.call(this, args),
-      createRevenuePath: (args: CreateRevenuePathV1Args) => createRevenuePathV1.call(this, args),
+      withdrawable: (args?: WithdrawableV1Args) => withdrawableV1.call(this, args),
+      withdrawn: (args?: WithdrawnV1Args) => withdrawnV1.call(this, args),
+      createRevenuePath: (args: CreateRevenuePathV1Args, opts?: { gasLimit: number }) => createRevenuePathV1.call(this, args, opts),
       updateRevenueTier: (args: UpdateRevenueTierV1Args) => updateRevenueTierV1.call(this, args),
       updateErc20Distribution: (args: UpdateErc20DistributionArgs) => updateErc20Distribution.call(this, args),
       updateFinalFund: (args: UpdateFinalFundArgs) => updateFinalFund.call(this, args),
       addRevenueTier: (args: AddRevenueTierV1Args) => addRevenueTierV1.call(this, args),
       withdrawEvents: () => getRevPathWithdrawEventsV1.call(this),
+      revenuePaths: () => getRevenuePathsV1.call(this),
       withdraw: (args: WithdrawV1Args) => withdrawFundsV1.call(this, args),
       tiers: (args: TiersV1Args) => tiersV1.call(this, args)
     }
@@ -157,21 +166,23 @@ export class R3vlClient extends Base {
   get v2() {
     return {
       v: 2,
-      init: ({ signer }: { signer?: boolean } = {}) => {
-        const { revPathV2, sdk, byPass } = this._initV2RevPath({ signer })
+      init: () => {
+        const { revPathV2Read, revPathV2Write, sdk, byPass } = this._initV2RevPath()
 
         this.sdk = sdk
         this.initialized = true
 
         if (byPass) return true
 
-        this.revPathV2 = revPathV2
+        this.revPathV2Read = revPathV2Read
+        this.revPathV2Write = revPathV2Write
       },
-      withdrawable: (args: WithdrawableV2Args) => withdrawableV2.call(this, args),
-      withdrawn: (args: WithdrawnV2Args) => withdrawnFundsV2.call(this, args),
+      withdrawable: (args?: WithdrawableV2Args) => withdrawableV2.call(this, args),
+      withdrawn: (args?: WithdrawnV2Args) => withdrawnFundsV2.call(this, args),
       withdrawEvents: () => getRevPathWithdrawEventsV2.call(this),
+      revenuePaths: () => getRevenuePathsV2.call(this),
       withdraw: (args: WithdrawV2Args) => withdrawFundsV2.call(this, args),
-      createRevenuePath: (args: CreateRevenuePathV2Args) => createRevenuePathV2.call(this, args),
+      createRevenuePath: (args: CreateRevenuePathV2Args, opts?: { gasLimit: number }) => createRevenuePathV2.call(this, args, opts),
       updateRevenueTiers: (args: UpdateRevenueTiersV2Args) => updateRevenueTiersV2.call(this, args),
       updateLimits: (args: UpdateLimitsV2Args) => updateLimitsV2.call(this, args),
       addRevenueTiers: (args: AddRevenueTiersV2Args) => addRevenueTiersV2.call(this, args),
