@@ -15,7 +15,7 @@ export const useR3vlClient = (config: ClientConfig) => {
   const chainId = config.chainId
   const provider = config.provider
   const signer = config.signer
-  const revPathAddress = config.revPathAddress
+  const revPathAddress = config.revPathAddress || ''
   const includeEnsNames = config.includeEnsNames
   const ensProvider = config.ensProvider
 

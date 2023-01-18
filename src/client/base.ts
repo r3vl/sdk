@@ -34,14 +34,13 @@ export default class Base {
         'Must include a mainnet provider if includeEnsNames is set to true',
       )
     if (!signer) throw new MissingSignerError('Signer is required.')
-    if (!revPathAddress) throw new InvalidConfigError("Could not initialize Revenue Path")
 
     this._ensProvider = ensProvider ?? provider
     this._provider = provider
     this._chainId = chainId
     this._signer = signer
     this._includeEnsNames = includeEnsNames
-    this._revPathAddress = revPathAddress
+    this._revPathAddress = revPathAddress || ''
   }
 
   protected _initV0RevPath({ signer }: { signer?: boolean } = {}) {
@@ -71,11 +70,17 @@ export default class Base {
   }
 
   protected _initV2RevPath({ signer }: { signer?: boolean } = {}) {
+    const sdk =  this._chainId === 5 ? getGoerliSdk(signer ? this._signer : this._provider) : getMainnetSdk(signer ? this._signer : this._provider)
+
+    if (this._revPathAddress === '') return {
+      byPass: true,
+      sdk
+    }
+
     const revPathV2 = PathLibraryV2__factory.connect(
       this._revPathAddress,
       signer ? this._signer : this._provider
     )
-    const sdk =  this._chainId === 5 ? getGoerliSdk(this._provider) : getMainnetSdk(this._provider)
 
     return {
       revPathV2,

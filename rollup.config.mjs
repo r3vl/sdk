@@ -32,14 +32,15 @@ export default [
       copy({
         targets: [
           { src: 'src/eth-sdk', dest: 'dist' },
-          { src: './node_modules/.dethcrypto/eth-sdk', dest: 'dist' }
+          // { src: './node_modules/.dethcrypto/eth-sdk', dest: 'dist' }
         ]
       })
     ],
     output: [
       { file: pkg.main, format: "cjs" },
       { file: pkg.module, format: "es" }
-    ]
+    ],
+    external: ["react", "react-dom"]
   },
   {
     input: './src/index.ts',

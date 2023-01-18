@@ -10,7 +10,7 @@ import { PathLibraryV0 } from './typechain'
 export type ClientConfig = {
   chainId: ChainIds
   provider: Provider
-  revPathAddress: string
+  revPathAddress?: string
   signer?: Signer
   includeEnsNames?: boolean
   // ensProvider can be used to fetch ens names when provider is not on mainnet (reverseRecords
