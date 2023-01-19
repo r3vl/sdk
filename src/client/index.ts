@@ -1,5 +1,5 @@
 import { ethers } from "ethers"
-import { MainnetSdk, GoerliSdk, PolygonSdk, PolygonMumbaiSdk, ArbitrumOneSdk, ArbitrumTestnetSdk } from "@dethcrypto/eth-sdk-client"
+import { MainnetSdk, GoerliSdk } from "@dethcrypto/eth-sdk-client"
 
 import Base from "./base"
 
@@ -62,7 +62,7 @@ export class R3vlClient extends Base {
   revPathV1Write?: PathLibraryV1
   revPathV2Read?: PathLibraryV2
   revPathV2Write?: PathLibraryV2
-  sdk?: MainnetSdk | GoerliSdk | PolygonSdk | PolygonMumbaiSdk | ArbitrumOneSdk | ArbitrumTestnetSdk
+  sdk?: MainnetSdk
   initialized = false
 
   constructor({
@@ -127,7 +127,7 @@ export class R3vlClient extends Base {
 
         this.revPathV0Read = revPathV0Read
         this.revPathV0Write = revPathV0Write
-        this.sdk = sdk
+        // this.sdk = sdk
         this.initialized = true
       },
       withdrawable: (args?: WithdrawableV0Args) => withdrawableV0.call(this, args),
@@ -146,7 +146,7 @@ export class R3vlClient extends Base {
 
         this.revPathV1Read = revPathV1Read
         this.revPathV1Write = revPathV1Write
-        this.sdk = sdk
+        // this.sdk = sdk
         this.initialized = true
       },
       withdrawable: (args?: WithdrawableV1Args) => withdrawableV1.call(this, args),
@@ -169,7 +169,7 @@ export class R3vlClient extends Base {
       init: () => {
         const { revPathV2Read, revPathV2Write, sdk, byPass } = this._initV2RevPath()
 
-        this.sdk = sdk
+        // this.sdk = sdk
         this.initialized = true
 
         if (byPass) return true
