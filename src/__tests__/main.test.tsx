@@ -7,12 +7,12 @@ import { communityProvider, communitySigner } from "../testing/utils"
 import { R3vlProvider, createClient } from "../react"
 import { useBalances } from "../react/hooks/useBalances"
 import { useWithdraw } from "../react/hooks/useWithdraw"
-import { useEvents } from "../react/hooks/useEvents"
+// import { useEvents } from "../react/hooks/useEvents"
 import { useCreateRevenuePath } from "../react/hooks/useCreateRevenuePath"
 import { useUpdateRevenuePath } from "../react/hooks/useUpdateRevenuePath"
 import { FnArgs as CreateRevenuePathV1Args } from "../createRevenuePathV1"
 import { PaymentReleasedEvent as PaymentReleasedEventV1 } from "../typechain/PathLibraryV1"
-import { useR3vlClient } from "../react/hooks"
+import { useR3vlClient, useRevenuePaths } from "../react/hooks"
 
 const client = createClient()
 
@@ -51,7 +51,7 @@ describe('Main', () => {
 
       await waitForNextUpdate()
 
-      await waitFor(() => expect(result?.current?.v).toEqual(2))
+      await waitFor(() => expect(result?.current?.['0x663c5A6fd46E9c9D20c8C174FD555079f8879F87'].v).toEqual(2))
     })
   })
 
@@ -66,7 +66,7 @@ describe('Main', () => {
             revPathAddress: '0x663c5A6fd46E9c9D20c8C174FD555079f8879F87'
           })
 
-          const r = useBalances()
+          const r = useBalances('0x663c5A6fd46E9c9D20c8C174FD555079f8879F87')
 
           return r.data?.withdrawn || 0
         },
@@ -76,6 +76,31 @@ describe('Main', () => {
       await waitForNextUpdate()
 
       expect(result?.current).not.toBeNaN()
+    })
+  })
+
+  test('Test useRevenuePaths', async () => {
+    await act(async () => {
+      const { result, waitForNextUpdate } = renderHook(
+        () => {
+          useR3vlClient({
+            chainId,
+            provider,
+            signer,
+          })
+
+          const r = useRevenuePaths()
+
+          return r.data
+        },
+        { wrapper }
+      )
+
+      await waitForNextUpdate()
+      await waitForNextUpdate()
+      await waitForNextUpdate()
+
+      expect(result?.current && result?.current.length).toBeTruthy()
     })
   })
 

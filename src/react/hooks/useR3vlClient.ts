@@ -38,7 +38,8 @@ export const useR3vlClient = (config: ClientConfig & {
         ...config
       })
 
-      initClient(revPath)
+      if (revPathAddress !== '') initClient(revPathAddress, revPath)
+      else initClient('default', revPath)
     }
 
     if (chainId && provider && signer) initialize()

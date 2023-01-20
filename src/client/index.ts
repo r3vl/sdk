@@ -33,8 +33,21 @@ import { createRevenuePathV2, FnArgs as CreateRevenuePathV2Args } from "../creat
 import { PaymentReleasedEvent as PaymentReleasedEventV0 } from "../typechain/PathLibraryV0"
 import { PaymentReleasedEvent as PaymentReleasedEventV1 } from "../typechain/PathLibraryV1"
 import { PaymentReleasedEvent as PaymentReleasedEventV2 } from "../typechain/PathLibraryV2"
+import { RevenuePathCreatedEvent as RevenuePathCreatedEventV0 } from "src/typechain/ReveelMainV0"
+import { RevenuePathCreatedEvent as RevenuePathCreatedEventV1 } from "src/typechain/ReveelMainV1"
+import { RevenuePathCreatedEvent as RevenuePathCreatedEventV2 } from "src/typechain/ReveelMainV2"
 
-export type RevenuePathsList = { address: string; contract: MainnetSdk["pathLibraryV0"] | MainnetSdk["pathLibraryV1"] | MainnetSdk["pathLibraryV2"] }[]
+export type RevenuePathsList = {
+  address: string;
+  contract:
+    MainnetSdk["pathLibraryV0"] |
+    MainnetSdk["pathLibraryV1"] |
+    MainnetSdk["pathLibraryV2"],
+  eventPayload:
+    RevenuePathCreatedEventV0 |
+    RevenuePathCreatedEventV1 |
+    RevenuePathCreatedEventV2
+}[]
 
 export type RevenuePath = {
   v: number

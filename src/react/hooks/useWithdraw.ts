@@ -8,14 +8,14 @@ import { R3vlContext } from ".."
 import { tokenList } from "../../constants/tokens"
 
 
-export const useWithdraw = (queryOpts?: QueryOptions) => {
+export const useWithdraw = (revPathAddress: string, queryOpts?: QueryOptions) => {
   const ctx = useContext(R3vlContext)
 
   if (!ctx ) return null
 
-  const { client } = ctx
+  const client = ctx?.client && ctx?.client[revPathAddress]
 
-  const mutation = useMutation(['/withdraw'], async ({
+  const mutation = useMutation(['/withdraw', revPathAddress], async ({
     walletAddress,
     ERC20Address
   }: {

@@ -16,9 +16,9 @@ import { FnArgs as AddRevenueTiersV2Args } from "../../addRevenueTiersV2"
 export const useUpdateRevenuePath = (queryOpts?: QueryOptions) => {
   const ctx = useContext(R3vlContext)
 
-  if (!ctx ) return null
+  if (!ctx) return null
 
-  const { client } = ctx
+  const client = ctx?.client && ctx?.client.default
 
   return {
     updateRevenueTier: useMutation(
