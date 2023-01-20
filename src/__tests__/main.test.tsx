@@ -52,7 +52,7 @@ describe('Main', () => {
 
       await waitForNextUpdate()
 
-      await waitFor(() => expect(result?.current?.client?.['0x663c5A6fd46E9c9D20c8C174FD555079f8879F87']?.v).toEqual(2))
+      await waitFor(() => expect(result?.current?.['0x663c5A6fd46E9c9D20c8C174FD555079f8879F87']?.v).toEqual(2))
     })
   })
 

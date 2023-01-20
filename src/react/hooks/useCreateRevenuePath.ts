@@ -6,7 +6,7 @@ import { ContractReceipt } from "ethers"
 
 export const useCreateRevenuePath = ({ gasLimit }: { gasLimit: number } = { gasLimit: 900000 }) => {
   const ctx = useContext(R3vlContext)
-  const client = ctx?.client && ctx.client?.default
+  const client = ctx?.default
   const [data, setData] = useState<ContractReceipt | undefined>()
   const [isFetched, setIsFetched] = useState(false)
   const [error, setError] = useState<unknown>()

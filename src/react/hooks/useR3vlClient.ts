@@ -42,7 +42,7 @@ export const useR3vlClient = (config: ClientConfig & {
     }
 
     if (chainId && provider && signer) initialize()
-  }, [chainId, !!provider, !!signer, includeEnsNames, ensProvider])
+  }, [chainId, provider, signer, includeEnsNames, ensProvider])
 
   return context
 }

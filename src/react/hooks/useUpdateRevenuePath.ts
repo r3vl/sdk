@@ -18,9 +18,9 @@ export const useUpdateRevenuePath = (queryOpts?: QueryOptions) => {
 
   return {
     updateRevenueTier: useMutation(
-      ['/updateRevenueTier', ctx?.client],
+      ['/updateRevenueTier', ctx?.default],
       async (args: UpdateRevenueTierV1Args) => {
-        const client = ctx?.client && ctx?.client.default
+        const client = ctx?.default && ctx?.default
 
         if (!client?.updateRevenueTier) return
 
@@ -29,9 +29,9 @@ export const useUpdateRevenuePath = (queryOpts?: QueryOptions) => {
       queryOpts
     ),
     updateErc20Distribution: useMutation(
-      ['/updateErc20Distribution', ctx?.client],
+      ['/updateErc20Distribution', ctx?.default],
       async (args: UpdateErc20DistributionArgs) => {
-        const client = ctx?.client && ctx?.client.default
+        const client = ctx?.default && ctx?.default
 
         if (!client?.updateErc20Distribution) return
 
@@ -40,9 +40,9 @@ export const useUpdateRevenuePath = (queryOpts?: QueryOptions) => {
       queryOpts
     ),
     updateFinalFund: useMutation(
-      ['/updateFinalFund', ctx?.client],
+      ['/updateFinalFund', ctx?.default],
       async (args: UpdateFinalFundArgs) => {
-        const client = ctx?.client && ctx?.client.default
+        const client = ctx?.default && ctx?.default
 
         if (!client?.updateFinalFund) return
 
@@ -51,9 +51,9 @@ export const useUpdateRevenuePath = (queryOpts?: QueryOptions) => {
       queryOpts
     ),
     addRevenueTier: useMutation(
-      ['/addRevenueTier', ctx?.client],
+      ['/addRevenueTier', ctx?.default],
       async (args: AddRevenueTierV1Args) => {
-        const client = ctx?.client && ctx?.client.default
+        const client = ctx?.default && ctx?.default
 
         if (!client?.addRevenueTier) return
 
@@ -62,9 +62,9 @@ export const useUpdateRevenuePath = (queryOpts?: QueryOptions) => {
       queryOpts
     ),
     addRevenueTiers: useMutation(
-      ['/addRevenueTiers', ctx?.client],
+      ['/addRevenueTiers', ctx?.default],
       async (args: AddRevenueTiersV2Args) => {
-        const client = ctx?.client && ctx?.client.default
+        const client = ctx?.default && ctx?.default
 
         if (!client?.addRevenueTiers) return
 
@@ -73,9 +73,9 @@ export const useUpdateRevenuePath = (queryOpts?: QueryOptions) => {
       queryOpts
     ),
     updateRevenueTiers: useMutation(
-      ['/updateRevenueTiers', ctx?.client],
+      ['/updateRevenueTiers', ctx?.default],
       async (args: UpdateRevenueTiersV2Args) => {
-        const client = ctx?.client && ctx?.client.default
+        const client = ctx?.default && ctx?.default
 
         if (!client?.updateRevenueTiers) return
 
@@ -84,9 +84,9 @@ export const useUpdateRevenuePath = (queryOpts?: QueryOptions) => {
       queryOpts
     ),
     updateLimits: useMutation(
-      ['/updateLimits', ctx?.client],
+      ['/updateLimits', ctx?.default],
       async (args: UpdateLimitsV2Args) => {
-        const client = ctx?.client && ctx?.client.default
+        const client = ctx?.default && ctx?.default
 
         if (!client?.updateLimits) return
 

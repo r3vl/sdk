@@ -4,7 +4,7 @@ import {
   UseQueryOptions
 } from '@tanstack/react-query'
 
-import { R3vlContext } from ".."
+import { AddressInput, R3vlContext } from ".."
 import { tokenList } from "../../constants/tokens"
 
 type QueryResult = {
@@ -13,12 +13,12 @@ type QueryResult = {
   earnings: number
 }
 
-export const useBalances = (revPathAddress: string, filter: {
+export const useBalances = (revPathAddress: AddressInput, filter: {
   walletAddress?: string,
   ERC20Address?: keyof typeof tokenList
 } | undefined = undefined, queryOpts?: Omit<UseQueryOptions<QueryResult | null>, 'queryKey' | 'queryFn' | 'initialData'>) => {
   const ctx = useContext(R3vlContext)
-  const client = ctx?.client && ctx?.client[revPathAddress]
+  const client = ctx?.[revPathAddress]
 
   const query = useQuery(['/balances', revPathAddress, filter?.walletAddress, filter?.ERC20Address, client], async () => {
     if (!client) return null

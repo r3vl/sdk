@@ -4,11 +4,15 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { R3vlClient, RevenuePath } from "../client"
 import { ClientConfig } from '../types'
 
-export type ClientType = { [address: string]: RevenuePath | undefined } | undefined
+export type AddressInput = `0x${string}`
 
-type R3vlContextType = {
-  client: ClientType
-  initClient: (objKey: string | undefined, revPath: RevenuePath | undefined) => void
+export type ClientType = {
+  default?: RevenuePath
+  [address: AddressInput]: RevenuePath | undefined
+}
+
+type R3vlContextType = ClientType & {
+  initClient: (objKey: string | undefined, revPath: RevenuePath) => void
 }
 
 const queryClient = new QueryClient()
@@ -38,11 +42,11 @@ export const R3vlProvider: React.FC<Props> = ({
   children,
   client: _client
 }: Props) => {
-  const [client, setClient] = useState<ClientType>()
+  const [clients, setClient] = useState<ClientType>({})
   const { queryClient } = _client
 
-  const initClient = (objKey: string | undefined, revPath: RevenuePath | undefined) => {
-    setClient({ ...client, [objKey || 'default']: revPath })
+  const initClient = (objKey: string | undefined, revPath: RevenuePath) => {
+    setClient({ ...clients, [objKey || 'default']: revPath })
   }
 
   useEffect(() => {
@@ -70,7 +74,7 @@ export const R3vlProvider: React.FC<Props> = ({
 
   return (
     <R3vlContext.Provider
-      value={{ client, initClient }}
+      value={{ ...clients, initClient } as any}
     >
       <QueryClientProvider client={queryClient}>
         {children}

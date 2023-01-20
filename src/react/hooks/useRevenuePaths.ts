@@ -9,7 +9,7 @@ import { RevenuePathsList } from "../../client"
 
 export const useRevenuePaths = (queryOpts?: QueryOptions<RevenuePathsList>) => {
   const ctx = useContext(R3vlContext)
-  const client = ctx?.client && ctx?.client.default
+  const client = ctx?.default
   
   const query = useQuery(['/revenuePaths'], async () => {
     try {
