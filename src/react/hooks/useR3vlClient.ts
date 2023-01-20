@@ -14,18 +14,16 @@ export const useR3vlClient = (config: ClientConfig & {
     throw new Error('Make sure to include <R3vlProvider>')
   }
 
-  const { client, initClient } = context
-
   const chainId = config.chainId
   const provider = config.provider
   const signer = config.signer
-  const revPathAddress = config.revPathAddress || ''
+  const revPathAddress = config.revPathAddress
   const includeEnsNames = config.includeEnsNames
   const ensProvider = config.ensProvider
 
   useEffect(() => {
     const initialize = async () => {
-      const client = new R3vlClient({
+      const clientInit = new R3vlClient({
         chainId,
         provider,
         signer,
@@ -34,16 +32,17 @@ export const useR3vlClient = (config: ClientConfig & {
         ensProvider
       })
 
-      const revPath = await client.init({
+      const revPath = await clientInit.init({
         ...config
       })
 
-      if (revPathAddress !== '') initClient(revPathAddress, revPath)
-      else initClient('default', revPath)
+      const { initClient } = context
+
+      initClient(revPathAddress, revPath)
     }
 
     if (chainId && provider && signer) initialize()
-  }, [!!chainId, !!provider, !!signer, !!includeEnsNames, !!ensProvider])
+  }, [chainId, !!provider, !!signer, includeEnsNames, ensProvider])
 
-  return client
+  return context
 }

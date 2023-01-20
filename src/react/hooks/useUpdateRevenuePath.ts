@@ -16,14 +16,12 @@ import { FnArgs as AddRevenueTiersV2Args } from "../../addRevenueTiersV2"
 export const useUpdateRevenuePath = (queryOpts?: QueryOptions) => {
   const ctx = useContext(R3vlContext)
 
-  if (!ctx) return null
-
-  const client = ctx?.client && ctx?.client.default
-
   return {
     updateRevenueTier: useMutation(
-      ['/updateRevenueTier'],
+      ['/updateRevenueTier', ctx?.client],
       async (args: UpdateRevenueTierV1Args) => {
+        const client = ctx?.client && ctx?.client.default
+
         if (!client?.updateRevenueTier) return
 
         return await client.updateRevenueTier(args)
@@ -31,8 +29,10 @@ export const useUpdateRevenuePath = (queryOpts?: QueryOptions) => {
       queryOpts
     ),
     updateErc20Distribution: useMutation(
-      ['/updateErc20Distribution'],
+      ['/updateErc20Distribution', ctx?.client],
       async (args: UpdateErc20DistributionArgs) => {
+        const client = ctx?.client && ctx?.client.default
+
         if (!client?.updateErc20Distribution) return
 
         return await client.updateErc20Distribution(args)
@@ -40,8 +40,10 @@ export const useUpdateRevenuePath = (queryOpts?: QueryOptions) => {
       queryOpts
     ),
     updateFinalFund: useMutation(
-      ['/updateFinalFund'],
+      ['/updateFinalFund', ctx?.client],
       async (args: UpdateFinalFundArgs) => {
+        const client = ctx?.client && ctx?.client.default
+
         if (!client?.updateFinalFund) return
 
         return await client.updateFinalFund(args)
@@ -49,8 +51,10 @@ export const useUpdateRevenuePath = (queryOpts?: QueryOptions) => {
       queryOpts
     ),
     addRevenueTier: useMutation(
-      ['/addRevenueTier'],
+      ['/addRevenueTier', ctx?.client],
       async (args: AddRevenueTierV1Args) => {
+        const client = ctx?.client && ctx?.client.default
+
         if (!client?.addRevenueTier) return
 
         return await client.addRevenueTier(args)
@@ -58,8 +62,10 @@ export const useUpdateRevenuePath = (queryOpts?: QueryOptions) => {
       queryOpts
     ),
     addRevenueTiers: useMutation(
-      ['/addRevenueTiers'],
+      ['/addRevenueTiers', ctx?.client],
       async (args: AddRevenueTiersV2Args) => {
+        const client = ctx?.client && ctx?.client.default
+
         if (!client?.addRevenueTiers) return
 
         return await client.addRevenueTiers(args)
@@ -67,8 +73,10 @@ export const useUpdateRevenuePath = (queryOpts?: QueryOptions) => {
       queryOpts
     ),
     updateRevenueTiers: useMutation(
-      ['/updateRevenueTiers'],
+      ['/updateRevenueTiers', ctx?.client],
       async (args: UpdateRevenueTiersV2Args) => {
+        const client = ctx?.client && ctx?.client.default
+
         if (!client?.updateRevenueTiers) return
 
         return await client.updateRevenueTiers(args)
@@ -76,8 +84,10 @@ export const useUpdateRevenuePath = (queryOpts?: QueryOptions) => {
       queryOpts
     ),
     updateLimits: useMutation(
-      ['/updateLimits'],
+      ['/updateLimits', ctx?.client],
       async (args: UpdateLimitsV2Args) => {
+        const client = ctx?.client && ctx?.client.default
+
         if (!client?.updateLimits) return
 
         return await client.updateLimits(args)

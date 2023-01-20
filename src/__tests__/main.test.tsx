@@ -13,6 +13,7 @@ import { useUpdateRevenuePath } from "../react/hooks/useUpdateRevenuePath"
 import { FnArgs as CreateRevenuePathV1Args } from "../createRevenuePathV1"
 import { PaymentReleasedEvent as PaymentReleasedEventV1 } from "../typechain/PathLibraryV1"
 import { useR3vlClient, useRevenuePaths } from "../react/hooks"
+import { ethers } from "ethers"
 
 const client = createClient()
 
@@ -51,7 +52,7 @@ describe('Main', () => {
 
       await waitForNextUpdate()
 
-      await waitFor(() => expect(result?.current?.['0x663c5A6fd46E9c9D20c8C174FD555079f8879F87'].v).toEqual(2))
+      await waitFor(() => expect(result?.current?.client?.['0x663c5A6fd46E9c9D20c8C174FD555079f8879F87']?.v).toEqual(2))
     })
   })
 
@@ -98,9 +99,52 @@ describe('Main', () => {
 
       await waitForNextUpdate()
       await waitForNextUpdate()
-      await waitForNextUpdate()
 
       expect(result?.current && result?.current.length).toBeTruthy()
+    })
+  })
+
+  test('Test useCreateRevenuePath', async () => {
+    await act(async () => {
+      const { result, waitForNextUpdate } = renderHook(
+        () => {
+          useR3vlClient({
+            chainId,
+            provider,
+            signer,
+          })
+
+          const mutation = useCreateRevenuePath()
+
+          return mutation
+        },
+        { wrapper }
+      )
+
+      await waitForNextUpdate()
+
+      // expect(result.current({
+      //   walletList: [["0xD6d0c9fC8F1f6cbCa3472052df3678E5b29b2DcA"]],
+      //   distribution: [[100]],
+      //   tiers: [
+      //     {
+      //       ETH: ethers.utils.parseEther("1"),
+      //       WETH: ethers.utils.parseEther("0.5")
+      //     },
+      //     {
+      //       ETH: ethers.utils.parseEther("1"),
+      //       WETH: ethers.utils.parseEther("0.5")
+      //     }
+      //   ],
+      //   name: "Test utest",
+      //   mutabilityEnabled: true
+      // })).toBeTruthy()
+
+      try {
+        await result.current.mutateAsync({} as any)
+      } catch (error) {
+        expect(error).toBeTruthy()
+      }
     })
   })
 

@@ -4,11 +4,11 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { R3vlClient, RevenuePath } from "../client"
 import { ClientConfig } from '../types'
 
-type ClientType = { [address: string]: RevenuePath } | undefined
+export type ClientType = { [address: string]: RevenuePath | undefined } | undefined
 
 type R3vlContextType = {
   client: ClientType
-  initClient: (objKey: string, revPath: RevenuePath) => void
+  initClient: (objKey: string | undefined, revPath: RevenuePath | undefined) => void
 }
 
 const queryClient = new QueryClient()
@@ -22,7 +22,11 @@ export const createClient = () => {
 export const R3vlContext = createContext<R3vlContextType | undefined>(undefined)
 
 interface Props {
-  config?: ClientConfig
+  config?: ClientConfig & {
+    initV0?: boolean
+    initV1?: boolean
+    initV2?: boolean
+  }
   children: React.ReactNode
   client: {
     queryClient: QueryClient
@@ -37,19 +41,14 @@ export const R3vlProvider: React.FC<Props> = ({
   const [client, setClient] = useState<ClientType>()
   const { queryClient } = _client
 
-  const initClient = (objKey: string, revPath: RevenuePath) => {
-    setClient({ ...client, [objKey]: revPath })
+  const initClient = (objKey: string | undefined, revPath: RevenuePath | undefined) => {
+    setClient({ ...client, [objKey || 'default']: revPath })
   }
-
-  const contextValue = useMemo(
-    () => ({ client, initClient }),
-    [client],
-  )
 
   useEffect(() => {
     if (config) {
       const initialize = async () => {
-        const client = new R3vlClient({
+        const clientInit = new R3vlClient({
           chainId: config.chainId,
           provider: config.provider,
           signer: config.signer,
@@ -58,10 +57,11 @@ export const R3vlProvider: React.FC<Props> = ({
           ensProvider: config.ensProvider
         })
   
-        const revPath = await client.init()
+        const revPath = await clientInit.init({
+          ...config
+        })
   
-        if (config.revPathAddress) initClient(config.revPathAddress, revPath)
-        else initClient('default', revPath)
+        initClient(undefined, revPath)
       }
 
       initialize()
@@ -70,7 +70,7 @@ export const R3vlProvider: React.FC<Props> = ({
 
   return (
     <R3vlContext.Provider
-      value={contextValue}
+      value={{ client, initClient }}
     >
       <QueryClientProvider client={queryClient}>
         {children}
