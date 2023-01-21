@@ -49,7 +49,6 @@ export const useCreateRevenuePath = ({ gasLimit }: { gasLimit: number } = { gasL
       setData(undefined)
       setError(undefined)
       setIsFetched(false)
-    },
-    client: ctx
+    }
   }
 }
