@@ -11,8 +11,13 @@ export type ClientType = {
   [address: AddressInput]: RevenuePath | undefined
 }
 
-type R3vlContextType = ClientType & {
+export type CurrentChain = {
+  chain?: { id?: number }
+}
+
+type R3vlContextType = CurrentChain & ClientType & {
   initClient: (objKey: string | undefined, revPath: RevenuePath) => void
+  setCurrentChain: (id: number) => void
 }
 
 const queryClient = new QueryClient()
@@ -43,10 +48,15 @@ export const R3vlProvider: React.FC<Props> = ({
   client: _client
 }: Props) => {
   const [clients, setClient] = useState<ClientType>({})
+  const [chain, setChain] = useState<CurrentChain>({})
   const { queryClient } = _client
 
   const initClient = (objKey: string | undefined, revPath: RevenuePath) => {
     setClient({ ...clients, [objKey || 'default']: revPath })
+  }
+
+  const setCurrentChain = (id: number) => {
+    setChain({ chain: { id } })
   }
 
   useEffect(() => {
@@ -74,7 +84,7 @@ export const R3vlProvider: React.FC<Props> = ({
 
   return (
     <R3vlContext.Provider
-      value={{ ...clients, initClient } as any}
+      value={{ ...clients, initClient, chain, setCurrentChain } as any}
     >
       <QueryClientProvider client={queryClient}>
         {children}

@@ -1,5 +1,6 @@
 import { MainnetSdk } from '@dethcrypto/eth-sdk-client';
 import { R3vlClient } from './client';
+import { contractsDeployedV2 } from './constants/tokens';
 import { RevenuePathCreatedEvent } from './typechain/ReveelMainV2';
 
 /**
@@ -10,18 +11,21 @@ import { RevenuePathCreatedEvent } from './typechain/ReveelMainV2';
  * all revenue paths V1
  */
 export async function getRevenuePathsV2(this: R3vlClient) {
-  const { sdk } = this
-
-  if (!sdk) throw new Error("ERROR:")
+  const { sdk, _chainId } = this
   
+  if (!sdk) throw new Error("SDK not initialized")
+
   const contract = sdk.reveelMainV2;
   const library = (sdk as { pathLibraryV2: any }).pathLibraryV2;
+
   const pathsEventPayload: { [address: string]: RevenuePathCreatedEvent } = {}
 
-  if (!library) return null
+  if (!library) throw new Error("Contract not found")
 
   const allPaths = await contract.queryFilter(
     contract.filters.RevenuePathCreated(),
+    contractsDeployedV2[_chainId],
+    'latest'
   )
 
   const uniquePathAddresses: string[] = []

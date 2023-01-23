@@ -9,21 +9,16 @@ import { RevenuePathsList } from "../../client"
 
 export const useRevenuePaths = (queryOpts?: QueryOptions<RevenuePathsList>) => {
   const ctx = useContext(R3vlContext)
+  const chainId = ctx?.chain
   const client = ctx?.default
-  
-  const query = useQuery(['/revenuePaths'], async () => {
-    try {
-      const result = await client?.revenuePaths()
 
-      return result
-    } catch (error) {
-      console.log("Error::", error)
+  const query = useQuery(['/revenuePaths', chainId], async () => {
+    const result = await client?.revenuePaths()
 
-      return null
-    }
+    return result
   }, {
     ...queryOpts,
-    enabled: !!client
+    enabled: !!client?.v
   })
 
   return query
