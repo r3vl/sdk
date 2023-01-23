@@ -4,18 +4,18 @@ import {
   useMutation
 } from '@tanstack/react-query'
 
-import { R3vlContext } from ".."
+import { AddressInput, R3vlContext } from ".."
 import { tokenList } from "../../constants/tokens"
 
 
-export const useWithdraw = (queryOpts?: QueryOptions) => {
+export const useWithdraw = (revPathAddress: AddressInput, queryOpts?: QueryOptions) => {
   const ctx = useContext(R3vlContext)
 
   if (!ctx ) return null
 
-  const { client } = ctx
+  const client = ctx?.[revPathAddress]
 
-  const mutation = useMutation(['/withdraw'], async ({
+  const mutation = useMutation(['/withdraw', revPathAddress], async ({
     walletAddress,
     ERC20Address
   }: {

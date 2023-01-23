@@ -5,7 +5,7 @@ import { R3vlClient } from './client'
 export type FnArgs = {
   walletList: string[][],
   distribution: number[][], 
-  tiers: { [token: string]: BigNumberish }[],
+  tiers?: { [token: string]: BigNumberish }[],
   name: string,
   mutabilityEnabled: boolean
 }
@@ -64,7 +64,7 @@ export async function createRevenuePathV2(
   //   } 
   // })
 
-  tiers.map((tier, id) => {
+  tiers?.map((tier, id) => {
     const tokens = Object.keys(tier)
 
     if (id === 0) {
@@ -104,6 +104,7 @@ export async function createRevenuePathV2(
     return result
   } catch (error) {
     console.error(error, 'createRevenuePathV2 Error')
+
+    throw error
   }
 }
-

@@ -14,7 +14,7 @@ export type FnArgs = {
 export async function withdrawableV0(this: R3vlClient, payload?: FnArgs) {
   const { revPathV0Read, sdk, _chainId, _revPathAddress } = this
 
-  if (!revPathV0Read || !sdk) throw new Error("ERROR:")
+  if (!revPathV0Read || !sdk || !_revPathAddress) throw new Error("ERROR:")
 
   const { walletAddress, isERC20 } = payload || { walletAddress: undefined, isERC20: undefined }
 

@@ -43,7 +43,7 @@ export default class Base {
   protected readonly _signer: Signer
   private readonly _provider: Provider
   protected readonly _includeEnsNames: boolean
-  protected readonly _revPathAddress: string
+  protected readonly _revPathAddress: string | undefined
 
   constructor({
     chainId,
@@ -64,10 +64,16 @@ export default class Base {
     this._chainId = chainId
     this._signer = signer
     this._includeEnsNames = includeEnsNames
-    this._revPathAddress = revPathAddress || ''
+    this._revPathAddress = revPathAddress
   }
 
   protected _initV0RevPath() {
+    const sdk =  sdks[this._chainId](this._signer)
+
+    if (!this._revPathAddress) return {
+      sdk
+    }
+
     const revPathV0Read = PathLibraryV0__factory.connect(
       this._revPathAddress,
       this._provider
@@ -76,7 +82,6 @@ export default class Base {
       this._revPathAddress,
       this._signer
     )
-    const sdk =  sdks[this._chainId](this._signer)
 
     return {
       revPathV0Read,
@@ -86,6 +91,12 @@ export default class Base {
   }
 
   protected _initV1RevPath() {
+    const sdk =  sdks[this._chainId](this._signer)
+
+    if (!this._revPathAddress) return {
+      sdk
+    }
+
     const revPathV1Read = PathLibraryV1__factory.connect(
       this._revPathAddress,
       this._provider
@@ -94,7 +105,6 @@ export default class Base {
       this._revPathAddress,
       this._signer
     )
-    const sdk =  sdks[this._chainId](this._signer)
 
     return {
       revPathV1Read,
@@ -106,7 +116,7 @@ export default class Base {
   protected _initV2RevPath() {
     const sdk =  sdks[this._chainId](this._signer)
 
-    if (this._revPathAddress === '') return {
+    if (!this._revPathAddress) return {
       byPass: true,
       sdk
     }

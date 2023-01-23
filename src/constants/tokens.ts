@@ -61,3 +61,16 @@ export const tokenList = {
   dai: Token
   usdc: Token
 }
+
+export const contractsDeployedV2 = {
+  [chainIds.mainnet]: 16_084_329,
+  [chainIds.goerli]: 7_952_086,
+  [chainIds.polygon]: 36_261_597,
+  [chainIds.polygonMumbai]: 29_418_579,
+  [chainIds.aurora]: 79_775_191,
+  [chainIds.auroraTestnet]: 106_512_994,
+  [chainIds.optimism]: 46_912_175,
+  [chainIds.optimismGoerli]: 3_299_818,
+  [chainIds.arbitrum]: 43_041_420,
+  [chainIds.arbitrumGoerli]: 2_131_251
+}

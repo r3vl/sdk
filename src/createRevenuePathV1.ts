@@ -62,5 +62,7 @@ export async function createRevenuePathV1 (
     return result
   } catch (error) {
     console.error(error, 'createRevenuePathV1 Error')
+
+    throw error
   }
 }
