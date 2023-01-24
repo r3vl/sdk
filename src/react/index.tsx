@@ -52,6 +52,12 @@ export const R3vlProvider: React.FC<Props> = ({
   const { queryClient } = _client
 
   const initClient = (objKey: string | undefined, revPath: RevenuePath) => {
+    if (!objKey && clients.default) {
+      setClient({ ...clients, default: undefined })
+
+      return
+    }
+
     setClient({ ...clients, [objKey || 'default']: revPath })
   }
 

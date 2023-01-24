@@ -38,7 +38,8 @@ import { RevenuePathCreatedEvent as RevenuePathCreatedEventV1 } from "src/typech
 import { RevenuePathCreatedEvent as RevenuePathCreatedEventV2 } from "src/typechain/ReveelMainV2"
 
 export type RevenuePathsList = {
-  address: string;
+  address: string
+  isUserInPath: boolean
   contract:
     MainnetSdk["pathLibraryV0"] |
     MainnetSdk["pathLibraryV1"] |

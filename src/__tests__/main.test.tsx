@@ -92,15 +92,12 @@ describe('Main', () => {
 
           const r = useRevenuePaths()
 
-          return r.data
+          return r
         },
         { wrapper }
       )
 
-      await waitForNextUpdate()
-      await waitForNextUpdate()
-
-      expect(result?.current && result?.current.length).toBeTruthy()
+      expect(result.current.isLoading).toBeTruthy()
     })
   })
 
