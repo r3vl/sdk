@@ -97,7 +97,10 @@ describe('Main', () => {
         { wrapper }
       )
 
-      expect(result.current.isLoading).toBeTruthy()
+      await waitForNextUpdate()
+      await waitForNextUpdate()
+
+      expect(result.current.isFetched).toBeTruthy()
     })
   })
 

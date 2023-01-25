@@ -1,8 +1,10 @@
 import React, { createContext, useState, useMemo, useEffect } from 'react'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { QueryClient, QueryClientProvider, UseQueryOptions } from '@tanstack/react-query'
 
 import { R3vlClient, RevenuePath } from "../client"
 import { ClientConfig } from '../types'
+
+export type UserQueryOPTs = Omit<UseQueryOptions<any, any, any, any>, 'queryKey' | 'queryFn' | 'initialData'> & { logContext?: boolean }
 
 export type AddressInput = `0x${string}`
 
@@ -11,13 +13,11 @@ export type ClientType = {
   [address: AddressInput]: RevenuePath | undefined
 }
 
-export type CurrentChain = {
-  chain?: { id?: number }
-}
-
-type R3vlContextType = CurrentChain & ClientType & {
-  initClient: (objKey: string | undefined, revPath: RevenuePath) => void
-  setCurrentChain: (id: number) => void
+type R3vlContextType = ClientType & {
+  contextHash?: string
+  currentChainId?: number
+  initClient: (objKey: string | undefined, revPath: RevenuePath, currentChainId: number) => void
+  resetClient: () => void
 }
 
 const queryClient = new QueryClient()
@@ -43,54 +43,36 @@ interface Props {
 }
 
 export const R3vlProvider: React.FC<Props> = ({
-  config,
   children,
   client: _client
 }: Props) => {
   const [clients, setClient] = useState<ClientType>({})
-  const [chain, setChain] = useState<CurrentChain>({})
+  const [currentChainId, setCurrentChainId] = useState<number | undefined>()
   const { queryClient } = _client
+  const contextHash = Object.keys(clients).reduce((prev, curr: any) => {
+    return prev + `[${curr}-${currentChainId}]`
+  }, '')
 
-  const initClient = (objKey: string | undefined, revPath: RevenuePath) => {
-    if (!objKey && clients.default) {
-      setClient({ ...clients, default: undefined })
-
-      return
-    }
-
+  const initClient = (objKey: string | undefined, revPath: RevenuePath, _currentChainId: number) => {
     setClient({ ...clients, [objKey || 'default']: revPath })
+    
+    setCurrentChainId(_currentChainId)
   }
 
-  const setCurrentChain = (id: number) => {
-    setChain({ chain: { id } })
+  const resetClient = () => {
+    setClient({})
+    
+    setCurrentChainId(undefined)
   }
 
-  useEffect(() => {
-    if (config) {
-      const initialize = async () => {
-        const clientInit = new R3vlClient({
-          chainId: config.chainId,
-          provider: config.provider,
-          signer: config.signer,
-          revPathAddress: config.revPathAddress,
-          includeEnsNames: config.includeEnsNames,
-          ensProvider: config.ensProvider
-        })
-  
-        const revPath = await clientInit.init({
-          ...config
-        })
-  
-        initClient(undefined, revPath)
-      }
-
-      initialize()
-    }
-  }, [config])
+  const contextMemo = useMemo(
+    () => ({ ...clients, contextHash, currentChainId, initClient, resetClient }),
+    [contextHash]
+  )
 
   return (
     <R3vlContext.Provider
-      value={{ ...clients, initClient, chain, setCurrentChain } as any}
+      value={contextMemo}
     >
       <QueryClientProvider client={queryClient}>
         {children}

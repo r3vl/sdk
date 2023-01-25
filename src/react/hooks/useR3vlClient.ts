@@ -36,14 +36,28 @@ export const useR3vlClient = (config: ClientConfig & {
         ...config
       })
 
-      const { initClient, setCurrentChain } = context
+      const { initClient, resetClient, currentChainId } = context
 
-      initClient(revPathAddress, revPath)
-      setCurrentChain(chainId)
+      if (currentChainId && currentChainId !== chainId) {
+        resetClient()
+
+        setTimeout(() => initClient(revPathAddress, revPath, chainId), 200)
+
+        return
+      }
+
+      initClient(revPathAddress, revPath, chainId)
     }
 
     if (chainId && provider && signer) initialize()
-  }, [chainId, provider, signer, includeEnsNames, ensProvider])
+  }, [
+    revPathAddress,
+    chainId,
+    provider,
+    signer,
+    includeEnsNames,
+    ensProvider
+  ])
 
   return context
 }

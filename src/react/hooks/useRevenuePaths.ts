@@ -1,24 +1,19 @@
-import { useContext } from "react"
+import { useContext, useMemo } from "react"
 import {
-  QueryOptions,
+  useQueries,
   useQuery
 } from '@tanstack/react-query'
 
-import { R3vlContext } from ".."
+import { R3vlContext, UserQueryOPTs } from ".."
 import { RevenuePathsList } from "../../client"
 
-export const useRevenuePaths = (wallet?: string, queryOpts?: QueryOptions<RevenuePathsList>) => {
-  const ctx = useContext(R3vlContext)
-  const chainId = ctx?.chain
-  const client = ctx?.default
+const generateQueries = (revPaths?: RevenuePathsList, wallet?: string, chainId?: number) => {
+  if (!revPaths) return []
 
-  const query = useQuery(['/revenuePaths', chainId], async () => {
-    const result = await client?.revenuePaths()
-
-    if (!wallet) return result as RevenuePathsList
-
-    for (let i = 0; i < result.length; i++) {
-      const { contract, address } = result[i]
+  return revPaths.map((revPath: any) => ({
+    queryKey: ['/revPathBelongsToWallet', revPath.address, wallet, chainId],
+    queryFn: async () => {
+      const { contract } = revPath
       const totalTiers = await contract.getTotalRevenueTiers()
       const walletList: string[] = []
 
@@ -30,17 +25,48 @@ export const useRevenuePaths = (wallet?: string, queryOpts?: QueryOptions<Revenu
         })
       }
 
-      result[i] = {
-        ...result[i],
-        isUserInPath: !!~walletList.indexOf(wallet),
+      return {
+        ...revPath,
+        isUserInPath: !!~walletList.indexOf(wallet || ''),
       }
-    }
+    },
+  })) 
+}
+
+export const useRevenuePaths = (wallet?: string, queryOpts?: UserQueryOPTs) => {
+  const ctx = useContext(R3vlContext)
+  const client = ctx?.default
+  const currentChainId = ctx?.currentChainId
+
+  if (queryOpts?.logContext) console.log("R3VL SDK Context:::", ctx)
+
+  const query = useQuery(['/revenuePaths', wallet, , currentChainId], async () => {
+    if (!client) return []
+
+    const result = await client.revenuePaths()
 
     return result as RevenuePathsList
   }, {
-    ...queryOpts,
-    enabled: !!client?.v
+    ...queryOpts
   })
 
-  return query
+  const queries = useMemo(() => {
+    return generateQueries(query.data, wallet, currentChainId)
+  }, [
+    query.data,
+    wallet,
+    currentChainId
+  ])
+
+  const results = useQueries({ queries })
+
+  return {
+    ...query,
+    data: results.map(({ data }) => data),
+    isLoading:
+      query.isRefetching ||
+      query.isLoading ||
+      results.some(({ isLoading }) => isLoading),
+    isFetched: !results.some(({ isFetched: _isFetched }) => !_isFetched)
+  }
 }
