@@ -15,13 +15,13 @@ type QueryResult = {
 
 export const useBalances = (revPathAddress: AddressInput, filter: {
   walletAddress?: string,
-  ERC20Address?: keyof typeof tokenList
+  isERC20?: keyof typeof tokenList
 } | undefined = undefined, queryOpts?: Omit<UseQueryOptions<QueryResult | null>, 'queryKey' | 'queryFn' | 'initialData'>) => {
   const ctx = useContext(R3vlContext)
-  const chainId = ctx?.chain?.id
   const client = ctx?.[revPathAddress]
+  const chainId = ctx?.currentChainId
 
-  const query = useQuery(['/balances', chainId, revPathAddress, filter?.walletAddress, filter?.ERC20Address, client], async () => {
+  const query = useQuery(['/balances', revPathAddress, filter?.walletAddress, filter?.isERC20, ctx?.contextHash, chainId], async () => {
     if (!client) return null
 
     const withdrawn = await client?.withdrawn(filter)

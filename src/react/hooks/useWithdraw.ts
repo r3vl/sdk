@@ -17,12 +17,12 @@ export const useWithdraw = (revPathAddress: AddressInput, queryOpts?: QueryOptio
 
   const mutation = useMutation(['/withdraw', revPathAddress], async ({
     walletAddress,
-    ERC20Address
+    isERC20
   }: {
     walletAddress: string,
-    ERC20Address?: keyof typeof tokenList
+    isERC20?: keyof typeof tokenList
   }) => {
-    const payload = ERC20Address ? { walletAddress, ERC20Address } : { walletAddress }
+    const payload = isERC20 ? { walletAddress, isERC20 } : { walletAddress }
 
     return await client?.withdraw(payload)
   }, queryOpts)
