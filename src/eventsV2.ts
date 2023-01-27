@@ -106,7 +106,7 @@ export async function getRevPathTransactionEventsV2(this: R3vlClient) {
 
   const depositETH = await revPathV2Read.queryFilter(revPathV2Read.filters.DepositETH())
   const wethTransfers = await sdk?.weth.queryFilter(sdk?.weth.filters.Transfer(undefined, _revPathAddress), blockNumber, 'latest')
-  const usdcTransers = await sdk?.usdc.queryFilter(sdk?.usdc.filters.Transfer(undefined, _revPathAddress), blockNumber, 'latest')
+  const usdcTransfers = await sdk?.usdc.queryFilter(sdk?.usdc.filters.Transfer(undefined, _revPathAddress), blockNumber, 'latest')
   const daiTransfers = await sdk?.dai.queryFilter(sdk?.dai.filters.Transfer(undefined, _revPathAddress), blockNumber, 'latest')
 
   return {
@@ -116,7 +116,7 @@ export async function getRevPathTransactionEventsV2(this: R3vlClient) {
     tokenDistributed,
     depositETH,
     wethTransfers,
-    usdcTransers,
+    usdcTransfers,
     daiTransfers
   }
 }
