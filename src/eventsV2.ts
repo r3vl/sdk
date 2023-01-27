@@ -1,6 +1,7 @@
 import { MainnetSdk } from '@dethcrypto/eth-sdk-client';
 import { R3vlClient } from './client';
 import { contractsDeployedV2 } from './constants/tokens';
+import { PaymentReleasedEvent } from './typechain/PathLibraryV2';
 import { RevenuePathCreatedEvent } from './typechain/ReveelMainV2';
 
 /**
@@ -87,14 +88,35 @@ export async function getRevenuePathsV2(this: R3vlClient) {
 //   return withdraws;
 // };
 
-export async function getRevPathWithdrawEventsV2(this: R3vlClient) {
-  const { revPathV2Read } = this
+export async function getRevPathTransactionEventsV2(this: R3vlClient) {
+  const { revPathV2Read, sdk, _revPathAddress, _chainId } = this
 
-  if (!revPathV2Read) return
+  if (!revPathV2Read || !sdk || !_chainId) throw new Error("ERROR:")
 
-  const withdraws = await revPathV2Read.queryFilter(
+  const ownershipTransferred = await revPathV2Read.queryFilter(
+    revPathV2Read.filters.OwnershipTransferred(),
+  )
+  const paymentReleased = await revPathV2Read.queryFilter(
     revPathV2Read.filters.PaymentReleased(),
   )
+  const eRC20PaymentReleased = await revPathV2Read.queryFilter(revPathV2Read.filters.ERC20PaymentReleased())
+  const tokenDistributed = await revPathV2Read.queryFilter(revPathV2Read.filters.TokenDistributed())
+  
+  const blockNumber = contractsDeployedV2[_chainId]
 
-  return withdraws
+  const depositETH = await revPathV2Read.queryFilter(revPathV2Read.filters.DepositETH())
+  const wethTransfers = await sdk?.weth.queryFilter(sdk?.weth.filters.Transfer(undefined, _revPathAddress), blockNumber, 'latest')
+  const usdcTransers = await sdk?.usdc.queryFilter(sdk?.usdc.filters.Transfer(undefined, _revPathAddress), blockNumber, 'latest')
+  const daiTransfers = await sdk?.dai.queryFilter(sdk?.dai.filters.Transfer(undefined, _revPathAddress), blockNumber, 'latest')
+
+  return {
+    ownershipTransferred,
+    paymentReleased,
+    eRC20PaymentReleased,
+    tokenDistributed,
+    depositETH,
+    wethTransfers,
+    usdcTransers,
+    daiTransfers
+  }
 }

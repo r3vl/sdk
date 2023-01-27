@@ -23,16 +23,13 @@ import { withdrawFundsV1, FnArgs as WithdrawV1Args } from "../withdrawV1"
 import { withdrawFundsV2, FnArgs as WithdrawV2Args } from "../withdrawV2"
 import { getRevenuePathsV0, getRevPathWithdrawEventsV0 } from "../eventsV0"
 import { getRevenuePathsV1, getRevPathWithdrawEventsV1 } from "../eventsV1"
-import { getRevenuePathsV2, getRevPathWithdrawEventsV2 } from "../eventsV2"
+import { getRevenuePathsV2, getRevPathTransactionEventsV2 } from "../eventsV2"
 import { tiersV1, TierType as TierTypeV1, FnArgs as TiersV1Args } from "../tiersV1"
 import { updateRevenueTiersV2, FnArgs as UpdateRevenueTiersV2Args } from "../updateRevenueTiersV2"
 import { updateLimitsV2, FnArgs as UpdateLimitsV2Args } from "../updateLimitsV2"
 import { addRevenueTiersV2, FnArgs as AddRevenueTiersV2Args } from "../addRevenueTiersV2"
 import { createRevenuePathV1, FnArgs as CreateRevenuePathV1Args } from "../createRevenuePathV1"
 import { createRevenuePathV2, FnArgs as CreateRevenuePathV2Args } from "../createRevenuePathV2"
-import { PaymentReleasedEvent as PaymentReleasedEventV0 } from "../typechain/PathLibraryV0"
-import { PaymentReleasedEvent as PaymentReleasedEventV1 } from "../typechain/PathLibraryV1"
-import { PaymentReleasedEvent as PaymentReleasedEventV2 } from "../typechain/PathLibraryV2"
 import { RevenuePathCreatedEvent as RevenuePathCreatedEventV0 } from "src/typechain/ReveelMainV0"
 import { RevenuePathCreatedEvent as RevenuePathCreatedEventV1 } from "src/typechain/ReveelMainV1"
 import { RevenuePathCreatedEvent as RevenuePathCreatedEventV2 } from "src/typechain/ReveelMainV2"
@@ -55,7 +52,7 @@ export type RevenuePath = {
   init: () => void
   withdrawable: (args?: WithdrawableV0Args | WithdrawableV1Args | WithdrawableV2Args) => Promise<number | undefined>
   withdrawn: (args?: WithdrawnV0Args | WithdrawnV1Args | WithdrawnV2Args) => Promise<number | undefined>
-  withdrawEvents: () => Promise<PaymentReleasedEventV0[] | PaymentReleasedEventV1[] | PaymentReleasedEventV2[] | undefined>
+  transactionEvents?: () => Promise<ReturnType<typeof getRevPathTransactionEventsV2> | any>
   revenuePaths: () => Promise<RevenuePathsList | any>
   withdraw: (args: WithdrawV1Args) => void
   tiers?: (args: TiersV1Args) => Promise<TierTypeV1[] | undefined>
@@ -146,7 +143,7 @@ export class R3vlClient extends Base {
       },
       withdrawable: (args?: WithdrawableV0Args) => withdrawableV0.call(this, args),
       withdrawn: (args?: WithdrawnV0Args) => withdrawnV0.call(this, args),
-      withdrawEvents: () => getRevPathWithdrawEventsV0.call(this),
+      // transactionEvents: () => getRevPathWithdrawEventsV0.call(this),
       revenuePaths: () => getRevenuePathsV0.call(this),
       withdraw: (args: WithdrawV0Args) => withdrawFundsV0.call(this, args)
     }
@@ -170,7 +167,7 @@ export class R3vlClient extends Base {
       updateErc20Distribution: (args: UpdateErc20DistributionArgs) => updateErc20Distribution.call(this, args),
       updateFinalFund: (args: UpdateFinalFundArgs) => updateFinalFund.call(this, args),
       addRevenueTier: (args: AddRevenueTierV1Args) => addRevenueTierV1.call(this, args),
-      withdrawEvents: () => getRevPathWithdrawEventsV1.call(this),
+      // transactionEvents: () => getRevPathWithdrawEventsV1.call(this),
       revenuePaths: () => getRevenuePathsV1.call(this),
       withdraw: (args: WithdrawV1Args) => withdrawFundsV1.call(this, args),
       tiers: (args: TiersV1Args) => tiersV1.call(this, args)
@@ -193,7 +190,7 @@ export class R3vlClient extends Base {
       },
       withdrawable: (args?: WithdrawableV2Args) => withdrawableV2.call(this, args),
       withdrawn: (args?: WithdrawnV2Args) => withdrawnFundsV2.call(this, args),
-      withdrawEvents: () => getRevPathWithdrawEventsV2.call(this),
+      transactionEvents: () => getRevPathTransactionEventsV2.call(this),
       revenuePaths: () => getRevenuePathsV2.call(this),
       withdraw: (args: WithdrawV2Args) => withdrawFundsV2.call(this, args),
       createRevenuePath: (args: CreateRevenuePathV2Args, opts?: { gasLimit: number }) => createRevenuePathV2.call(this, args, opts),
