@@ -109,6 +109,9 @@ export async function getRevPathTransactionEventsV2(this: R3vlClient) {
   const usdcTransfers = await sdk?.usdc.queryFilter(sdk?.usdc.filters.Transfer(undefined, _revPathAddress), blockNumber, 'latest')
   const daiTransfers = await sdk?.dai.queryFilter(sdk?.dai.filters.Transfer(undefined, _revPathAddress), blockNumber, 'latest')
 
+  const revPathsEvents = await getRevenuePathsV2.call(this)
+  const contract = revPathsEvents.find((event) => event.address === _revPathAddress)
+
   return {
     ownershipTransferred,
     paymentReleased,
@@ -117,6 +120,12 @@ export async function getRevPathTransactionEventsV2(this: R3vlClient) {
     depositETH,
     wethTransfers,
     usdcTransfers,
-    daiTransfers
+    daiTransfers,
+    erc20s: {
+      [sdk?.weth.address]: await sdk?.weth.symbol(),
+      [sdk?.usdc.address]: await sdk?.usdc.symbol(),
+      [sdk?.dai.address]: await sdk?.dai.symbol()
+    },
+    revPathName: contract?.eventPayload.args.name
   }
 }
