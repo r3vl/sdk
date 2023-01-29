@@ -12,12 +12,14 @@ import { useCreateRevenuePath } from "../react/hooks/useCreateRevenuePath"
 import { useUpdateRevenuePath } from "../react/hooks/useUpdateRevenuePath"
 import { FnArgs as CreateRevenuePathV1Args } from "../createRevenuePathV1"
 import { PaymentReleasedEvent as PaymentReleasedEventV1 } from "../typechain/PathLibraryV1"
-import { useR3vlClient, useRevenuePaths, useTransactionEvents } from "../react/hooks"
+import { useR3vlClient, useRevenuePaths, useRevenuePathTiers, useTransactionEvents } from "../react/hooks"
 import { ethers } from "ethers"
 
 const client = createClient()
 
 describe('Main', () => {
+  jest.setTimeout(10000)
+
   const provider = communityProvider()
   const signer = communitySigner()
   const chainId = 5
@@ -171,6 +173,32 @@ describe('Main', () => {
       await waitForNextUpdate({ timeout: 5000 })
 
       expect(result?.current).toBeTruthy()
+    })
+  })
+
+  test('Test useRevenuePathTiers', async () => {
+    await act(async () => {
+      const { result, waitForNextUpdate } = renderHook(
+        () => {
+          useR3vlClient({
+            chainId,
+            provider,
+            signer,
+            revPathAddress: '0x663c5A6fd46E9c9D20c8C174FD555079f8879F87'
+          })
+
+          const r = useRevenuePathTiers('0x663c5A6fd46E9c9D20c8C174FD555079f8879F87')
+
+          return r
+        },
+        { wrapper }
+      )
+
+      await waitForNextUpdate()
+      await waitForNextUpdate()
+      await waitForNextUpdate({ timeout: 8000 })
+
+      expect(result?.current.isFetched).toBeTruthy()
     })
   })
 
