@@ -2,12 +2,12 @@ import { useCallback, useContext, useState } from "react"
 import { R3vlContext } from ".."
 import { FnArgs as CreateRevenuePathV1Args } from "../../createRevenuePathV1"
 import { FnArgs as CreateRevenuePathV2Args } from "../../createRevenuePathV2"
-import { ContractReceipt } from "ethers"
+import { ContractReceipt, ContractTransaction } from "ethers"
 
 export const useCreateRevenuePath = ({ gasLimit }: { gasLimit: number } = { gasLimit: 900000 }) => {
   const ctx = useContext(R3vlContext)
   const client = ctx?.default
-  const [data, setData] = useState<ContractReceipt | undefined>()
+  const [data, setData] = useState<ContractReceipt | ContractTransaction | undefined>()
   const [isFetched, setIsFetched] = useState(false)
   const [error, setError] = useState<unknown>()
   const [loading, setLoading] = useState(false)
