@@ -6,6 +6,10 @@ import Base from "./base"
 import type { ClientConfig } from '../types'
 import { PathLibraryV0, PathLibraryV1, PathLibraryV2 } from '../typechain'
 
+import { AddressInput } from "../react"
+
+import { transferOwnershipV2 } from "../transferOwnershipV2"
+
 import { withdrawableV0, FnArgs as WithdrawableV0Args } from '../withdrawableV0'
 import { withdrawnV0, FnArgs as WithdrawnV0Args } from '../withdrawnV0'
 import { withdrawableV1, FnArgs as WithdrawableV1Args } from '../withdrawableV1'
@@ -57,7 +61,7 @@ export type RevenuePath = {
   revenuePaths: () => Promise<RevenuePathsList | any>
   withdraw: (args: WithdrawV1Args) => void
   tiers?: (args?: TiersV1Args) => ReturnType<typeof tiersV1> | ReturnType<typeof tiersV2>
-  createRevenuePath?: (args: CreateRevenuePathV1Args | CreateRevenuePathV2Args | any /* TODO: remove any */, opts?: { gasLimit: number }) => Promise<undefined | ethers.ContractReceipt>
+  createRevenuePath?: (args: CreateRevenuePathV1Args | CreateRevenuePathV2Args | any /* TODO: remove any */, opts?: { gasLimit: number }) => Promise<undefined | ethers.ContractReceipt | ethers.ContractTransaction>
   updateRevenueTier?: (args: UpdateRevenueTierV1Args) => Promise<ethers.ContractReceipt | undefined>
   updateErc20Distribution?: (args: UpdateErc20DistributionArgs) => Promise<ethers.ContractReceipt | undefined>
   updateFinalFund?: (args: UpdateFinalFundArgs) => Promise<void>
@@ -65,6 +69,7 @@ export type RevenuePath = {
   updateLimits?: (args: UpdateLimitsV2Args) => Promise<ethers.ContractReceipt | undefined>
   addRevenueTier?: (args: AddRevenueTierV1Args) => Promise<ethers.ContractReceipt | undefined>
   updateRevenueTiers?: (args: UpdateRevenueTiersV2Args) => Promise<ethers.ContractReceipt | undefined>
+  transferOwnerhip?: (args: any) => Promise<any>
 }
 
 export class R3vlClient extends Base {
@@ -199,6 +204,7 @@ export class R3vlClient extends Base {
       updateLimits: (args: UpdateLimitsV2Args) => updateLimitsV2.call(this, args),
       addRevenueTiers: (args: AddRevenueTiersV2Args) => addRevenueTiersV2.call(this, args),
       tiers: () => tiersV2.call(this),
+      transferOwnerhip: (newOwner: AddressInput) => transferOwnershipV2.call(this, newOwner)
     }
   }
 }

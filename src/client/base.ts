@@ -127,7 +127,7 @@ export default class Base {
     )
     const revPathV2Write = PathLibraryV2__factory.connect(
       this._revPathAddress,
-      this._provider
+      this._signer
     )
 
     return {

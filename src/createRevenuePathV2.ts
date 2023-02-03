@@ -97,11 +97,11 @@ export async function createRevenuePathV2(
       }
     )
 
-    const result = await tx?.wait()
+    // const result = await tx?.wait()
 
-    console.log(result, 'createRevenuePathV2 Result');
+    // console.log(result, 'createRevenuePathV2 Result');
     
-    return result
+    return tx
   } catch (error) {
     console.error(error, 'createRevenuePathV2 Error')
 

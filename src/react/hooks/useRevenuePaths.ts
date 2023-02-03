@@ -33,7 +33,7 @@ const generateQueries = (revPaths?: RevenuePathsList, wallet?: string, chainId?:
   })) 
 }
 
-export const useRevenuePaths = (wallet?: string, queryOpts?: UserQueryOPTs) => {
+export const useRevenuePaths = (wallet?: string | boolean, queryOpts?: UserQueryOPTs) => {
   const ctx = useContext(R3vlContext)
   const client = ctx?.default
   const currentChainId = ctx?.currentChainId
@@ -51,6 +51,8 @@ export const useRevenuePaths = (wallet?: string, queryOpts?: UserQueryOPTs) => {
   })
 
   const queries = useMemo(() => {
+    if (typeof wallet !== 'string' || !wallet?.length) return []
+
     return generateQueries(query.data, wallet, currentChainId)
   }, [
     query.data,
@@ -63,6 +65,7 @@ export const useRevenuePaths = (wallet?: string, queryOpts?: UserQueryOPTs) => {
   return {
     ...query,
     data: results.map(({ data }) => data),
+    dataRaw: query.data,
     isLoading:
       query.isRefetching ||
       query.isLoading ||

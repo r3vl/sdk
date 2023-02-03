@@ -24,9 +24,9 @@ export const useBalances = (revPathAddress: AddressInput, filter: {
   const query = useQuery(['/balances', revPathAddress, filter?.walletAddress, filter?.isERC20, ctx?.contextHash, chainId], async () => {
     if (!client) return null
 
-    const withdrawn = await client?.withdrawn(filter)
-    const withdrawable = await client?.withdrawable(filter)
-    const earnings = withdrawn && withdrawable ? withdrawn + withdrawable : 0
+    const withdrawn = await client?.withdrawn(filter) || 0
+    const withdrawable = await client?.withdrawable(filter) || 0
+    const earnings = withdrawn + withdrawable
 
     return {
       withdrawn,
