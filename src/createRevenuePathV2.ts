@@ -5,7 +5,7 @@ import { R3vlClient } from './client'
 export type FnArgs = {
   walletList: string[][],
   distribution: number[][], 
-  tiers?: { [token: string]: BigNumberish }[],
+  tiers?: { [token: string]: string }[],
   name: string,
   mutabilityEnabled: boolean
 }
@@ -75,7 +75,9 @@ export async function createRevenuePathV2(
       })
     }
 
-    formatedLimits.push(tokens.map((token) => tier[token]))
+    formatedLimits.push(tokens.map((token) => {
+      return (token === 'eth') ? utils.parseEther(tier[token]) : utils.parseUnits(tier[token])
+    }))
   })
 
   const formatedDistribution = distribution.map(item => {
