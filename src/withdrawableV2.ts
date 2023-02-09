@@ -20,20 +20,42 @@ export async function withdrawableV2(this: R3vlClient, payload?: FnArgs) {
 
   try {
     let pendingBalance: ethers.BigNumber
+    const totalTiers = await revPathV2Read.getTotalRevenueTiers()
+    let pendingDistribution = await revPathV2Read.getPendingDistributionAmount(isERC20 ? tokenList[isERC20][_chainId] : ethers.constants.AddressZero)
     
     if (walletAddress) {
-      pendingBalance = await revPathV2Read.getWithdrawableToken(
+      let totalAmount
+
+      totalAmount = await revPathV2Read.getWithdrawableToken(
         isERC20 ? tokenList[isERC20][_chainId] : ethers.constants.AddressZero,
         walletAddress
       )
-    } else {
-      const pendingDistribution = await revPathV2Read.getPendingDistributionAmount(isERC20 ? tokenList[isERC20][_chainId] : ethers.constants.AddressZero)
 
-      const withdrawable: ethers.BigNumber = ethers.BigNumber.from(0)
-      const currentTier = await revPathV2Read.getTotalRevenueTiers()
+      for (let i = 0; i < totalTiers?.toNumber(); i++) {
+        const tierLimit = await revPathV2Read.getTokenTierLimits(isERC20 ? tokenList[isERC20][_chainId] : ethers.constants.AddressZero, walletAddress)
+        const proportion = await revPathV2Read.getRevenueProportion(i, walletAddress)
+
+        if (
+          tierLimit.gt(pendingDistribution) ||
+          (tierLimit.eq(ethers.BigNumber.from(0)) && pendingDistribution.gt(ethers.BigNumber.from(0)))
+        ) {
+          totalAmount = totalAmount.add(pendingDistribution.div(ethers.BigNumber.from(10000000)).mul(proportion))
+
+          break
+        } else {
+          const distribution = pendingDistribution.div(ethers.BigNumber.from(10000000)).mul(proportion)
+
+          totalAmount = totalAmount.add(distribution)
+          pendingDistribution = pendingDistribution.sub(distribution)
+        }
+      }
+
+      pendingBalance = totalAmount
+    } else {
+      let totalAmount: ethers.BigNumber = ethers.BigNumber.from(0)
       const _walletList: string[] = []
 
-      for (let i = 0; i < currentTier?.toNumber(); i++) {
+      for (let i = 0; i < totalTiers?.toNumber(); i++) {
         const walletList = await revPathV2Read.getRevenueTier(i)
 
         walletList.map((wallet) => {
@@ -42,10 +64,10 @@ export async function withdrawableV2(this: R3vlClient, payload?: FnArgs) {
       }
 
       for (let i = 0; i < _walletList.length; i++) {
-        withdrawable.add(await revPathV2Read.getWithdrawableToken(isERC20 ? tokenList[isERC20][_chainId] : ethers.constants.AddressZero, _walletList[i]))
+        totalAmount = totalAmount.add(await revPathV2Read.getWithdrawableToken(isERC20 ? tokenList[isERC20][_chainId] : ethers.constants.AddressZero, _walletList[i]))
       }
 
-      pendingBalance = withdrawable.add(pendingDistribution)
+      pendingBalance = totalAmount.add(pendingDistribution)
     }
 
     return parseFloat(ethers.utils.formatEther(pendingBalance))

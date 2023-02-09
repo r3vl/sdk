@@ -66,17 +66,22 @@ describe('Main', () => {
             chainId,
             provider,
             signer,
-            revPathAddress: '0x663c5A6fd46E9c9D20c8C174FD555079f8879F87'
+            revPathAddress: '0x9daEd44e885e0d8568cd4f49aa2BDdcfadEA5335'
           })
 
-          const r = useBalances('0x663c5A6fd46E9c9D20c8C174FD555079f8879F87')
+          const r = useBalances('0x9daEd44e885e0d8568cd4f49aa2BDdcfadEA5335', {
+            walletAddress: "0x538C138B73836b811c148B3E4c3683B7B923A0E7"
+          })
 
+          console.log("META:::", r.data)
           return r.data?.withdrawn || 0
         },
         { wrapper }
       )
 
       await waitForNextUpdate()
+      await waitForNextUpdate()
+      await waitForNextUpdate({ timeout: 5000 })
 
       expect(result?.current).not.toBeNaN()
     })
