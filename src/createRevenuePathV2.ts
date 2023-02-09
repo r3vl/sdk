@@ -7,7 +7,7 @@ export type FnArgs = {
   distribution: number[][], 
   tiers?: { [token: string]: string }[],
   name: string,
-  mutabilityEnabled: boolean
+  mutabilityDisabled: boolean
 }
 
 /**
@@ -20,7 +20,7 @@ export async function createRevenuePathV2(
     distribution, 
     tiers, 
     name, 
-    mutabilityEnabled 
+    mutabilityDisabled 
   } : FnArgs,
   {
     gasLimit
@@ -36,48 +36,27 @@ export async function createRevenuePathV2(
 
   const contract = sdk.reveelMainV2;
 
-  const formatedLimits: BigNumberish[][] = []
-  const formatedTokens: string[] = []
-  
-  // tiers.forEach((item) => {
-  //   switch (item.token) {
-  //     case 'eth': {
-  //       formatedLimits.push(item.limits.map(limit => utils.parseEther(limit.toString())))
-  //       formatedTokens.push(constants.AddressZero)
-  //       break
-  //     }
-  //     case 'weth': {
-  //       formatedLimits.push(item.limits.map(limit => utils.parseUnits(limit.toString())))
-  //       formatedTokens.push(tokenList.weth[_chainId])
-  //       break
-  //     }
-  //     case 'usdc': {
-  //       formatedLimits.push(item.limits.map(limit => utils.parseUnits(limit.toString())))
-  //       formatedTokens.push(tokenList.usdc[_chainId])
-  //       break
-  //     }
-  //     case 'dai': {
-  //       formatedLimits.push(item.limits.map(limit => utils.parseUnits(limit.toString(), 18)))
-  //       formatedTokens.push(tokenList.dai[_chainId])
-  //       break
-  //     }
-  //   } 
-  // })
+  const formatedLimits: BigNumberish[][] = tiers ? Object.keys(tiers[0]).reduce((acc: BigNumberish[][], key) => {
+    acc.push(
+      tiers.map((item) => {
+        return key === "eth"
+          ? utils.parseEther(item[key])
+          : key === "dai"
+          ? utils.parseUnits(item[key], 18)
+          : utils.parseUnits(item[key])
+      }),
+    )
+    return acc
+  }, []) : []
 
-  tiers?.map((tier, id) => {
-    const tokens = Object.keys(tier)
+  const formatedTokens: string[]= []
 
-    if (id === 0) {
-      tokens.map((token) => {
-        const tokenConfig = tokenList[token.toLowerCase() as keyof typeof tokenList]
-  
-        if (tokenConfig && tokenConfig[_chainId]) formatedTokens.push(tokenConfig[_chainId])
-      })
-    }
+  const tokens = tiers ? Object.keys(tiers[0]) : []
 
-    formatedLimits.push(tokens.map((token) => {
-      return (token === 'eth') ? utils.parseEther(tier[token]) : utils.parseUnits(tier[token])
-    }))
+  tokens.map((token) => {
+    const tokenConfig = tokenList[token.toLowerCase() as keyof typeof tokenList]
+
+    if (tokenConfig && tokenConfig[_chainId]) formatedTokens.push(tokenConfig[_chainId])
   })
 
   const formatedDistribution = distribution.map(item => {
@@ -93,7 +72,7 @@ export async function createRevenuePathV2(
       formatedTokens,
       formatedLimits,
       name,
-      mutabilityEnabled,
+      mutabilityDisabled,
       {
         gasLimit
       }
