@@ -36,7 +36,7 @@ export async function createRevenuePathV2(
 
   const contract = sdk.reveelMainV2;
 
-  const formatedLimits: BigNumberish[][] = tiers ? Object.keys(tiers[0]).reduce((acc: BigNumberish[][], key) => {
+  const formatedLimits: BigNumberish[][] = tiers?.length && tiers?.length > 0 ? Object.keys(tiers[0]).reduce((acc: BigNumberish[][], key) => {
     acc.push(
       tiers.map((item) => {
         return key === "eth"
@@ -51,7 +51,7 @@ export async function createRevenuePathV2(
 
   const formatedTokens: string[]= []
 
-  const tokens = tiers ? Object.keys(tiers[0]) : []
+  const tokens = tiers?.length && tiers?.length > 0 ? Object.keys(tiers[0]) : []
 
   tokens.map((token) => {
     const tokenConfig = tokenList[token.toLowerCase() as keyof typeof tokenList]

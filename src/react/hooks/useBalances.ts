@@ -21,8 +21,15 @@ export const useBalances = (revPathAddress: AddressInput, filter: {
   const client = ctx?.[revPathAddress]
   const chainId = ctx?.currentChainId
 
-  const query = useQuery(['/balances', revPathAddress, filter?.walletAddress, filter?.isERC20, ctx?.contextHash, chainId], async () => {
-    if (!client) return null
+  const query = useQuery([
+    '/balances',
+    revPathAddress,
+    filter?.walletAddress,
+    filter?.isERC20,
+    ctx?.contextHash,
+    chainId
+  ], async () => {
+    if (!client) throw new Error("No client found.")
 
     const withdrawn = await client?.withdrawn(filter) || 0
     const withdrawable = await client?.withdrawable(filter) || 0
