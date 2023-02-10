@@ -39,7 +39,7 @@ export async function createRevenuePathV2(
   const formatedLimits: BigNumberish[][] = tiers?.length && tiers?.length > 0 ? Object.keys(tiers[0]).reduce((acc: BigNumberish[][], key) => {
     acc.push(
       tiers.map((item) => {
-        return key === "eth"
+        return key === "eth" || key === "matic"
           ? utils.parseEther(item[key])
           : key === "dai"
           ? utils.parseUnits(item[key], 18)
