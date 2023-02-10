@@ -6,6 +6,7 @@ import {
 
 import { AddressInput, R3vlContext } from ".."
 import { tokenList } from "../../constants/tokens"
+import { RevenuePath } from 'src/client'
 
 type QueryResult = {
   withdrawn: number | false | undefined
@@ -16,9 +17,9 @@ type QueryResult = {
 export const useBalances = (revPathAddress: AddressInput, filter: {
   walletAddress?: string,
   isERC20?: keyof typeof tokenList
-} | undefined = undefined, queryOpts?: Omit<UseQueryOptions<QueryResult | null>, 'queryKey' | 'queryFn' | 'initialData'>) => {
+} | undefined = undefined, queryOpts?: Omit<UseQueryOptions<QueryResult | null>, 'queryKey' | 'queryFn' | 'initialData'>, revPath?: RevenuePath) => {
   const ctx = useContext(R3vlContext)
-  const client = ctx?.[revPathAddress]
+  const client = revPath === undefined ? ctx?.[revPathAddress] : revPath
   const chainId = ctx?.currentChainId
 
   const query = useQuery(['/balances', revPathAddress, filter?.walletAddress, filter?.isERC20, ctx?.contextHash, chainId], async () => {

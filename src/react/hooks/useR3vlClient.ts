@@ -1,5 +1,5 @@
-import { useContext, useEffect } from "react"
-import { R3vlClient } from "../../client"
+import { useContext, useEffect, useState } from "react"
+import { R3vlClient, RevenuePath } from "../../client"
 import { ClientConfig } from "../../types"
 import { R3vlContext } from "../../react"
 
@@ -9,6 +9,7 @@ export const useR3vlClient = (config: ClientConfig & {
   initV2?: boolean
 }) => {
   const context = useContext(R3vlContext)
+  const [currentClient, setCurrentClient] = useState<RevenuePath | null>(null)
 
   if (context === undefined) {
     throw new Error('Make sure to include <R3vlProvider>')
@@ -36,6 +37,8 @@ export const useR3vlClient = (config: ClientConfig & {
         ...config
       })
 
+      setCurrentClient(revPath)
+
       const { initClient, resetClient, currentChainId } = context
 
       if (currentChainId && currentChainId !== chainId) {
@@ -59,5 +62,5 @@ export const useR3vlClient = (config: ClientConfig & {
     ensProvider
   ])
 
-  return context
+  return currentClient 
 }
