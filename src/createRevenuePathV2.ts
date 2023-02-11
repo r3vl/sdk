@@ -68,14 +68,14 @@ export async function createRevenuePathV2(
   })
 
   try {
-    const estimateGas = await contract.estimateGas.createRevenuePath(
-      walletList,
-      formatedDistribution, 
-      formatedTokens,
-      formatedLimits,
-      name,
-      mutabilityDisabled
-    )
+    // const estimateGas = await contract.estimateGas.createRevenuePath(
+    //   walletList,
+    //   formatedDistribution, 
+    //   formatedTokens,
+    //   formatedLimits,
+    //   name,
+    //   mutabilityDisabled
+    // )
 
     const tx = await contract.createRevenuePath(
       walletList,
@@ -85,7 +85,7 @@ export async function createRevenuePathV2(
       name,
       mutabilityDisabled,
       {
-        gasLimit: opts?.customGasLimit || increaseGasLimit(estimateGas),
+        gasLimit: opts?.customGasLimit || undefined // increaseGasLimit(estimateGas),
       }
     )
 
