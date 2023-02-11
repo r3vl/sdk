@@ -21,12 +21,8 @@ export async function createRevenuePathV1 (
     name, 
     mutabilityEnabled 
   } : FnArgs,
-  {
-    gasLimit
-  }: {
-    gasLimit: number
-  } = {
-    gasLimit: 9000
+  opts?: {
+    customGasLimit?: number
   }
 ) {
   const { sdk } = this
@@ -51,7 +47,7 @@ export async function createRevenuePathV1 (
       name,
       mutabilityEnabled,
       {
-        gasLimit,
+        gasLimit: opts?.customGasLimit,
       }
     )
 

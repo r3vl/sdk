@@ -10,6 +10,12 @@ export type FnArgs = {
   mutabilityDisabled: boolean
 }
 
+export const increaseGasLimit = (
+  estimatedGasLimit: ethers.BigNumber,
+) => {
+  return estimatedGasLimit.mul(130).div(100)
+}
+
 /**
  *  V2
  */
@@ -22,12 +28,8 @@ export async function createRevenuePathV2(
     name, 
     mutabilityDisabled 
   } : FnArgs,
-  {
-    gasLimit
-  }: {
-    gasLimit: number
-  } = {
-    gasLimit: 900000
+  opts?: {
+    customGasLimit?: number
   }
 ) {
   const { sdk, _chainId } = this
@@ -66,6 +68,15 @@ export async function createRevenuePathV2(
   })
 
   try {
+    const estimateGas = await contract.estimateGas.createRevenuePath(
+      walletList,
+      formatedDistribution, 
+      formatedTokens,
+      formatedLimits,
+      name,
+      mutabilityDisabled
+    )
+
     const tx = await contract.createRevenuePath(
       walletList,
       formatedDistribution, 
@@ -74,7 +85,7 @@ export async function createRevenuePathV2(
       name,
       mutabilityDisabled,
       {
-        gasLimit
+        gasLimit: opts?.customGasLimit || increaseGasLimit(estimateGas),
       }
     )
 

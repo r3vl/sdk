@@ -4,7 +4,7 @@ import { FnArgs as CreateRevenuePathV1Args } from "../../createRevenuePathV1"
 import { FnArgs as CreateRevenuePathV2Args } from "../../createRevenuePathV2"
 import { ContractReceipt, ContractTransaction } from "ethers"
 
-export const useCreateRevenuePath = ({ gasLimit }: { gasLimit: number } = { gasLimit: 900000 }) => {
+export const useCreateRevenuePath = (opts?: { customGasLimit?: number }) => {
   const ctx = useContext(R3vlContext)
   const client = ctx?.default
   const [data, setData] = useState<ContractReceipt | ContractTransaction | undefined>()
@@ -18,7 +18,7 @@ export const useCreateRevenuePath = ({ gasLimit }: { gasLimit: number } = { gasL
     try {
       if (!client?.createRevenuePath) throw new Error("ERROR:: Couldn't find createRevenuePath")
 
-      const response = await client?.createRevenuePath?.(args, { gasLimit })
+      const response = await client?.createRevenuePath?.(args, opts)
 
       setData(response)
     } catch (_error) {
@@ -33,7 +33,7 @@ export const useCreateRevenuePath = ({ gasLimit }: { gasLimit: number } = { gasL
   const mutateAsync = async (args: CreateRevenuePathV1Args | CreateRevenuePathV2Args) => {    
     if (!client?.createRevenuePath) throw new Error("ERROR:: Couldn't find createRevenuePath")
 
-    const response = await client?.createRevenuePath?.(args, { gasLimit })
+    const response = await client?.createRevenuePath?.(args, opts)
 
     return response   
   }
