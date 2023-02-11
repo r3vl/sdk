@@ -6,7 +6,7 @@ export default defineConfig({
     mainnet: {
       reveelMainV0: '0x1b5aa0D926ea3c4C4485Ba447c9ABd9A5A128967',
       reveelMainV1: '0x320becCdfbed31a84A0c6E6F678320814B400BBe',
-      reveelMainV2: '0x320becCdfbed31a84A0c6E6F678320814B400BBe',
+      reveelMainV2: '0xae4EfaEB758f149f9C780268986537E45Bd57d7C',
       pathLibraryV0: '0x92582A5091A55A8Cd168A927ec100fDD13Ec0f20',
       pathLibraryV1: '0x9C23D192313b60225459bee71BC96cF49740418E',
       pathLibraryV2: '0x0000000000000000000000000000000000000000', // TODO: Get correct mainnet address
