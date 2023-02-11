@@ -40,7 +40,7 @@ export const useRevenuePaths = (wallet?: string | boolean, queryOpts?: UserQuery
 
   if (queryOpts?.logContext) console.log("R3VL SDK Context:::", ctx)
 
-  const query = useQuery(['/revenuePaths', wallet, , currentChainId], async () => {
+  const query = useQuery(['/revenuePaths', wallet, currentChainId], async () => {
     if (!client) return []
 
     const result = await client.revenuePaths()
