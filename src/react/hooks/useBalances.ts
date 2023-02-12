@@ -37,10 +37,10 @@ export const useBalances = (revPathAddress: AddressInput, filter: {
     const earnings = withdrawable + pendingDistribution + withdrawn
 
     return {
-      withdrawn,
-      withdrawable,
-      pendingDistribution,
-      earnings
+      withdrawn: withdrawn < 0.000000001 ? withdrawn * 1000000000000 : withdrawn, // TODO: replace with parseUInits
+      withdrawable: withdrawable < 0.000000001 ? withdrawable * 1000000000000 : withdrawable, // TODO: replace with parseUInits
+      pendingDistribution: pendingDistribution < 0.000000001 ? pendingDistribution * 1000000000000 : pendingDistribution, // TODO: replace with parseUInits
+      earnings: earnings < 0.000000001 ? earnings * 1000000000000 : earnings, // TODO: replace with parseUInits
     }
   }, queryOpts)
 
