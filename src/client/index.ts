@@ -55,7 +55,7 @@ export type RevenuePathsList = {
 export type RevenuePath = {
   v: number
   init: () => void
-  withdrawable: (args?: WithdrawableV0Args | WithdrawableV1Args | WithdrawableV2Args) => Promise<number | undefined>
+  withdrawable: (args?: WithdrawableV0Args | WithdrawableV1Args | WithdrawableV2Args) => Promise<any[] | undefined>
   withdrawn: (args?: WithdrawnV0Args | WithdrawnV1Args | WithdrawnV2Args) => Promise<number | undefined>
   transactionEvents?: () => Promise<any> | ReturnType<typeof getRevPathTransactionEventsV2>
   revenuePaths: () => Promise<RevenuePathsList | any>

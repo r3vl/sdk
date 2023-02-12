@@ -18,18 +18,18 @@ export async function withdrawableV1(this: R3vlClient, payload?: FnArgs) {
 
   const { walletAddress, isERC20 } = payload || { walletAddress: undefined, isERC20: undefined }
 
-  if (!walletAddress) return undefined // TODO: implement final solution for total balance
+  if (!walletAddress) return ['', undefined] // TODO: implement final solution for total balance
 
   try {
     if (isERC20) {
       const pendingBalance = await revPathV1Read.erc20Withdrawable(tokenList[isERC20][_chainId], walletAddress)
 
-      return parseFloat(ethers.utils.formatEther(pendingBalance))
+      return ['', parseFloat(ethers.utils.formatEther(pendingBalance))]
     }
 
     const pendingBalance = await revPathV1Read.getPendingEthBalance(walletAddress)
 
-    return parseFloat(ethers.utils.formatEther(pendingBalance))
+    return ['', parseFloat(ethers.utils.formatEther(pendingBalance))]
   } catch (error) {
     console.error(error)
   }

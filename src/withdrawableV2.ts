@@ -19,17 +19,11 @@ export async function withdrawableV2(this: R3vlClient, payload?: FnArgs) {
   const { walletAddress, isERC20 } = payload || { walletAddress: undefined, isERC20: undefined }
 
   try {
-    let pendingBalance: ethers.BigNumber
     const totalTiers = await revPathV2Read.getTotalRevenueTiers()
     let pendingDistribution = await revPathV2Read.getPendingDistributionAmount(isERC20 ? tokenList[isERC20][_chainId] : ethers.constants.AddressZero)
     
     if (walletAddress) {
-      let totalAmount
-
-      totalAmount = await revPathV2Read.getWithdrawableToken(
-        isERC20 ? tokenList[isERC20][_chainId] : ethers.constants.AddressZero,
-        walletAddress
-      )
+      let walletPendingDistribution = ethers.BigNumber.from(0)
 
       for (let i = 0; i < totalTiers?.toNumber(); i++) {
         const tierLimit = await revPathV2Read.getTokenTierLimits(isERC20 ? tokenList[isERC20][_chainId] : ethers.constants.AddressZero, walletAddress)
@@ -39,20 +33,31 @@ export async function withdrawableV2(this: R3vlClient, payload?: FnArgs) {
           tierLimit.gt(pendingDistribution) ||
           (tierLimit.eq(ethers.BigNumber.from(0)) && pendingDistribution.gt(ethers.BigNumber.from(0)))
         ) {
-          totalAmount = totalAmount.add(pendingDistribution.div(ethers.BigNumber.from(10000000)).mul(proportion))
+          walletPendingDistribution = walletPendingDistribution.add(pendingDistribution.div(ethers.BigNumber.from(10000000)).mul(proportion))
 
           break
         } else {
           const distribution = pendingDistribution.div(ethers.BigNumber.from(10000000)).mul(proportion)
 
-          totalAmount = totalAmount.add(distribution)
+          walletPendingDistribution = walletPendingDistribution.add(distribution)
           pendingDistribution = pendingDistribution.sub(distribution)
         }
       }
+      
+      if (walletPendingDistribution.gt(ethers.BigNumber.from(0))) {
+        return ['pendingDistribution', parseFloat(ethers.utils.formatEther(walletPendingDistribution))]
+      }
 
-      pendingBalance = totalAmount
+      const withdrawable = await revPathV2Read.getWithdrawableToken(
+        isERC20 ? tokenList[isERC20][_chainId] : ethers.constants.AddressZero,
+        walletAddress
+      )
+
+      return ['withdrawable', parseFloat(ethers.utils.formatEther(withdrawable))]
     } else {
-      let totalAmount: ethers.BigNumber = ethers.BigNumber.from(0)
+      if (pendingDistribution.gt(ethers.BigNumber.from(0))) return ['pendingDistribution', parseFloat(ethers.utils.formatEther(pendingDistribution))]
+
+      let wtihdrawable: ethers.BigNumber = ethers.BigNumber.from(0)
       const _walletList: string[] = []
 
       for (let i = 0; i < totalTiers?.toNumber(); i++) {
@@ -64,13 +69,11 @@ export async function withdrawableV2(this: R3vlClient, payload?: FnArgs) {
       }
 
       for (let i = 0; i < _walletList.length; i++) {
-        totalAmount = totalAmount.add(await revPathV2Read.getWithdrawableToken(isERC20 ? tokenList[isERC20][_chainId] : ethers.constants.AddressZero, _walletList[i]))
+        wtihdrawable = wtihdrawable.add(await revPathV2Read.getWithdrawableToken(isERC20 ? tokenList[isERC20][_chainId] : ethers.constants.AddressZero, _walletList[i]))
       }
 
-      pendingBalance = totalAmount.add(pendingDistribution)
+      return ['withdrawable', parseFloat(ethers.utils.formatEther(wtihdrawable.add(pendingDistribution)))]
     }
-
-    return parseFloat(ethers.utils.formatEther(pendingBalance))
   } catch (error) {
     console.error(error)
   }
