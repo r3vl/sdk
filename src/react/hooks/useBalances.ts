@@ -33,13 +33,13 @@ export const useBalances = (revPathAddress: AddressInput, filter: {
     if (!client) throw new Error("No client found.")
 
     const withdrawn = await client?.withdrawn(filter) || 0
-    const [type, withdrawable] = await client?.withdrawable(filter) || ['', 0]
-    const earnings = withdrawn + withdrawable
+    const [pendingDistribution, withdrawable] = client?.withdrawable ? await client?.withdrawable(filter) || [0, 0]  : [0, 0]
+    const earnings = withdrawable + pendingDistribution + withdrawn
 
     return {
-      type,
       withdrawn,
       withdrawable,
+      pendingDistribution,
       earnings
     }
   }, queryOpts)

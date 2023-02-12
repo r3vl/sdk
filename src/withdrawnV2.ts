@@ -22,7 +22,7 @@ export async function withdrawnFundsV2(this: R3vlClient, payload?: FnArgs) {
     const released = walletAddress ? await revPathV2Read.getTokenWithdrawn(
       isERC20 ? tokenList[isERC20][_chainId] : ethers.constants.AddressZero,
       walletAddress
-    ) : await revPathV2Read.getTotalTokenAccounted(isERC20 ? tokenList[isERC20][_chainId] : ethers.constants.AddressZero)
+    ) : await revPathV2Read.getTotalTokenReleased(isERC20 ? tokenList[isERC20][_chainId] : ethers.constants.AddressZero)
 
     return parseFloat(ethers.utils.formatEther(released))
   } catch (error) {

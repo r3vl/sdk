@@ -55,7 +55,7 @@ export type RevenuePathsList = {
 export type RevenuePath = {
   v: number
   init: () => void
-  withdrawable: (args?: WithdrawableV0Args | WithdrawableV1Args | WithdrawableV2Args) => Promise<any[] | undefined>
+  withdrawable?: (args?: WithdrawableV0Args | WithdrawableV1Args | WithdrawableV2Args) => Promise<any[] | undefined>
   withdrawn: (args?: WithdrawnV0Args | WithdrawnV1Args | WithdrawnV2Args) => Promise<number | undefined>
   transactionEvents?: () => Promise<any> | ReturnType<typeof getRevPathTransactionEventsV2>
   revenuePaths: () => Promise<RevenuePathsList | any>
@@ -147,7 +147,7 @@ export class R3vlClient extends Base {
         this.sdk = sdk
         this.initialized = true
       },
-      withdrawable: (args?: WithdrawableV0Args) => withdrawableV0.call(this, args),
+      // withdrawable: (args?: WithdrawableV0Args) => withdrawableV0.call(this, args),
       withdrawn: (args?: WithdrawnV0Args) => withdrawnV0.call(this, args),
       // transactionEvents: () => getRevPathWithdrawEventsV0.call(this),
       revenuePaths: () => getRevenuePathsV0.call(this),
@@ -166,7 +166,7 @@ export class R3vlClient extends Base {
         this.sdk = sdk
         this.initialized = true
       },
-      withdrawable: (args?: WithdrawableV1Args) => withdrawableV1.call(this, args),
+      // withdrawable: (args?: WithdrawableV1Args) => withdrawableV1.call(this, args),
       withdrawn: (args?: WithdrawnV1Args) => withdrawnV1.call(this, args),
       createRevenuePath: (args: CreateRevenuePathV1Args, opts?: { customGasLimit?: number }) => createRevenuePathV1.call(this, args, opts),
       updateRevenueTier: (args: UpdateRevenueTierV1Args) => updateRevenueTierV1.call(this, args),
