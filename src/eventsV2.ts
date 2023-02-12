@@ -111,6 +111,7 @@ export async function getRevPathTransactionEventsV2(this: R3vlClient) {
 
   const revPathsEvents = await getRevenuePathsV2.call(this)
   const contract = revPathsEvents.find((event) => event.address === _revPathAddress)
+  const tiers = await contract?.contract.getTotalRevenueTiers()
 
   return {
     ownershipTransferred,
@@ -126,6 +127,7 @@ export async function getRevPathTransactionEventsV2(this: R3vlClient) {
       [sdk?.usdc.address]: await sdk?.usdc.symbol(),
       [sdk?.dai.address]: await sdk?.dai.symbol()
     },
-    revPathName: contract?.eventPayload.args.name
+    revPathName: contract?.eventPayload.args.name,
+    tiers: tiers?.toNumber && tiers?.toNumber() > 1
   }
 }
