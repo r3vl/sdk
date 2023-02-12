@@ -27,9 +27,10 @@ export async function withdrawableV2(this: R3vlClient, payload?: FnArgs) {
 
       return [parseFloat(ethers.utils.formatEther(pendingDistribution)), parseFloat(ethers.utils.formatEther(withdrawable))]
     } else {
-      const distributed = await revPathV2Read.getTotalTokenAccounted(isERC20 ? tokenList[isERC20][_chainId] : ethers.constants.AddressZero)
+      const accounted = await revPathV2Read.getTotalTokenAccounted(isERC20 ? tokenList[isERC20][_chainId] : ethers.constants.AddressZero)
+      const withdrawn = await revPathV2Read.getTotalTokenReleased(isERC20 ? tokenList[isERC20][_chainId] : ethers.constants.AddressZero)
 
-      return [parseFloat(ethers.utils.formatEther(pendingDistribution)), parseFloat(ethers.utils.formatEther(distributed))]
+      return [parseFloat(ethers.utils.formatEther(pendingDistribution)), parseFloat(ethers.utils.formatEther(accounted.sub(withdrawn)))]
     }
   } catch (error) {
     console.error(error)

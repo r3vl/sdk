@@ -70,7 +70,7 @@ describe('Main', () => {
           })
 
           const r = useBalances('0x49d70FdFBeF24B66D1a1bd4f69E638ea7B1DBA53', {
-            // walletAddress: "0x5e5E38626d419Df414e5AFd06121DFb041AEe2B2"
+            // walletAddress: "0x538C138B73836b811c148B3E4c3683B7B923A0E7"
           })
 
           console.log("META:::", r.data)
