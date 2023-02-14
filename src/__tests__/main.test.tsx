@@ -66,11 +66,12 @@ describe('Main', () => {
             chainId,
             provider,
             signer,
-            revPathAddress: '0x49d70FdFBeF24B66D1a1bd4f69E638ea7B1DBA53'
+            revPathAddress: '0x1d6A43b269Fb9EDE3784d55AeEDEd9428d6dA11f'
           })
 
-          const r = useBalances('0x49d70FdFBeF24B66D1a1bd4f69E638ea7B1DBA53', {
+          const r = useBalances('0x1d6A43b269Fb9EDE3784d55AeEDEd9428d6dA11f', {
             // walletAddress: "0x538C138B73836b811c148B3E4c3683B7B923A0E7"
+            walletAddress: "0x5e5E38626d419Df414e5AFd06121DFb041AEe2B2"
           })
 
           console.log("META:::", r.data)
