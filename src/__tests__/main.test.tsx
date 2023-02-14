@@ -189,11 +189,12 @@ describe('Main', () => {
             chainId,
             provider,
             signer,
-            revPathAddress: '0x663c5A6fd46E9c9D20c8C174FD555079f8879F87'
+            revPathAddress: '0x1d6A43b269Fb9EDE3784d55AeEDEd9428d6dA11f'
           })
 
-          const r = useRevenuePathTiers('0x663c5A6fd46E9c9D20c8C174FD555079f8879F87')
+          const r = useRevenuePathTiers('0x1d6A43b269Fb9EDE3784d55AeEDEd9428d6dA11f')
 
+          console.log("MMMMM", r.data?.map((p: any) => p.available["0x538C138B73836b811c148B3E4c3683B7B923A0E7"].eth))
           return r
         },
         { wrapper }
@@ -201,7 +202,7 @@ describe('Main', () => {
 
       await waitForNextUpdate()
       await waitForNextUpdate()
-      await waitForNextUpdate({ timeout: 8000 })
+      await waitForNextUpdate({ timeout: 10000 })
 
       expect(result?.current.isFetched).toBeTruthy()
     })

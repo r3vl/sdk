@@ -21,6 +21,8 @@ export const chainIds = {
   auroraTestnet: 1313161555
 }
 
+export const getTokenListByAddress = (chainId: number) => Object.keys(tokenList).reduce((prev, curr) => { return { ...prev, [tokenList[curr as keyof typeof tokenList][chainId]]: curr } }, {})
+
 export type ChainIds = typeof chainIds[keyof typeof chainIds]
 export type ChainIdType = { [key in ChainIds]: string }
 
