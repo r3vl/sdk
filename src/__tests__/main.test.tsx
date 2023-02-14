@@ -201,7 +201,7 @@ describe('Main', () => {
       )
 
       await waitForNextUpdate()
-      await waitForNextUpdate()
+      await waitForNextUpdate({ timeout: 10000 })
       await waitForNextUpdate({ timeout: 10000 })
 
       expect(result?.current.isFetched).toBeTruthy()

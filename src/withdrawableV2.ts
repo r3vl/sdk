@@ -78,13 +78,16 @@ export async function withdrawableTiersV2(this: R3vlClient, payload?: FnArgs) {
   let pendingDistribution = await revPathV2Read.getPendingDistributionAmount(isERC20 ? tokenList[isERC20][_chainId] : ethers.constants.AddressZero)
   
   const tiers = []
+
+  for (let i = 0; i < totalTiers.toNumber(); i++) {
+    pendingDistribution = pendingDistribution.add(await revPathV2Read.getTierDistributedAmount(isERC20 ? tokenList[isERC20][_chainId] : ethers.constants.AddressZero, i))
+  }
   
   for (let i = 0; i < totalTiers.toNumber(); i++) {
     const wallets: any = {}
     const lastTier = totalTiers.toNumber() - 1
     const walletList = await revPathV2Read.getRevenueTier(i)
-    const tierDistributed = await revPathV2Read.getTierDistributedAmount(isERC20 ? tokenList[isERC20][_chainId] : ethers.constants.AddressZero, i)
-    const tierLimit = (await revPathV2Read.getTokenTierLimits(isERC20 ? tokenList[isERC20][_chainId] : ethers.constants.AddressZero, i)).sub(tierDistributed)
+    const tierLimit = await revPathV2Read.getTokenTierLimits(isERC20 ? tokenList[isERC20][_chainId] : ethers.constants.AddressZero, i)
 
     let walletsTierLimit = ethers.BigNumber.from(0)
 
