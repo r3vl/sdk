@@ -54,7 +54,7 @@ export const R3vlProvider: React.FC<Props> = ({
   }, '')
 
   const initClient = (objKey: string | undefined, revPath: RevenuePath, _currentChainId: number) => {
-    setClient({ ...clients, [objKey || 'default']: revPath })
+    setClient((clients) => ({ ...clients, [objKey || 'default']: revPath }))
     
     setCurrentChainId(_currentChainId)
   }
