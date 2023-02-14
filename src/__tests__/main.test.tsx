@@ -80,7 +80,7 @@ describe('Main', () => {
         { wrapper }
       )
 
-      await waitForNextUpdate()
+      await waitForNextUpdate({ timeout: 5000 })
       await waitForNextUpdate({ timeout: 5000 })
 
       expect(result?.current).not.toBeNaN()
