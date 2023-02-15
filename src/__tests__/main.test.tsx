@@ -66,13 +66,10 @@ describe('Main', () => {
             chainId,
             provider,
             signer,
-            revPathAddress: '0x1d6A43b269Fb9EDE3784d55AeEDEd9428d6dA11f'
+            revPathAddress: '0xaC6641999806289f5516fD22290F9eED3750c74c'
           })
 
-          const r = useBalances('0x1d6A43b269Fb9EDE3784d55AeEDEd9428d6dA11f', {
-            // walletAddress: "0x538C138B73836b811c148B3E4c3683B7B923A0E7"
-            walletAddress: "0x5e5E38626d419Df414e5AFd06121DFb041AEe2B2"
-          })
+          const r = useBalances('0xaC6641999806289f5516fD22290F9eED3750c74c', { walletAddress: "0x5e5E38626d419Df414e5AFd06121DFb041AEe2B2" })
 
           console.log("META:::", r.data)
           return r.data || 0
@@ -80,8 +77,8 @@ describe('Main', () => {
         { wrapper }
       )
 
-      await waitForNextUpdate({ timeout: 5000 })
-      await waitForNextUpdate({ timeout: 5000 })
+      await waitForNextUpdate({ timeout: 9000 })
+      await waitForNextUpdate({ timeout: 9000 })
 
       expect(result?.current).not.toBeNaN()
     })
@@ -189,12 +186,12 @@ describe('Main', () => {
             chainId,
             provider,
             signer,
-            revPathAddress: '0x1d6A43b269Fb9EDE3784d55AeEDEd9428d6dA11f'
+            revPathAddress: '0xaC6641999806289f5516fD22290F9eED3750c74c'
           })
 
-          const r = useRevenuePathTiers('0x1d6A43b269Fb9EDE3784d55AeEDEd9428d6dA11f')
+          const r = useRevenuePathTiers('0xaC6641999806289f5516fD22290F9eED3750c74c')
 
-          console.log("MMMMM", r.data?.map((p: any) => p.available["0x538C138B73836b811c148B3E4c3683B7B923A0E7"].eth))
+          console.log("MMMMM", r.data)
           return r
         },
         { wrapper }
