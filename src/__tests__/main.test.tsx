@@ -186,10 +186,10 @@ describe('Main', () => {
             chainId,
             provider,
             signer,
-            revPathAddress: '0xaC6641999806289f5516fD22290F9eED3750c74c'
+            revPathAddress: '0x3f872C2A7E32d392f502c6c9756DC57B890c2FE1'
           })
 
-          const r = useRevenuePathTiers('0xaC6641999806289f5516fD22290F9eED3750c74c')
+          const r = useRevenuePathTiers('0x3f872C2A7E32d392f502c6c9756DC57B890c2FE1')
 
           console.log("MMMMM", r.data)
           return r
@@ -197,7 +197,7 @@ describe('Main', () => {
         { wrapper }
       )
 
-      await waitForNextUpdate()
+      await waitForNextUpdate({ timeout: 10000 })
       await waitForNextUpdate({ timeout: 10000 })
       await waitForNextUpdate({ timeout: 10000 })
 

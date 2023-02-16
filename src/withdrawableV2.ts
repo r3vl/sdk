@@ -100,12 +100,14 @@ export async function withdrawableTiersV2(this: R3vlClient, payload?: FnArgs) {
       const walletTierProportion = await revPathV2Read.getRevenueProportion(i, walletList[j])
       const walletTierLimit = tierLimit.div(ethers.BigNumber.from(10000000)).mul(walletTierProportion)
       
-      if (tierLimit.isZero()) {
+      if (parseFloat(ethers.utils.formatEther(tierLimit)) === 0) {
         let received = pendingDistribution.div(ethers.BigNumber.from(10000000)).mul(walletTierProportion)
 
         if (j + 1 === walletList.length) received = pendingDistribution
 
         wallets[walletList[j]] = parseFloat(ethers.utils.formatEther(received))
+
+        pendingDistribution = pendingDistribution.sub(received)
 
         continue
       }

@@ -12,7 +12,7 @@ import { ContractTransaction } from 'ethers'
 export const useWithdraw = (revPathAddress: AddressInput, queryOpts?: QueryOptions) => {
   const ctx = useContext(R3vlContext)
 
-  if (!ctx ) return null
+  if (!ctx) return null
 
   const client = ctx?.[revPathAddress]
 
