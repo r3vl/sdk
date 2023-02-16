@@ -1,6 +1,6 @@
 {
   "name": "@r3vl/sdk",
-  "version": "0.0.29-beta.43",
+  "version": "0.0.29-beta.44",
   "description": "an sdk for interacting with reveel",
   "main": "dist/index.cjs.js",
   "types": "dist/index.d.ts",

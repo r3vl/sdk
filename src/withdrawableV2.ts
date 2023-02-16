@@ -47,6 +47,16 @@ export async function withdrawableV2(this: R3vlClient, payload?: FnArgs) {
         }
       }
 
+      if (parseFloat(ethers.utils.formatEther(walletsTierLimit)) === 0) {
+        let received = pendingDistribution.div(ethers.BigNumber.from(10000000)).mul(currentWalletProportion)
+
+        walletPendingDistribution = walletPendingDistribution.add(received)
+
+        pendingDistribution = pendingDistribution.sub(walletsTierLimit)
+
+        continue
+      }
+
       if (pendingDistribution.gte(walletsTierLimit)) {
         walletPendingDistribution = walletPendingDistribution.add(currentWalletLimit)
 
