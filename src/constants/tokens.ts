@@ -56,7 +56,7 @@ export const tokenList = {
   },
   dai: {
     name: "DAI",
-    [chainIds.goerli]: "0x41e38e70a36150D08A8c97aEC194321b5eB545A5",
+    [chainIds.goerli]: "0xdc31ee1784292379fbb2964b3b9c4124d8f89c60",
     [chainIds.mainnet]: "0x6B175474E89094C44Da98b954EedeAC495271d0F",
     [chainIds.polygon]: '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063',
     [chainIds.optimism]: '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
