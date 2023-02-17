@@ -77,6 +77,16 @@ export async function createRevenuePathV2(
     //   mutabilityDisabled
     // )
 
+    console.log("CREATE_REVENUE_PATH_PAYLOAD", walletList,
+      formatedDistribution, 
+      formatedTokens,
+      formatedLimits,
+      name,
+      mutabilityDisabled,
+      {
+        gasLimit: opts?.customGasLimit || undefined // increaseGasLimit(estimateGas),
+      }
+    )
     const tx = await contract.createRevenuePath(
       walletList,
       formatedDistribution, 

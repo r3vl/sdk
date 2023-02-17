@@ -22,7 +22,7 @@ export default defineConfig({
       pathLibraryV2: '0x82AeaFc181f83a1AB53bBeFC2d8fdCc8C42a7707',
       weth: '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6',
       usdc: '0xD87Ba7A50B2E7E660f678A895E4B72E7CB4CCd9C',
-      dai: '0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60'
+      dai: '0x41e38e70a36150D08A8c97aEC194321b5eB545A5'
     },
     polygonMumbai: {
       reveelMainV1: '0xb05Bcdfd259D08728db7517bf3c3CC4262D3b451',

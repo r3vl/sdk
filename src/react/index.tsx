@@ -1,6 +1,11 @@
 import React, { createContext, useState, useMemo, useEffect } from 'react'
 import { QueryClient, QueryClientProvider, UseQueryOptions } from '@tanstack/react-query'
 
+import { persistQueryClient } from '@tanstack/react-query-persist-client'
+import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister'
+
+import { compress, decompress } from 'lz-string'
+
 import { R3vlClient, RevenuePath } from "../client"
 import { ClientConfig } from '../types'
 
@@ -21,6 +26,15 @@ type R3vlContextType = ClientType & {
 }
 
 const queryClient = new QueryClient()
+
+persistQueryClient({
+  queryClient,
+  persister: createSyncStoragePersister({
+    storage: typeof window === "undefined" ? undefined : window.localStorage,
+    serialize: data => compress(JSON.stringify(data)),
+    deserialize: data => JSON.parse(decompress(data) || ''),
+  }),
+})
 
 export const createClient = () => {
   return {
@@ -54,7 +68,7 @@ export const R3vlProvider: React.FC<Props> = ({
   }, '')
 
   const initClient = (objKey: string | undefined, revPath: RevenuePath, _currentChainId: number) => {
-    setClient({ ...clients, [objKey || 'default']: revPath })
+    setClient((clients) => ({ ...clients, [objKey || 'default']: revPath }))
     
     setCurrentChainId(_currentChainId)
   }

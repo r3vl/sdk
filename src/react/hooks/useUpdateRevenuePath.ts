@@ -13,8 +13,10 @@ import { FnArgs as UpdateLimitsV2Args } from "../../updateLimitsV2"
 import { FnArgs as AddRevenueTiersV2Args } from "../../addRevenueTiersV2"
 
 
-export const useUpdateRevenuePath = (queryOpts?: QueryOptions) => {
+export const useUpdateRevenuePath = (revPathAddress: string, queryOpts?: QueryOptions) => {
   const ctx = useContext(R3vlContext)
+
+  if (!ctx) return
 
   return {
     updateRevenueTier: useMutation(
@@ -73,9 +75,9 @@ export const useUpdateRevenuePath = (queryOpts?: QueryOptions) => {
       queryOpts
     ),
     updateRevenueTiers: useMutation(
-      ['/updateRevenueTiers', ctx?.default],
+      ['/updateRevenueTiers', revPathAddress],
       async (args: UpdateRevenueTiersV2Args) => {
-        const client = ctx?.default && ctx?.default
+        const client = ctx?.[revPathAddress as any]
 
         if (!client?.updateRevenueTiers) return
 

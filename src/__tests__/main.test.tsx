@@ -22,7 +22,7 @@ describe('Main', () => {
 
   const provider = communityProvider()
   const signer = communitySigner()
-  const chainId = 5
+  const chainId = 1
   const wrapper = ({ children }: { children: any }) => {
     return (
       <R3vlProvider client={client}>
@@ -66,13 +66,10 @@ describe('Main', () => {
             chainId,
             provider,
             signer,
-            revPathAddress: '0x1d6A43b269Fb9EDE3784d55AeEDEd9428d6dA11f'
+            revPathAddress: '0x6F262b498768eb6ed461241ccd52CA4663649860'
           })
 
-          const r = useBalances('0x1d6A43b269Fb9EDE3784d55AeEDEd9428d6dA11f', {
-            // walletAddress: "0x538C138B73836b811c148B3E4c3683B7B923A0E7"
-            walletAddress: "0x5e5E38626d419Df414e5AFd06121DFb041AEe2B2"
-          })
+          const r = useBalances('0x6F262b498768eb6ed461241ccd52CA4663649860', { walletAddress: "0xD6d0c9fC8F1f6cbCa3472052df3678E5b29b2DcA" })
 
           console.log("META:::", r.data)
           return r.data || 0
@@ -80,8 +77,8 @@ describe('Main', () => {
         { wrapper }
       )
 
-      await waitForNextUpdate({ timeout: 5000 })
-      await waitForNextUpdate({ timeout: 5000 })
+      await waitForNextUpdate({ timeout: 9000 })
+      await waitForNextUpdate({ timeout: 9000 })
 
       expect(result?.current).not.toBeNaN()
     })
@@ -189,18 +186,18 @@ describe('Main', () => {
             chainId,
             provider,
             signer,
-            revPathAddress: '0x1d6A43b269Fb9EDE3784d55AeEDEd9428d6dA11f'
+            revPathAddress: '0x3f872C2A7E32d392f502c6c9756DC57B890c2FE1'
           })
 
-          const r = useRevenuePathTiers('0x1d6A43b269Fb9EDE3784d55AeEDEd9428d6dA11f')
+          const r = useRevenuePathTiers('0x3f872C2A7E32d392f502c6c9756DC57B890c2FE1')
 
-          console.log("MMMMM", r.data?.map((p: any) => p.available["0x538C138B73836b811c148B3E4c3683B7B923A0E7"].eth))
+          console.log("MMMMM", r.data)
           return r
         },
         { wrapper }
       )
 
-      await waitForNextUpdate()
+      await waitForNextUpdate({ timeout: 10000 })
       await waitForNextUpdate({ timeout: 10000 })
       await waitForNextUpdate({ timeout: 10000 })
 

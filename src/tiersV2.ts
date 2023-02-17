@@ -23,16 +23,40 @@ export async function tiersV2(this: R3vlClient): Promise<TierType[] | undefined>
   if (!revPathV2Read || !sdk) throw new Error("ERROR:.")
 
   const tiersNumber = await revPathV2Read.getTotalRevenueTiers()
-  const currentTierETH = await revPathV2Read.getCurrentTier(ethers.constants.AddressZero)
-  const currentTierWETH = await revPathV2Read.getCurrentTier(sdk.weth.address)
-  const currentTierUSDC = await revPathV2Read.getCurrentTier(sdk.usdc.address)
-  const currentTierDAI = await revPathV2Read.getCurrentTier(sdk.dai.address)
+  const currentTierETHPromise = revPathV2Read.getCurrentTier(ethers.constants.AddressZero)
+  const currentTierWETHPromise = revPathV2Read.getCurrentTier(sdk.weth.address)
+  const currentTierUSDCPromise = revPathV2Read.getCurrentTier(sdk.usdc.address)
+  const currentTierDAIPromise = revPathV2Read.getCurrentTier(sdk.dai.address)
   const tiers = []
+
+  const [
+    currentTierETH,
+    currentTierWETH,
+    currentTierUSDC,
+    currentTierDAI,
+  ] = await Promise.all([
+    currentTierETHPromise,
+    currentTierWETHPromise,
+    currentTierUSDCPromise,
+    currentTierDAIPromise,
+  ])
   
-  const walletsDistributedETH = await withdrawableTiersV2.call(_context)
-  const walletsDistributedWETH = await withdrawableTiersV2.call(_context, { isERC20: 'weth' })
-  const walletsDistributedUSDC = await withdrawableTiersV2.call(_context, { isERC20: 'usdc' })
-  const walletsDistributedDAI = await withdrawableTiersV2.call(_context, { isERC20: 'dai' })
+  const walletsDistributedETHPromise = withdrawableTiersV2.call(_context)
+  const walletsDistributedWETHPromise = withdrawableTiersV2.call(_context, { isERC20: 'weth' })
+  const walletsDistributedUSDCPromise = withdrawableTiersV2.call(_context, { isERC20: 'usdc' })
+  const walletsDistributedDAIPromise = withdrawableTiersV2.call(_context, { isERC20: 'dai' })
+
+  const [
+    walletsDistributedETH,
+    walletsDistributedWETH,
+    walletsDistributedUSDC,
+    walletsDistributedDAI,
+  ] = await Promise.all([
+    walletsDistributedETHPromise,
+    walletsDistributedWETHPromise,
+    walletsDistributedUSDCPromise,
+    walletsDistributedDAIPromise,
+  ])
 
   for (let i = 0; i < tiersNumber?.toNumber(); i++) {
     const walletList = await revPathV2Read.getRevenueTier(i)
@@ -42,10 +66,22 @@ export async function tiersV2(this: R3vlClient): Promise<TierType[] | undefined>
     // const availableUSDC = await revPathV2Read.getTierDistributedAmount(sdk.usdc.address, i)
     // const availableDAI = await revPathV2Read.getTierDistributedAmount(sdk.dai.address, i)
 
-    const tierLimitsETH = await revPathV2Read.getTokenTierLimits(ethers.constants.AddressZero, i)
-    const tierLimitsWETH = await revPathV2Read.getTokenTierLimits(sdk.weth.address, i)
-    const tierLimitsUSDC = await revPathV2Read.getTokenTierLimits(sdk.usdc.address, i)
-    const tierLimitsDAI = await revPathV2Read.getTokenTierLimits(sdk.dai.address, i)
+    const tierLimitsETHPromise = revPathV2Read.getTokenTierLimits(ethers.constants.AddressZero, i)
+    const tierLimitsWETHPromise = revPathV2Read.getTokenTierLimits(sdk.weth.address, i)
+    const tierLimitsUSDCPromise = revPathV2Read.getTokenTierLimits(sdk.usdc.address, i)
+    const tierLimitsDAIPromise = revPathV2Read.getTokenTierLimits(sdk.dai.address, i)
+
+    const [
+      tierLimitsETH,
+      tierLimitsWETH,
+      tierLimitsUSDC,
+      tierLimitsDAI,
+    ] = await Promise.all([
+      tierLimitsETHPromise,
+      tierLimitsWETHPromise,
+      tierLimitsUSDCPromise,
+      tierLimitsDAIPromise
+    ])
 
     const proportions = {} as { [walletAddress: string]: number }
     const available = {} as { [walletAddress: string]: any }

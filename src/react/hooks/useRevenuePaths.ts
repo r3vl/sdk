@@ -28,6 +28,7 @@ const generateQueries = (revPaths?: RevenuePathsList, wallet?: string, chainId?:
       return {
         ...revPath,
         isUserInPath: !!~walletList.indexOf(wallet || ''),
+        walletList
       }
     },
   })) 
