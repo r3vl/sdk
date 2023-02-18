@@ -69,7 +69,7 @@ describe('Main', () => {
             revPathAddress: '0x6F262b498768eb6ed461241ccd52CA4663649860'
           })
 
-          const r = useBalances('0x6F262b498768eb6ed461241ccd52CA4663649860', { walletAddress: "0xD6d0c9fC8F1f6cbCa3472052df3678E5b29b2DcA" })
+          const r = useBalances('0x6F262b498768eb6ed461241ccd52CA4663649860', { walletAddress: "0xD6d0c9fC8F1f6cbCa3472052df3678E5b29b2DcA", isERC20: "usdc" })
 
           console.log("META:::", r.data)
           return r.data || 0

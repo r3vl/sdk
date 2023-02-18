@@ -1,5 +1,5 @@
 import { BigNumberish, constants, ethers, utils } from 'ethers'
-import { tokenList } from './constants/tokens';
+import { chainIds, tokenList } from './constants/tokens';
 import { R3vlClient } from './client'
 
 export type FnArgs = {
@@ -12,8 +12,9 @@ export type FnArgs = {
 
 export const increaseGasLimit = (
   estimatedGasLimit: ethers.BigNumber,
+  chainId: number
 ) => {
-  return estimatedGasLimit.mul(130).div(100)
+  return estimatedGasLimit.mul(chainId === chainIds.polygon ? 130 : 110).div(100)
 }
 
 /**
@@ -68,14 +69,14 @@ export async function createRevenuePathV2(
   })
 
   try {
-    // const estimateGas = await contract.estimateGas.createRevenuePath(
-    //   walletList,
-    //   formatedDistribution, 
-    //   formatedTokens,
-    //   formatedLimits,
-    //   name,
-    //   mutabilityDisabled
-    // )
+    const estimateGas = await contract.estimateGas.createRevenuePath(
+      walletList,
+      formatedDistribution, 
+      formatedTokens,
+      formatedLimits,
+      name,
+      mutabilityDisabled
+    )
 
     console.log("CREATE_REVENUE_PATH_PAYLOAD", walletList,
       formatedDistribution, 
@@ -83,8 +84,9 @@ export async function createRevenuePathV2(
       formatedLimits,
       name,
       mutabilityDisabled,
+      estimateGas,
       {
-        gasLimit: opts?.customGasLimit || undefined // increaseGasLimit(estimateGas),
+        gasLimit: opts?.customGasLimit || increaseGasLimit(estimateGas, _chainId),
       }
     )
     const tx = await contract.createRevenuePath(
@@ -95,7 +97,7 @@ export async function createRevenuePathV2(
       name,
       mutabilityDisabled,
       {
-        gasLimit: opts?.customGasLimit || undefined // increaseGasLimit(estimateGas),
+        gasLimit: opts?.customGasLimit || increaseGasLimit(estimateGas, _chainId),
       }
     )
 
