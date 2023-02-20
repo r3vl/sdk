@@ -17,6 +17,7 @@ type QueryResult = {
 export const useBalances = (revPathAddress: AddressInput, filter: {
   walletAddress?: string,
   isERC20?: keyof typeof tokenList
+  blockNumber?: number
 } | undefined = undefined, queryOpts?: Omit<UseQueryOptions<any | null>, 'queryKey' | 'queryFn' | 'initialData'>) => {
   const ctx = useContext(R3vlContext)
   const client = ctx?.[revPathAddress]
@@ -27,6 +28,7 @@ export const useBalances = (revPathAddress: AddressInput, filter: {
     revPathAddress,
     filter?.walletAddress,
     filter?.isERC20,
+    filter?.blockNumber,
     ctx?.contextHash,
     chainId
   ], async () => {

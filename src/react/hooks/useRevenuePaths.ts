@@ -71,6 +71,6 @@ export const useRevenuePaths = (wallet?: string | boolean, queryOpts?: UserQuery
       query.isRefetching ||
       query.isLoading ||
       results.some(({ isLoading }) => isLoading),
-    isFetched: !results.some(({ isFetched: _isFetched }) => !_isFetched)
+    isFetched: query.isFetched && !results.some(({ isFetched: _isFetched }) => !_isFetched)
   }
 }

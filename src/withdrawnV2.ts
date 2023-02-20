@@ -6,6 +6,7 @@ import { R3vlClient } from './client'
 export type FnArgs = {
   walletAddress?: string
   isERC20?: keyof typeof tokenList
+  blockNumber?: number
 }
 
 /**
