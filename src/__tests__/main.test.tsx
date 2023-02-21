@@ -66,10 +66,10 @@ describe('Main', () => {
             chainId,
             provider,
             signer,
-            revPathAddress: '0x6F262b498768eb6ed461241ccd52CA4663649860'
+            revPathAddress: '0xB257603b35C370a9b429C1c81ADE366006ad5232'
           })
 
-          const r = useBalances('0x6F262b498768eb6ed461241ccd52CA4663649860', { walletAddress: "0xD6d0c9fC8F1f6cbCa3472052df3678E5b29b2DcA", isERC20: "usdc" })
+          const r = useBalances('0xB257603b35C370a9b429C1c81ADE366006ad5232', { walletAddress: "0x35224C95aa3E53a30cc3F6f64540618892a568D7", isERC20: "usdc" })
 
           console.log("META:::", r.data)
           return r.data || 0
@@ -186,10 +186,10 @@ describe('Main', () => {
             chainId,
             provider,
             signer,
-            revPathAddress: '0x3f872C2A7E32d392f502c6c9756DC57B890c2FE1'
+            revPathAddress: '0xB257603b35C370a9b429C1c81ADE366006ad5232'
           })
 
-          const r = useRevenuePathTiers('0x3f872C2A7E32d392f502c6c9756DC57B890c2FE1')
+          const r = useRevenuePathTiers('0xB257603b35C370a9b429C1c81ADE366006ad5232')
 
           console.log("MMMMM", r.data)
           return r
