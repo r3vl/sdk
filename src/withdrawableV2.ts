@@ -28,13 +28,12 @@ export async function withdrawableV2(this: R3vlClient, payload?: FnArgs) {
     pendingDistribution = ethers.utils.parseEther(ethers.utils.formatUnits(pendingDistribution.toString(), decimals))
   }
 
-  let aaa = ethers.BigNumber.from(0)
   if (walletAddress) {
     const withdrawable = await revPathV2Read.getWithdrawableToken(isERC20 ? tokenList[isERC20][_chainId] : ethers.constants.AddressZero, walletAddress)
+  
     let walletPendingDistribution = ethers.BigNumber.from(0)
 
     for (let i = 0; i < totalTiers.toNumber(); i++) {
-      aaa = pendingDistribution
       const lastTier = totalTiers.toNumber() - 1
       const walletList = await revPathV2Read.getRevenueTier(i)
       // const tierDistributed = await revPathV2Read.getTierDistributedAmount(isERC20 ? tokenList[isERC20][_chainId] : ethers.constants.AddressZero, i)
@@ -104,7 +103,15 @@ export async function withdrawableTiersV2(this: R3vlClient, payload?: FnArgs) {
   const tiers = []
 
   for (let i = 0; i < totalTiers.toNumber(); i++) {
-    pendingDistribution = pendingDistribution.add(await revPathV2Read.getTierDistributedAmount(isERC20 ? tokenList[isERC20][_chainId] : ethers.constants.AddressZero, i))
+    let distributed = await revPathV2Read.getTierDistributedAmount(isERC20 ? tokenList[isERC20][_chainId] : ethers.constants.AddressZero, i)
+
+    if (isERC20) {
+      const decimals = await (sdk as any)[isERC20].decimals()
+  
+      distributed = ethers.utils.parseEther(ethers.utils.formatUnits(distributed.toString(), decimals))
+    }
+
+    pendingDistribution = pendingDistribution.add(distributed)
   }
 
   for (let i = 0; i < totalTiers.toNumber(); i++) {
