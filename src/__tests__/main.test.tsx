@@ -18,7 +18,7 @@ import { ethers } from "ethers"
 const client = createClient()
 
 describe('Main', () => {
-  jest.setTimeout(10000)
+  jest.setTimeout(40000)
 
   const provider = communityProvider()
   const signer = communitySigner()
@@ -186,10 +186,10 @@ describe('Main', () => {
             chainId,
             provider,
             signer,
-            revPathAddress: '0xB593fDaa38010CCA96b32B432eEA8Ac35e41F2c1'
+            revPathAddress: '0xB257603b35C370a9b429C1c81ADE366006ad5232'
           })
 
-          const r = useRevenuePathTiers('0xB593fDaa38010CCA96b32B432eEA8Ac35e41F2c1')
+          const r = useRevenuePathTiers('0xB257603b35C370a9b429C1c81ADE366006ad5232')
 
           console.log("MMMMM", r.data?.[0]?.available)
           return r
@@ -197,9 +197,9 @@ describe('Main', () => {
         { wrapper }
       )
 
-      await waitForNextUpdate({ timeout: 10000 })
-      await waitForNextUpdate({ timeout: 10000 })
-      await waitForNextUpdate({ timeout: 10000 })
+      await waitForNextUpdate({ timeout: 20000 })
+      await waitForNextUpdate({ timeout: 20000 })
+      await waitForNextUpdate({ timeout: 20000 })
 
       expect(result?.current.isFetched).toBeTruthy()
     })
