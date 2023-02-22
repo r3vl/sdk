@@ -42,9 +42,6 @@ export async function addRevenueTierV1 (
       addedWalletList,
       addedDistribution, 
       tierLimits,
-      {
-        gasLimit: 900000,
-      }
     )
 
     const addedResult = await addTx?.wait()

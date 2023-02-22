@@ -56,9 +56,6 @@ export async function updateLimitsV2 (
       formatedTokens,
       formatedLimits, 
       tier,
-      {
-        gasLimit: 900000,
-      }
     )
 
     const result = await tx?.wait()

@@ -60,9 +60,6 @@ export async function addRevenueTiersV2 (
     const addTx = await revPathV2Write.addRevenueTiers(
       addedWalletList,
       addedDistribution,
-      {
-        gasLimit: 900000,
-      }
     )
 
     const addedResult = await addTx?.wait()
