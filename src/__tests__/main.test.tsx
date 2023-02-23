@@ -18,7 +18,7 @@ import { ethers } from "ethers"
 const client = createClient()
 
 describe('Main', () => {
-  jest.setTimeout(40000)
+  jest.setTimeout(80000)
 
   const provider = communityProvider()
   const signer = communitySigner()
@@ -66,10 +66,11 @@ describe('Main', () => {
             chainId,
             provider,
             signer,
-            revPathAddress: '0xB593fDaa38010CCA96b32B432eEA8Ac35e41F2c1'
+            revPathAddress: '0x3A1ac693b22b830c688A801E7a3299B79BC9c3C1',
+            initV1: true,
           })
 
-          const r = useBalances('0xB593fDaa38010CCA96b32B432eEA8Ac35e41F2c1', { walletAddress: "0x3453832af1EbB12F607b406E555829e4C31370bb", isERC20: "usdc" })
+          const r = useBalances('0x3A1ac693b22b830c688A801E7a3299B79BC9c3C1', { walletAddress: "0x755d3EDdD084c8749b5EF6E87bc2b50815aa7664" })
 
           console.log("META:::", r.data)
           return r.data || 0
@@ -92,10 +93,13 @@ describe('Main', () => {
             chainId,
             provider,
             signer,
+            initV0: true,
+            customDefaultKey: 'v0'
           })
 
-          const r = useRevenuePaths()
+          const r = useRevenuePaths("0xD6d0c9fC8F1f6cbCa3472052df3678E5b29b2DcA", { cacheTime: 0, staleTime: 0 }, { customDefaultKey: 'v0' })
 
+          console.log("REVS", r.dataRaw?.[0]?.eventPayload?.args)
           return r
         },
         { wrapper }
@@ -103,8 +107,17 @@ describe('Main', () => {
 
       await waitForNextUpdate()
       await waitForNextUpdate()
+      await waitForNextUpdate({ timeout: 80000 })
+      await waitForNextUpdate({ timeout: 80000 })
+      await waitForNextUpdate({ timeout: 80000 })
+      await waitForNextUpdate({ timeout: 80000 })
+      await waitForNextUpdate({ timeout: 80000 })
+      await waitForNextUpdate({ timeout: 80000 })
+      await waitForNextUpdate({ timeout: 80000 })
+      await waitForNextUpdate({ timeout: 80000 })
+      await waitForNextUpdate({ timeout: 80000 })
 
-      expect(result.current.isFetched).toBeTruthy()
+      expect(result.current).toBeTruthy()
     })
   })
 

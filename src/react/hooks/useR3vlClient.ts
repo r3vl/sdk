@@ -7,6 +7,7 @@ export const useR3vlClient = (config: ClientConfig & {
   initV0?: boolean
   initV1?: boolean
   initV2?: boolean
+  customDefaultKey?: string
 }) => {
   const context = useContext(R3vlContext)
 
@@ -41,12 +42,12 @@ export const useR3vlClient = (config: ClientConfig & {
       if (currentChainId && currentChainId !== chainId) {
         resetClient()
 
-        setTimeout(() => initClient(revPathAddress, revPath, chainId), 200)
+        setTimeout(() => initClient(revPathAddress, revPath, chainId, config.customDefaultKey), 200)
 
         return
       }
 
-      initClient(revPathAddress, revPath, chainId)
+      initClient(revPathAddress, revPath, chainId, config.customDefaultKey)
     }
 
     if (chainId && provider && signer) initialize()

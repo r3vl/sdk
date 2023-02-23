@@ -17,7 +17,7 @@ export async function getRevenuePathsV2(this: R3vlClient) {
   if (!sdk) throw new Error("SDK not initialized")
 
   const contract = sdk.reveelMainV2;
-  const library = (sdk as { pathLibraryV2: any }).pathLibraryV2;
+  const library = (sdk as typeof sdk & { pathLibraryV2: any }).pathLibraryV2;
 
   const pathsEventPayload: { [address: string]: RevenuePathCreatedEvent } = {}
 

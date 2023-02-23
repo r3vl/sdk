@@ -113,9 +113,9 @@ export class R3vlClient extends Base {
 
     const { revPathV1Read, revPathV2Read } = this
 
-    if (byPass === true || opts?.initV2) return v2
-    if (opts?.initV1) return v1
     if (opts?.initV0) return v0
+    if (opts?.initV1) return v1
+    if (byPass === true || opts?.initV2) return v2
 
     try {
       const version = await revPathV2Read?.VERSION()

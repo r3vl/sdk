@@ -21,7 +21,7 @@ export type ClientType = {
 type R3vlContextType = ClientType & {
   contextHash?: string
   currentChainId?: number
-  initClient: (objKey: string | undefined, revPath: RevenuePath, currentChainId: number) => void
+  initClient: (objKey: string | undefined, revPath: RevenuePath, currentChainId: number, customDefaultKey?: string) => void
   resetClient: () => void
 }
 
@@ -67,9 +67,9 @@ export const R3vlProvider: React.FC<Props> = ({
     return prev + `[${curr}-${currentChainId}]`
   }, '')
 
-  const initClient = (objKey: string | undefined, revPath: RevenuePath, _currentChainId: number) => {
-    setClient((clients) => ({ ...clients, [objKey || 'default']: revPath }))
-    
+  const initClient = (objKey: string | undefined, revPath: RevenuePath, _currentChainId: number, customDefaultKey?: string) => {
+    setClient((clients) => ({ ...clients, [objKey || customDefaultKey || 'default']: revPath }))
+
     setCurrentChainId(_currentChainId)
   }
 
