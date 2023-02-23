@@ -23,9 +23,6 @@ export async function updateErc20Distribution (
     const tx = await revPathV1Write.updateErc20Distribution(
       walletList,
       formatedDistribution, 
-      {
-        gasLimit: 900000,
-      }
     )
 
     const result = await tx?.wait()

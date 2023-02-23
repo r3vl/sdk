@@ -33,9 +33,6 @@ export async function updateRevenueTierV1 (
       formatedDistribution, 
       formatedTierLimit,
       tierNumber,
-      {
-        gasLimit: 900000,
-      }
     )
 
     const result = await tx?.wait()
