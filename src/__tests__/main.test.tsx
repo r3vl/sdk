@@ -22,7 +22,7 @@ describe('Main', () => {
 
   const provider = communityProvider()
   const signer = communitySigner()
-  const chainId = 1
+  const chainId = 5
   const wrapper = ({ children }: { children: any }) => {
     return (
       <R3vlProvider client={client}>
@@ -66,11 +66,11 @@ describe('Main', () => {
             chainId,
             provider,
             signer,
-            revPathAddress: '0x3A1ac693b22b830c688A801E7a3299B79BC9c3C1',
+            revPathAddress: '0x54FA6330e45AdB0B20F09E1Ac102a225655B6830',
             initV1: true,
           })
 
-          const r = useBalances('0x3A1ac693b22b830c688A801E7a3299B79BC9c3C1', { walletAddress: "0x755d3EDdD084c8749b5EF6E87bc2b50815aa7664" })
+          const r = useBalances('0x54FA6330e45AdB0B20F09E1Ac102a225655B6830', { walletAddress: "0x7761CA398E836534bEd3B8798f96A3CF39D3bD2E" })
 
           console.log("META:::", r.data)
           return r.data || 0

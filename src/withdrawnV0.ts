@@ -11,7 +11,7 @@ export type FnArgs = {
 /**
  *  V0
  */
-export async function withdrawnV0(this: R3vlClient, payload?: FnArgs) {
+export async function withdrawnV0(this: R3vlClient, payload?: FnArgs, _getBN?: boolean) {
   const { revPathV0Read, _chainId } = this
 
   if (!revPathV0Read) throw new Error("ERROR:")

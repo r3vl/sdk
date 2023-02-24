@@ -2,6 +2,7 @@ import { ContractTransaction, ethers } from 'ethers'
 
 import { tokenList } from "./constants/tokens"
 import { R3vlClient } from './client'
+import { increaseGasLimit } from './createRevenuePathV2'
 
 export type FnArgs = {
   walletAddress: string
@@ -21,9 +22,15 @@ export async function withdrawFundsV2(this: R3vlClient, { walletAddress, isERC20
     let tx 
 
     if (walletAddress) {
-      tx = isERC20 ?
-        await revPathV2Write.release(tokenList[isERC20][_chainId], walletAddress) :
-        await revPathV2Write.release(ethers.constants.AddressZero, walletAddress)
+      if (isERC20) {
+        const gasLimit = increaseGasLimit(await revPathV2Write.estimateGas.release(tokenList[isERC20][_chainId], walletAddress))
+
+        tx = await revPathV2Write.release(tokenList[isERC20][_chainId], walletAddress, { gasLimit })
+      } else {
+        const gasLimit = increaseGasLimit(await revPathV2Write.estimateGas.release(ethers.constants.AddressZero, walletAddress))
+
+        tx = await revPathV2Write.release(ethers.constants.AddressZero, walletAddress, { gasLimit })
+      }
     } else {
       tx = await revPathV2Write.distributePendingTokens(isERC20 ? tokenList[isERC20][_chainId] : ethers.constants.AddressZero)
     }

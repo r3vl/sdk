@@ -2,6 +2,7 @@ import { ethers } from 'ethers'
 
 import { tokenList } from "./constants/tokens"
 import { R3vlClient } from './client'
+import { withdrawnFundsV2 } from './withdrawnV2'
 
 export type FnArgs = {
   walletAddress?: string
@@ -12,6 +13,7 @@ export type FnArgs = {
  *  V2
  */
 export async function withdrawableV2(this: R3vlClient, payload?: FnArgs) {
+  const scope = this
   const { revPathV2Read, _chainId, sdk } = this
 
   if (!revPathV2Read || !sdk) throw new Error("ERROR:")
@@ -72,6 +74,14 @@ export async function withdrawableV2(this: R3vlClient, payload?: FnArgs) {
       } else if (pendingDistribution.lt(walletsTierLimit)) {
         walletPendingDistribution = walletPendingDistribution.add(pendingDistribution.div(divideBy).mul(currentWalletProportion))
       }
+    }
+
+    const withdrawn: ethers.BigNumber = (await withdrawnFundsV2.call(scope, payload, true) as any)
+
+    if (walletPendingDistribution.gt(ethers.BigNumber.from(0)) && withdrawn?.gt(ethers.BigNumber.from(0))) {
+      const withdrawnWithFees = totalTiers.toNumber() > 0 ? walletPendingDistribution.sub(withdrawn.div(ethers.BigNumber.from(10000000)).mul(ethers.BigNumber.from(1))) : withdrawn      
+
+      walletPendingDistribution = walletPendingDistribution.sub(withdrawnWithFees)
     }
 
     return [parseFloat(ethers.utils.formatEther(walletPendingDistribution)), parseFloat(ethers.utils.formatEther(withdrawable))]

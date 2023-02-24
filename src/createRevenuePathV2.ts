@@ -12,9 +12,9 @@ export type FnArgs = {
 
 export const increaseGasLimit = (
   estimatedGasLimit: ethers.BigNumber,
-  chainId: number
+  chainId?: number
 ) => {
-  return estimatedGasLimit.mul(chainId === chainIds.polygon ? 130 : 110).div(100)
+  return estimatedGasLimit.mul(chainId === chainIds.polygon ? 130 : 130).div(100)
 }
 
 /**
