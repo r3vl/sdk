@@ -67,10 +67,9 @@ describe('Main', () => {
             provider,
             signer,
             revPathAddress: '0x54FA6330e45AdB0B20F09E1Ac102a225655B6830',
-            initV1: true,
           })
 
-          const r = useBalances('0x54FA6330e45AdB0B20F09E1Ac102a225655B6830', { walletAddress: "0x7761CA398E836534bEd3B8798f96A3CF39D3bD2E" })
+          const r = useBalances('0x54FA6330e45AdB0B20F09E1Ac102a225655B6830', { walletAddress: "0xF228eDC596846Ed2EA8eE3B8551C29456703476d" })
 
           console.log("META:::", r.data)
           return r.data || 0
@@ -97,9 +96,9 @@ describe('Main', () => {
             customDefaultKey: 'v0'
           })
 
-          const r = useRevenuePaths("0xD6d0c9fC8F1f6cbCa3472052df3678E5b29b2DcA", { cacheTime: 0, staleTime: 0 }, { customDefaultKey: 'v0' })
+          const r = useRevenuePaths("0x538C138B73836b811c148B3E4c3683B7B923A0E7", { cacheTime: 0, staleTime: 0 }, { customDefaultKey: 'v0' })
 
-          console.log("REVS", r.dataRaw?.[0]?.eventPayload?.args)
+          console.log("REVS", r)
           return r
         },
         { wrapper }

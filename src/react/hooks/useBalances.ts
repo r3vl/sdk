@@ -34,15 +34,15 @@ export const useBalances = (revPathAddress: AddressInput, filter: {
   ], async () => {
     if (!client) throw new Error("No client found.")
 
+    const earnings = client?.withdrawable ? await client?.withdrawable(filter) || 0 : 0 // TODO: Rename to received
     const withdrawn = await client?.withdrawn(filter) || 0
-    const [pendingDistribution, withdrawable] = client?.withdrawable ? await client?.withdrawable(filter) || [0, 0]  : [0, 0]
-    const earnings = withdrawable + pendingDistribution + withdrawn
+    const withdrawable = earnings - withdrawn < 0.0001 ? 0 : earnings - withdrawn
 
     return {
-      withdrawn: withdrawn, // TODO: replace with parseUInits
-      withdrawable: withdrawable, // TODO: replace with parseUInits
-      pendingDistribution: pendingDistribution, // TODO: replace with parseUInits
-      earnings: earnings, // TODO: replace with parseUInits
+      withdrawn: withdrawn,
+      withdrawable: withdrawable,
+      pendingDistribution: 0,
+      earnings,
     }
   }, queryOpts)
 

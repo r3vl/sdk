@@ -35,7 +35,11 @@ export async function getRevenuePathsV0(this: R3vlClient) {
     }
   }
 
-  const revPaths: {contract: MainnetSdk["pathLibraryV0"], address: string}[] = uniquePathAddresses.map((revPathAddress) => {
+  const revPaths: {
+    contract: MainnetSdk["pathLibraryV0"],
+    address: string
+    eventPayload: RevenuePathCreatedEvent
+  }[] = uniquePathAddresses.map((revPathAddress) => {
     const contract: MainnetSdk["pathLibraryV0"] = library.attach(revPathAddress)
 
     return {

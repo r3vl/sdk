@@ -12,7 +12,7 @@ export type FnArgs = {
 /**
  *  V0
  */
-export async function withdrawnFundsV2(this: R3vlClient, payload?: FnArgs, getBN: boolean = false) {
+export async function withdrawnFundsV2(this: R3vlClient, payload?: FnArgs) {
   const { revPathV2Read, _chainId, sdk } = this
 
   if (!revPathV2Read || !sdk) throw new Error("ERROR:")
@@ -31,9 +31,11 @@ export async function withdrawnFundsV2(this: R3vlClient, payload?: FnArgs, getBN
       released = ethers.utils.parseEther(ethers.utils.formatUnits(released.toString(), decimals))
     }
 
-    if (getBN) return released
+    const totalTiers = await revPathV2Read.getTotalRevenueTiers()
 
-    return parseFloat(ethers.utils.formatEther(released))
+    const result = totalTiers.toNumber() > 0 ? parseFloat(ethers.utils.formatEther(released)) + parseFloat(ethers.utils.formatEther(released)) * 0.01 : parseFloat(ethers.utils.formatEther(released))
+
+    return result
   } catch (error) {
     console.error(error)
   }

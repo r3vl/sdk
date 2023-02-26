@@ -55,8 +55,8 @@ export type RevenuePathsList = {
 export type RevenuePath = {
   v: number
   init: () => void
-  withdrawable?: (args?: WithdrawableV0Args | WithdrawableV1Args | WithdrawableV2Args) => Promise<any[] | undefined>
-  withdrawn: (args?: WithdrawnV0Args | WithdrawnV1Args | WithdrawnV2Args, getBN?: boolean) => Promise<number | ethers.BigNumber | undefined>
+  withdrawable?: (args?: WithdrawableV0Args | WithdrawableV1Args | WithdrawableV2Args) => Promise<any | undefined>
+  withdrawn: (args?: WithdrawnV0Args | WithdrawnV1Args | WithdrawnV2Args, getBN?: boolean) => Promise<number | undefined>
   transactionEvents?: () => Promise<any> | ReturnType<typeof getRevPathTransactionEventsV2>
   revenuePaths: () => Promise<RevenuePathsList | any>
   withdraw: (args: WithdrawV1Args) => void
@@ -148,7 +148,7 @@ export class R3vlClient extends Base {
         this.initialized = true
       },
       // withdrawable: (args?: WithdrawableV0Args) => withdrawableV0.call(this, args),
-      withdrawn: (args?: WithdrawnV0Args, getBN?: boolean) => withdrawnV0.call(this, args, getBN),
+      withdrawn: (args?: WithdrawnV0Args) => withdrawnV0.call(this, args),
       // transactionEvents: () => getRevPathWithdrawEventsV0.call(this),
       revenuePaths: () => getRevenuePathsV0.call(this),
       withdraw: (args: WithdrawV0Args) => withdrawFundsV0.call(this, args)
@@ -167,7 +167,7 @@ export class R3vlClient extends Base {
         this.initialized = true
       },
       // withdrawable: (args?: WithdrawableV1Args) => withdrawableV1.call(this, args),
-      withdrawn: (args?: WithdrawnV1Args, getBN?: boolean) => withdrawnV1.call(this, args, getBN),
+      withdrawn: (args?: WithdrawnV1Args) => withdrawnV1.call(this, args),
       createRevenuePath: (args: CreateRevenuePathV1Args, opts?: { customGasLimit?: number }) => createRevenuePathV1.call(this, args, opts),
       updateRevenueTier: (args: UpdateRevenueTierV1Args) => updateRevenueTierV1.call(this, args),
       updateErc20Distribution: (args: UpdateErc20DistributionArgs) => updateErc20Distribution.call(this, args),
@@ -195,7 +195,7 @@ export class R3vlClient extends Base {
         this.revPathV2Write = revPathV2Write
       },
       withdrawable: (args?: WithdrawableV2Args) => withdrawableV2.call(this, args),
-      withdrawn: (args?: WithdrawnV2Args, getBN?: boolean) => withdrawnFundsV2.call(this, args, getBN),
+      withdrawn: (args?: WithdrawnV2Args) => withdrawnFundsV2.call(this, args),
       transactionEvents: () => getRevPathTransactionEventsV2.call(this),
       revenuePaths: () => getRevenuePathsV2.call(this),
       withdraw: (args: WithdrawV2Args) => withdrawFundsV2.call(this, args),
