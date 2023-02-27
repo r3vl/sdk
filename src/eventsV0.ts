@@ -1,6 +1,7 @@
 import { MainnetSdk } from '@dethcrypto/eth-sdk-client';
 import { R3vlClient } from './client';
 import { RevenuePathCreatedEvent } from './typechain/ReveelMainV0';
+
 /**
  * TODO(appleseed): build classes for RevenuePath & ReveelMain
  */
