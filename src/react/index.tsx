@@ -21,7 +21,8 @@ export type ClientType = {
 type R3vlContextType = ClientType & {
   contextHash?: string
   currentChainId?: number
-  initClient: (objKey: string | undefined, revPath: RevenuePath, currentChainId: number, customDefaultKey?: string) => void
+  currentSignerAddress?: string
+  initClient: (objKey: string | undefined, revPath: RevenuePath, currentChainId: number, customDefaultKey?: string, currentSignerAddress?: string) => void
   resetClient: () => void
 }
 
@@ -62,25 +63,28 @@ export const R3vlProvider: React.FC<Props> = ({
 }: Props) => {
   const [clients, setClient] = useState<ClientType>({})
   const [currentChainId, setCurrentChainId] = useState<number | undefined>()
+  const [currentSignerAddress, setCurrentSignerAddress] = useState<string | undefined>()
   const { queryClient } = _client
   const contextHash = Object.keys(clients).reduce((prev, curr: any) => {
-    return prev + `[${curr}-${currentChainId}]`
+    return prev + `[${curr}-${currentChainId}-${currentSignerAddress}]`
   }, '')
 
-  const initClient = (objKey: string | undefined, revPath: RevenuePath, _currentChainId: number, customDefaultKey?: string) => {
+  const initClient = (objKey: string | undefined, revPath: RevenuePath, _currentChainId: number, customDefaultKey?: string,  _currentSignerAddress?: string) => {
     setClient((clients) => ({ ...clients, [objKey || customDefaultKey || 'default']: revPath }))
 
     setCurrentChainId(_currentChainId)
+    setCurrentSignerAddress(_currentSignerAddress)
   }
 
   const resetClient = () => {
     setClient({})
     
     setCurrentChainId(undefined)
+    setCurrentSignerAddress(undefined)
   }
 
   const contextMemo = useMemo(
-    () => ({ ...clients, contextHash, currentChainId, initClient, resetClient }),
+    () => ({ ...clients, contextHash, currentChainId, currentSignerAddress, initClient, resetClient }),
     [contextHash]
   )
 
