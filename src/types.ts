@@ -18,12 +18,10 @@ export type ClientConfig = {
   ensProvider?: Provider
 }
 
-export const MISSING_SIGNER = ''
-
 export type ClientContext = {
   _chainId: ChainIds
   _ensProvider: Provider
-  _signer: Signer | typeof MISSING_SIGNER
+  _signer?: Signer
   _provider: Provider
   _includeEnsNames: boolean
   revPathV0: PathLibraryV0

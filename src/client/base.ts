@@ -40,7 +40,7 @@ export default class Base {
   protected readonly _chainId: ChainIds
   protected readonly _ensProvider: Provider | undefined
   // TODO: something better we can do here to handle typescript check for missing signer?
-  protected readonly _signer: Signer
+  protected readonly _signer?: Signer
   private readonly _provider: Provider
   protected readonly _includeEnsNames: boolean
   protected readonly _revPathAddress: string | undefined
@@ -57,7 +57,6 @@ export default class Base {
       throw new InvalidConfigError(
         'Must include a mainnet provider if includeEnsNames is set to true',
       )
-    if (!signer) throw new MissingSignerError('Signer is required.')
 
     this._ensProvider = ensProvider ?? provider
     this._provider = provider
@@ -68,7 +67,7 @@ export default class Base {
   }
 
   protected _initV0RevPath() {
-    const sdk =  sdks[this._chainId](this._signer)
+    const sdk =  sdks[this._chainId](this._signer || this._provider)
 
     if (!this._revPathAddress) return {
       sdk
@@ -78,10 +77,10 @@ export default class Base {
       this._revPathAddress,
       this._provider
     )
-    const revPathV0Write = PathLibraryV0__factory.connect(
+    const revPathV0Write = this._signer ? PathLibraryV0__factory.connect(
       this._revPathAddress,
       this._signer
-    )
+    ) : undefined
 
     return {
       revPathV0Read,
@@ -91,7 +90,7 @@ export default class Base {
   }
 
   protected _initV1RevPath() {
-    const sdk =  sdks[this._chainId](this._signer)
+    const sdk =  sdks[this._chainId](this._signer || this._provider)
 
     if (!this._revPathAddress) return {
       sdk
@@ -101,10 +100,10 @@ export default class Base {
       this._revPathAddress,
       this._provider
     )
-    const revPathV1Write = PathLibraryV1__factory.connect(
+    const revPathV1Write = this._signer ? PathLibraryV1__factory.connect(
       this._revPathAddress,
       this._signer
-    )
+    ) : undefined
 
     return {
       revPathV1Read,
@@ -114,7 +113,7 @@ export default class Base {
   }
 
   protected _initV2RevPath() {
-    const sdk =  sdks[this._chainId](this._signer)
+    const sdk =  sdks[this._chainId](this._signer || this._provider)
 
     if (!this._revPathAddress) return {
       byPass: true,
@@ -125,10 +124,10 @@ export default class Base {
       this._revPathAddress,
       this._provider
     )
-    const revPathV2Write = PathLibraryV2__factory.connect(
+    const revPathV2Write = this._signer ? PathLibraryV2__factory.connect(
       this._revPathAddress,
       this._signer
-    )
+    ) : undefined
 
     return {
       revPathV2Read,

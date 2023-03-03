@@ -54,7 +54,7 @@ export const useR3vlClient = (config: ClientConfig & {
       initClient(revPathAddress, revPath, chainId, config.customDefaultKey, signerAddress)
     }
 
-    if (chainId && provider && signer) initialize()
+    if (chainId && provider) initialize()
   }, [
     revPathAddress,
     chainId,

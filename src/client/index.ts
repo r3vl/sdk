@@ -111,29 +111,13 @@ export class R3vlClient extends Base {
     v1.init()
     v0.init()
 
-    const { revPathV1Read, revPathV2Read } = this
+    // const { revPathV1Read, revPathV2Read } = this
 
     if (opts?.initV0) return v0
     if (opts?.initV1) return v1
     if (byPass === true || opts?.initV2) return v2
 
-    try {
-      const version = await revPathV2Read?.VERSION()
-
-      if (version === 2) return v2
-    } catch (error) {
-      console.log("SDK Error:", error)
-    }
-
-    try {
-      const version = await revPathV1Read?.VERSION()
-
-      if (version === 1) return v1
-    } catch (error) {
-      console.log("SDK Error:", error)
-    }
-
-    return v0
+    return v2
   }
 
   get v0() {
