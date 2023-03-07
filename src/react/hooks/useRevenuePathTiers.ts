@@ -12,8 +12,9 @@ export const useRevenuePathTiers = (revPathAddress: AddressInput, queryOpts?: Om
   const ctx = useContext(R3vlContext)
   const client = ctx?.[revPathAddress]
   const chainId = ctx?.currentChainId
+  const currentSignerAddress = ctx?.currentSignerAddress
 
-  const query = useQuery(['/useRevenuePathTiers', revPathAddress, ctx?.contextHash, chainId], async () => {
+  const query = useQuery(['/useRevenuePathTiers', revPathAddress, currentSignerAddress, chainId], async () => {
     if (!client || !client.tiers) return null
 
     const tiers = await client?.tiers()

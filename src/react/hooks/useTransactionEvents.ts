@@ -12,8 +12,9 @@ export const useTransactionEvents = (revPathAddress: AddressInput, queryOpts?: O
   const ctx = useContext(R3vlContext)
   const client = ctx?.[revPathAddress]
   const chainId = ctx?.currentChainId
+  const currentSignerAddress = ctx?.currentSignerAddress
 
-  const query = useQuery(['/revPathTransactionEvents', revPathAddress, ctx?.contextHash, chainId], async () => {
+  const query = useQuery(['/revPathTransactionEvents', revPathAddress, currentSignerAddress,  chainId], async () => {
     const events = await client?.transactionEvents?.()
 
     return events
