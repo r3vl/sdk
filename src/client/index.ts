@@ -35,9 +35,9 @@ import { updateLimitsV2, FnArgs as UpdateLimitsV2Args } from "../updateLimitsV2"
 import { addRevenueTiersV2, FnArgs as AddRevenueTiersV2Args } from "../addRevenueTiersV2"
 import { createRevenuePathV1, FnArgs as CreateRevenuePathV1Args } from "../createRevenuePathV1"
 import { createRevenuePathV2, FnArgs as CreateRevenuePathV2Args } from "../createRevenuePathV2"
-import { RevenuePathCreatedEvent as RevenuePathCreatedEventV0 } from "src/typechain/ReveelMainV0"
-import { RevenuePathCreatedEvent as RevenuePathCreatedEventV1 } from "src/typechain/ReveelMainV1"
-import { RevenuePathCreatedEvent as RevenuePathCreatedEventV2 } from "src/typechain/ReveelMainV2"
+import { RevenuePathCreatedEvent as RevenuePathCreatedEventV0 } from "../typechain/ReveelMainV0"
+import { RevenuePathCreatedEvent as RevenuePathCreatedEventV1 } from "../typechain/ReveelMainV1"
+import { RevenuePathCreatedEvent as RevenuePathCreatedEventV2 } from "../typechain/ReveelMainV2"
 
 export type RevenuePathsList = {
   address: string
@@ -57,7 +57,7 @@ export type RevenuePath = {
   init: () => void
   withdrawable?: (args?: WithdrawableV0Args | WithdrawableV1Args | WithdrawableV2Args) => Promise<any | undefined>
   withdrawn: (args?: WithdrawnV0Args | WithdrawnV1Args | WithdrawnV2Args, getBN?: boolean) => Promise<number | undefined>
-  transactionEvents?: () => Promise<any> | ReturnType<typeof getRevPathTransactionEventsV2>
+  transactionEvents?: (rePath: string) => Promise<any> | ReturnType<typeof getRevPathTransactionEventsV2>
   revenuePaths: () => Promise<RevenuePathsList | any>
   withdraw: (args: WithdrawV1Args) => void
   tiers?: (args?: TiersV1Args) => ReturnType<typeof tiersV1> | ReturnType<typeof tiersV2>
@@ -180,7 +180,7 @@ export class R3vlClient extends Base {
       },
       withdrawable: (args?: WithdrawableV2Args) => withdrawableV2.call(this, args),
       withdrawn: (args?: WithdrawnV2Args) => withdrawnFundsV2.call(this, args),
-      transactionEvents: () => getRevPathTransactionEventsV2.call(this),
+      transactionEvents: (revPath: string) => getRevPathTransactionEventsV2.call(this, revPath),
       revenuePaths: () => getRevenuePathsV2.call(this),
       withdraw: (args: WithdrawV2Args) => withdrawFundsV2.call(this, args),
       createRevenuePath: (args: CreateRevenuePathV2Args, opts?: { customGasLimit?: number }) => createRevenuePathV2.call(this, args, opts),

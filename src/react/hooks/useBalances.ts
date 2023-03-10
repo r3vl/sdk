@@ -30,6 +30,7 @@ export const useBalances = (revPathAddress: AddressInput, filter: {
     filter?.isERC20,
     filter?.blockNumber,
     ctx?.contextHash,
+    client,
     chainId
   ], async () => {
     if (!client) throw new Error("No client found.")
@@ -39,12 +40,15 @@ export const useBalances = (revPathAddress: AddressInput, filter: {
     const withdrawable = earnings - withdrawn < 0.0001 ? 0 : earnings - withdrawn
 
     return {
-      withdrawn: withdrawn,
-      withdrawable: withdrawable,
+      withdrawn,
+      withdrawable,
       pendingDistribution: 0,
       earnings,
     }
-  }, queryOpts)
+  }, {
+    ...queryOpts,
+    retryDelay: 400,
+  } as any)
 
   return query
 }

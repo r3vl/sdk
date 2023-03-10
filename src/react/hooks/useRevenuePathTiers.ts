@@ -14,7 +14,7 @@ export const useRevenuePathTiers = (revPathAddress: AddressInput, queryOpts?: Om
   const chainId = ctx?.currentChainId
 
   const query = useQuery(['/useRevenuePathTiers', revPathAddress, ctx?.contextHash, chainId], async () => {
-    if (!client || !client.tiers) return null
+    if (!client || !client.tiers) throw new Error("No client found.")
 
     const tiers = await client?.tiers()
 

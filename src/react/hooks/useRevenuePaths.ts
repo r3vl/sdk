@@ -68,8 +68,8 @@ export const useRevenuePaths = (wallet?: string | boolean, queryOpts?: UserQuery
 
   if (queryOpts?.logContext) console.log("R3VL SDK Context:::", ctx)
 
-  const query = useQuery(['/revenuePaths' + hookConfig?.customDefaultKey ? `/${hookConfig?.customDefaultKey}` : '', wallet, currentChainId, hookConfig?.customDefaultKey], async () => {
-    if (!client) return []
+  const query = useQuery(['/revenuePaths' + hookConfig?.customDefaultKey ? `/${hookConfig?.customDefaultKey}` : '', wallet, currentChainId, hookConfig?.customDefaultKey, client], async () => {
+    if (!client) throw new Error("No client found.")
 
     const result = await client.revenuePaths()
 

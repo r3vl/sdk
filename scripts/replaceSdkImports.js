@@ -62,7 +62,7 @@ const replaceSdkClientPath = async () => {
 
 replaceSdkClientPath().then(() => console.log("Success 1"))
 
-const resolveABIsImports = async () => {  
+const resolveABIsImports = async () => {
   const options = {
     files: ['dist/sdk-client/cjs/index.js', 'dist/sdk-client/esm/index.js'],
     from: /..\/..\/..\/eth-sdk\//g,
@@ -86,7 +86,7 @@ const resolveABIsImports = async () => {
       const options1 = {
         files: [cjsFile],
         from: line,
-        to: `const ${constantName} = JSON.parse('${json}')`
+        to: `const ${constantName} = JSON.parse('{"default":${json}}')`
       }
 
       await replace(options1)

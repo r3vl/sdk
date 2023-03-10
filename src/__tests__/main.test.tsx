@@ -65,11 +65,11 @@ describe('Main', () => {
           useR3vlClient({
             chainId,
             provider,
-            signer,
-            revPathAddress: '0x54FA6330e45AdB0B20F09E1Ac102a225655B6830',
+            revPathAddress: '0x5eBEBdd68AA7651754906c74B0b3A4B78251A44e',
+            initV2: true,
           })
 
-          const r = useBalances('0x54FA6330e45AdB0B20F09E1Ac102a225655B6830', { walletAddress: "0xF228eDC596846Ed2EA8eE3B8551C29456703476d" })
+          const r = useBalances('0x5eBEBdd68AA7651754906c74B0b3A4B78251A44e', { walletAddress: "0x35224C95aa3E53a30cc3F6f64540618892a568D7" })
 
           console.log("META:::", r.data)
           return r.data || 0
@@ -77,8 +77,10 @@ describe('Main', () => {
         { wrapper }
       )
 
-      await waitForNextUpdate({ timeout: 9000 })
-      await waitForNextUpdate({ timeout: 9000 })
+      await waitForNextUpdate({ timeout: 50000 })
+      await waitForNextUpdate({ timeout: 50000 })
+      await waitForNextUpdate({ timeout: 50000 })
+      await waitForNextUpdate({ timeout: 50000 })
 
       expect(result?.current).not.toBeNaN()
     })
@@ -203,22 +205,22 @@ describe('Main', () => {
           useR3vlClient({
             chainId,
             provider,
-            signer,
-            revPathAddress: '0x663c5A6fd46E9c9D20c8C174FD555079f8879F87'
+            revPathAddress: '0xB593fDaa38010CCA96b32B432eEA8Ac35e41F2c1'
           })
 
-          const r = useTransactionEvents('0x663c5A6fd46E9c9D20c8C174FD555079f8879F87')
+          const r = useTransactionEvents('0xB593fDaa38010CCA96b32B432eEA8Ac35e41F2c1')
 
+          console.log("META:::", r.data)
           return r
         },
         { wrapper }
       )
 
-      await waitForNextUpdate()
-      await waitForNextUpdate()
-      await waitForNextUpdate({ timeout: 5000 })
+      await waitForNextUpdate({ timeout: 50000 })
+      await waitForNextUpdate({ timeout: 50000 })
+      await waitForNextUpdate({ timeout: 50000 })
 
-      expect(result?.current).toBeTruthy()
+      expect(result?.current.data).toBeTruthy()
     })
   })
 
