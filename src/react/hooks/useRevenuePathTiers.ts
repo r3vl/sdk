@@ -11,9 +11,8 @@ type QueryResult = any
 export const useRevenuePathTiers = (revPathAddress: AddressInput, queryOpts?: Omit<UseQueryOptions<QueryResult | null>, 'queryKey' | 'queryFn' | 'initialData'>) => {
   const ctx = useContext(R3vlContext)
   const client = ctx?.[revPathAddress]
-  const chainId = ctx?.currentChainId
 
-  const query = useQuery(['/useRevenuePathTiers', revPathAddress, ctx?.contextHash, chainId], async () => {
+  const query = useQuery(['/useRevenuePathTiers', revPathAddress, client], async () => {
     if (!client || !client.tiers) throw new Error("No client found.")
 
     const tiers = await client?.tiers()
