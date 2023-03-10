@@ -31,7 +31,7 @@ const queryClient = new QueryClient()
 persistQueryClient({
   queryClient,
   persister: createSyncStoragePersister({
-    storage: typeof window === "undefined" ? undefined : window.localStorage,
+    storage: window?.localStorage, 
     serialize: data => compress(JSON.stringify(data)),
     deserialize: data => JSON.parse(decompress(data) || ''),
   }),

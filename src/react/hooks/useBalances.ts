@@ -21,7 +21,6 @@ export const useBalances = (revPathAddress: AddressInput, filter: {
 } | undefined = undefined, queryOpts?: Omit<UseQueryOptions<any | null>, 'queryKey' | 'queryFn' | 'initialData'>) => {
   const ctx = useContext(R3vlContext)
   const client = ctx?.[revPathAddress]
-  const chainId = ctx?.currentChainId
 
   const query = useQuery([
     '/balances',
@@ -29,9 +28,7 @@ export const useBalances = (revPathAddress: AddressInput, filter: {
     filter?.walletAddress,
     filter?.isERC20,
     filter?.blockNumber,
-    ctx?.contextHash,
     client,
-    chainId
   ], async () => {
     if (!client) throw new Error("No client found.")
 
