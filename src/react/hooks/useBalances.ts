@@ -21,8 +21,6 @@ export const useBalances = (revPathAddress: AddressInput, filter: {
 } | undefined = undefined, queryOpts?: Omit<UseQueryOptions<any | null>, 'queryKey' | 'queryFn' | 'initialData'>) => {
   const ctx = useContext(R3vlContext)
   const client = ctx?.[revPathAddress]
-  const chainId = ctx?.currentChainId
-  const currentSignerId = ctx?.currentSignerAddress
 
   const query = useQuery([
     '/balances',
@@ -30,8 +28,7 @@ export const useBalances = (revPathAddress: AddressInput, filter: {
     filter?.walletAddress,
     filter?.isERC20,
     filter?.blockNumber,
-    chainId,
-    currentSignerId
+    client,
   ], async () => {
     if (!client) throw new Error("No client found.")
 
@@ -40,12 +37,15 @@ export const useBalances = (revPathAddress: AddressInput, filter: {
     const withdrawable = earnings - withdrawn < 0.0001 ? 0 : earnings - withdrawn
 
     return {
-      withdrawn: withdrawn,
-      withdrawable: withdrawable,
+      withdrawn,
+      withdrawable,
       pendingDistribution: 0,
       earnings,
     }
-  }, queryOpts)
+  }, {
+    ...queryOpts,
+    retryDelay: 400,
+  } as any)
 
   return query
 }

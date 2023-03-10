@@ -88,8 +88,8 @@ export async function getRevenuePathsV2(this: R3vlClient) {
 //   return withdraws;
 // };
 
-export async function getRevPathTransactionEventsV2(this: R3vlClient) {
-  const { revPathV2Read, sdk, _revPathAddress, _chainId } = this
+export async function getRevPathTransactionEventsV2(this: R3vlClient, _revPathAddress: string) {
+  const { revPathV2Read, sdk, _chainId } = this
 
   if (!revPathV2Read || !sdk || !_chainId) throw new Error("ERROR:")
 
@@ -102,16 +102,19 @@ export async function getRevPathTransactionEventsV2(this: R3vlClient) {
   const eRC20PaymentReleased = await revPathV2Read.queryFilter(revPathV2Read.filters.ERC20PaymentReleased())
   const tokenDistributed = await revPathV2Read.queryFilter(revPathV2Read.filters.TokenDistributed())
   
-  const blockNumber = contractsDeployedV2[_chainId]
+  const blockNumber = ownershipTransferred?.[0]?.blockNumber
 
-  const depositETH = await revPathV2Read.queryFilter(revPathV2Read.filters.DepositETH())
-  const wethTransfers = await sdk?.weth.queryFilter(sdk?.weth.filters.Transfer(undefined, _revPathAddress), blockNumber, 'latest')
-  const usdcTransfers = await sdk?.usdc.queryFilter(sdk?.usdc.filters.Transfer(undefined, _revPathAddress), blockNumber, 'latest')
-  const daiTransfers = await sdk?.dai.queryFilter(sdk?.dai.filters.Transfer(undefined, _revPathAddress), blockNumber, 'latest')
+  const depositETHPromise = revPathV2Read.queryFilter(revPathV2Read.filters.DepositETH())
+  const wethTransfersPromise = sdk?.weth.queryFilter(sdk?.weth.filters.Transfer(undefined, _revPathAddress), blockNumber, 'latest')
+  const usdcTransfersPromise = sdk?.usdc.queryFilter(sdk?.usdc.filters.Transfer(undefined, _revPathAddress), blockNumber, 'latest')
+  const daiTransfersPromise = sdk?.dai.queryFilter(sdk?.dai.filters.Transfer(undefined, _revPathAddress), blockNumber, 'latest')
 
-  const revPathsEvents = await getRevenuePathsV2.call(this)
-  const contract = revPathsEvents.find((event) => event.address === _revPathAddress)
-  const tiers = await contract?.contract.getTotalRevenueTiers()
+  const [
+    depositETH,
+    wethTransfers,
+    usdcTransfers,
+    daiTransfers
+  ] = await Promise.all([depositETHPromise, wethTransfersPromise, usdcTransfersPromise, daiTransfersPromise])
 
   return {
     ownershipTransferred,
@@ -126,8 +129,6 @@ export async function getRevPathTransactionEventsV2(this: R3vlClient) {
       [sdk?.weth.address]: await sdk?.weth.symbol(),
       [sdk?.usdc.address]: await sdk?.usdc.symbol(),
       [sdk?.dai.address]: await sdk?.dai.symbol()
-    },
-    revPathName: contract?.eventPayload.args.name,
-    tiers: tiers?.toNumber && tiers?.toNumber() > 1
+    }
   }
 }
