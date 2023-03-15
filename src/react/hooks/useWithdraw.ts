@@ -1,4 +1,4 @@
-import { useContext } from "react"
+import { useCallback, useContext, useState } from "react"
 import {
   QueryOptions,
   useMutation
@@ -6,17 +6,19 @@ import {
 
 import { AddressInput, R3vlContext } from ".."
 import { tokenList } from "../../constants/tokens"
-import { ContractTransaction } from 'ethers'
+import { ContractReceipt, ContractTransaction } from 'ethers'
 
 
-export const useWithdraw = (revPathAddress: AddressInput, queryOpts?: QueryOptions) => {
+export const useWithdraw = (revPathAddress: AddressInput, _queryOpts?: QueryOptions) => {
+  const [data, setData] = useState()
+  const [isFetched, setIsFetched] = useState(false)
+  const [error, setError] = useState<unknown>()
+  const [isLoading, setIsLoading] = useState(false)
+
   const ctx = useContext(R3vlContext)
-
-  if (!ctx) return null
-
   const client = ctx?.[revPathAddress]
 
-  const mutation = useMutation(['/withdraw', revPathAddress], async ({
+  const mutate = useCallback(async ({
     walletAddress,
     isERC20,
     onTxCreated,
@@ -25,11 +27,57 @@ export const useWithdraw = (revPathAddress: AddressInput, queryOpts?: QueryOptio
     isERC20?: keyof typeof tokenList
     onTxCreated?: (tx: ContractTransaction) => void
   }) => {
-    const payloadV1 = isERC20 ? { walletAddress, isERC20 } : { walletAddress }
-    const payloadV2 = onTxCreated ? { ...payloadV1, onTxCreated } : payloadV1 
+    setIsLoading(true)
+    
+    try {
+      if (!client?.withdraw) throw new Error("ERROR:: Couldn't find createRevenuePath")
 
-    return await client?.withdraw(payloadV2)
-  }, queryOpts)
+      const payloadV1 = isERC20 ? { walletAddress, isERC20 } : { walletAddress }
+      const payloadV2 = onTxCreated ? { ...payloadV1, onTxCreated } : payloadV1 
+      
+      await client?.withdraw(payloadV2)
+    } catch (_error) {
+      setError(_error)
+    } finally {
+      setIsLoading(false)
 
-  return mutation
+      setIsFetched(true)
+    }
+  }, [revPathAddress, client])
+
+  const mutateAsync = async ({
+    walletAddress,
+    isERC20,
+    onTxCreated,
+  }: {
+    walletAddress: string,
+    isERC20?: keyof typeof tokenList
+    onTxCreated?: (tx: ContractTransaction) => void
+  }) => {
+    setIsLoading(true)
+    
+    try {
+      if (!client?.withdraw) throw new Error("ERROR:: Couldn't find createRevenuePath")
+
+      const payloadV1 = isERC20 ? { walletAddress, isERC20 } : { walletAddress }
+      const payloadV2 = onTxCreated ? { ...payloadV1, onTxCreated } : payloadV1 
+      
+      await client?.withdraw(payloadV2)
+    } catch (_error) {
+      setError(_error)
+    } finally {
+      setIsLoading(false)
+
+      setIsFetched(true)
+    }
+  }
+
+  return {
+    mutate,
+    mutateAsync,
+    data,
+    isFetched,
+    isLoading,
+    error
+  }
 }

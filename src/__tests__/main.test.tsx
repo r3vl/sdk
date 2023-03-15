@@ -65,24 +65,22 @@ describe('Main', () => {
           useR3vlClient({
             chainId,
             provider,
-            revPathAddress: '0x5eBEBdd68AA7651754906c74B0b3A4B78251A44e',
+            revPathAddress: '0x37b96f962b508C813aF545B767a6D1C0C9Eda472',
             initV2: true,
           })
 
-          const r = useBalances('0x5eBEBdd68AA7651754906c74B0b3A4B78251A44e', { walletAddress: "0x35224C95aa3E53a30cc3F6f64540618892a568D7" })
+          const r = useBalances('0x37b96f962b508C813aF545B767a6D1C0C9Eda472', { walletAddress: "0x2f2581c49A79880561032094887F59bd6d777F75" })
 
           console.log("META:::", r.data)
-          return r.data || 0
+          return r.data
         },
         { wrapper }
       )
 
       await waitForNextUpdate({ timeout: 50000 })
       await waitForNextUpdate({ timeout: 50000 })
-      await waitForNextUpdate({ timeout: 50000 })
-      await waitForNextUpdate({ timeout: 50000 })
 
-      expect(result?.current).not.toBeNaN()
+      expect(result?.current?.withdrawn).toBeGreaterThanOrEqual(0)
     })
   })
 
