@@ -1,4 +1,4 @@
-import { BigNumberish, constants, ethers, utils } from 'ethers'
+import { BigNumberish, constants, errors, ethers, utils } from 'ethers'
 import { chainIds, tokenList } from './constants/tokens';
 import { R3vlClient } from './client'
 
@@ -106,9 +106,15 @@ export async function createRevenuePathV2(
     // console.log(result, 'createRevenuePathV2 Result');
     
     return tx
-  } catch (error) {
+  } catch (error: any) {
     console.error(error, 'createRevenuePathV2 Error')
-
+    const pathLibraryContract = 'pathLibraryV2' in sdk ? sdk.pathLibraryV2 : undefined;
+    if(pathLibraryContract) {
+      const errorData = error?.error?.data?.originalError?.data;
+      if(errorData) {
+        throw pathLibraryContract.interface.parseError(errorData);
+      }
+    }
     throw error
   }
 }

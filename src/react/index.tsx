@@ -28,10 +28,10 @@ type R3vlContextType = ClientType & {
 
 const queryClient = new QueryClient()
 
-persistQueryClient({
+ persistQueryClient({
   queryClient,
   persister: createSyncStoragePersister({
-    storage: typeof window === "undefined" ? undefined : window.localStorage, 
+    storage: globalThis.localStorage,
     serialize: data => compress(JSON.stringify(data)),
     deserialize: data => JSON.parse(decompress(data) || ''),
   }),
