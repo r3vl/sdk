@@ -3,11 +3,12 @@ import { R3vlContext } from ".."
 import { FnArgs as CreateRevenuePathV1Args } from "../../createRevenuePathV1"
 import { FnArgs as CreateRevenuePathV2Args } from "../../createRevenuePathV2"
 import { ContractReceipt, ContractTransaction } from "ethers"
+import { RelayResponse } from "@gelatonetwork/relay-sdk"
 
 export const useCreateRevenuePath = (opts?: { customGasLimit?: number }) => {
   const ctx = useContext(R3vlContext)
   const client = ctx?.default
-  const [data, setData] = useState<ContractReceipt | ContractTransaction | undefined>()
+  const [data, setData] = useState<ContractReceipt| ContractTransaction | RelayResponse | undefined>()
   const [isFetched, setIsFetched] = useState(false)
   const [error, setError] = useState<unknown>()
   const [loading, setLoading] = useState(false)

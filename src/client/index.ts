@@ -38,6 +38,7 @@ import { createRevenuePathV2, FnArgs as CreateRevenuePathV2Args } from "../creat
 import { RevenuePathCreatedEvent as RevenuePathCreatedEventV0 } from "../typechain/ReveelMainV0"
 import { RevenuePathCreatedEvent as RevenuePathCreatedEventV1 } from "../typechain/ReveelMainV1"
 import { RevenuePathCreatedEvent as RevenuePathCreatedEventV2 } from "../typechain/ReveelMainV2"
+import { RelayResponse } from "@gelatonetwork/relay-sdk"
 
 export type RevenuePathsList = {
   address: string
@@ -61,7 +62,7 @@ export type RevenuePath = {
   revenuePaths: () => Promise<RevenuePathsList | any>
   withdraw: (args: WithdrawV1Args) => void
   tiers?: (args?: TiersV1Args) => ReturnType<typeof tiersV1> | ReturnType<typeof tiersV2>
-  createRevenuePath?: (args: CreateRevenuePathV1Args | CreateRevenuePathV2Args | any /* TODO: remove any */, opts?: { customGasLimit?: number }) => Promise<undefined | ethers.ContractReceipt | ethers.ContractTransaction>
+  createRevenuePath?: (args: CreateRevenuePathV1Args | CreateRevenuePathV2Args | any /* TODO: remove any */, opts?: { customGasLimit?: number; isGasLess?: boolean }) => Promise<undefined | ethers.ContractReceipt | ethers.ContractTransaction | RelayResponse>
   updateRevenueTier?: (args: UpdateRevenueTierV1Args) => Promise<ethers.ContractReceipt | undefined>
   updateErc20Distribution?: (args: UpdateErc20DistributionArgs) => Promise<ethers.ContractReceipt | undefined>
   updateFinalFund?: (args: UpdateFinalFundArgs) => Promise<void>
@@ -183,7 +184,7 @@ export class R3vlClient extends Base {
       transactionEvents: (revPath: string) => getRevPathTransactionEventsV2.call(this, revPath),
       revenuePaths: () => getRevenuePathsV2.call(this),
       withdraw: (args: WithdrawV2Args) => withdrawFundsV2.call(this, args),
-      createRevenuePath: (args: CreateRevenuePathV2Args, opts?: { customGasLimit?: number }) => createRevenuePathV2.call(this, args, opts),
+      createRevenuePath: (args: CreateRevenuePathV2Args, opts?: { customGasLimit?: number, isGasLess?: boolean }) => createRevenuePathV2.call(this, args, opts),
       updateRevenueTiers: (args: UpdateRevenueTiersV2Args) => updateRevenueTiersV2.call(this, args),
       updateLimits: (args: UpdateLimitsV2Args) => updateLimitsV2.call(this, args),
       addRevenueTiers: (args: AddRevenueTiersV2Args) => addRevenueTiersV2.call(this, args),
