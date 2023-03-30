@@ -81,6 +81,7 @@ export class R3vlClient extends Base {
   revPathV2Read?: PathLibraryV2
   revPathV2Write?: PathLibraryV2
   sdk?: MainnetSdk | GoerliSdk | PolygonSdk | PolygonMumbaiSdk | ArbitrumOneSdk | ArbitrumTestnetSdk
+  relay?: { signatureCall: any }
   initialized = false
 
   constructor({
@@ -89,7 +90,8 @@ export class R3vlClient extends Base {
     signer,
     includeEnsNames = false,
     ensProvider,
-    revPathAddress
+    revPathAddress,
+    gasLessKey
   }: ClientConfig) {
     super({
       chainId,
@@ -97,7 +99,8 @@ export class R3vlClient extends Base {
       ensProvider,
       signer,
       includeEnsNames,
-      revPathAddress
+      revPathAddress,
+      gasLessKey
     })
   }
 
@@ -169,9 +172,10 @@ export class R3vlClient extends Base {
     return {
       v: 2,
       init: () => {
-        const { revPathV2Read, revPathV2Write, sdk, byPass } = this._initV2RevPath()
+        const { revPathV2Read, revPathV2Write, sdk, byPass, relay } = this._initV2RevPath()
 
         this.sdk = sdk
+        this.relay = relay
         this.initialized = true
 
         if (byPass) return true

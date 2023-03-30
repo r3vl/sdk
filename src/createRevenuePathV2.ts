@@ -1,9 +1,6 @@
 import { BigNumberish, constants, errors, ethers, utils } from 'ethers'
-import { GelatoRelay, SponsoredCallRequest } from "@gelatonetwork/relay-sdk"
 import { chainIds, tokenList } from './constants/tokens'
 import { R3vlClient } from './client'
-
-const relay = new GelatoRelay()
 
 export type FnArgs = {
   walletList: string[][],
@@ -34,10 +31,10 @@ export async function createRevenuePathV2(
   } : FnArgs,
   opts?: {
     customGasLimit?: number
-    isGassLess?: boolean
+    isGasLess?: boolean
   }
 ) {
-  const { sdk, _chainId } = this
+  const { sdk, _chainId, relay } = this
 
   if (!sdk) return
 
@@ -73,7 +70,7 @@ export async function createRevenuePathV2(
   })
 
   try {
-    const estimateGas = await contract.estimateGas.createRevenuePath(
+    console.log("CREATE_REVENUE_PATH_PAYLOAD",
       walletList,
       formatedDistribution, 
       formatedTokens,
@@ -82,19 +79,7 @@ export async function createRevenuePathV2(
       mutabilityDisabled
     )
 
-    console.log("CREATE_REVENUE_PATH_PAYLOAD", walletList,
-      formatedDistribution, 
-      formatedTokens,
-      formatedLimits,
-      name,
-      mutabilityDisabled,
-      estimateGas,
-      {
-        gasLimit: opts?.customGasLimit || increaseGasLimit(estimateGas, _chainId),
-      }
-    )
-
-    if (opts?.isGassLess) {
+    if (opts?.isGasLess && relay?.signatureCall) {
       const { data } = await contract.populateTransaction.createRevenuePath(
         walletList,
         formatedDistribution, 
@@ -102,39 +87,48 @@ export async function createRevenuePathV2(
         formatedLimits,
         name,
         mutabilityDisabled
-      )
-
-      const request: SponsoredCallRequest = {
-        chainId: _chainId,
-        target: contract.address,
-        data: data as any
-      };
+        )
         
-      // send relayRequest to Gelato Relay API
-      const relayResponse = await relay.sponsoredCall(request, "_7wILI9bWgCHcmQhyLWcDcK_a24d9mT_PgpTSFl88O4_")
-
-      return relayResponse
-    }
-
-    const tx = await contract.createRevenuePath(
-      walletList,
-      formatedDistribution, 
-      formatedTokens,
-      formatedLimits,
-      name,
-      mutabilityDisabled,
-      {
-        gasLimit: opts?.customGasLimit || increaseGasLimit(estimateGas, _chainId),
+        const request = {
+          chainId: _chainId,
+          target: contract.address,
+          data: data as any
+        };
+        
+        // send relayRequest to Gelato Relay API
+        const relayResponse = await relay?.signatureCall(request)
+        
+        return relayResponse
       }
-    )
 
-    // const result = await tx?.wait()
-
-    // console.log(result, 'createRevenuePathV2 Result');
-    
-    return tx
-  } catch (error: any) {
-    console.error(error, 'createRevenuePathV2 Error')
+      const estimateGas = await contract.estimateGas.createRevenuePath(
+        walletList,
+        formatedDistribution, 
+        formatedTokens,
+        formatedLimits,
+        name,
+        mutabilityDisabled
+      )
+      
+      const tx = await contract.createRevenuePath(
+        walletList,
+        formatedDistribution, 
+        formatedTokens,
+        formatedLimits,
+        name,
+        mutabilityDisabled,
+        {
+          gasLimit: opts?.customGasLimit || increaseGasLimit(estimateGas, _chainId),
+        }
+        )
+        
+        // const result = await tx?.wait()
+        
+        // console.log(result, 'createRevenuePathV2 Result');
+        
+        return tx
+      } catch (error: any) {
+        console.error(error, 'createRevenuePathV2 Error')
 
     const pathLibraryContract = 'pathLibraryV2' in sdk ? sdk.pathLibraryV2 : undefined;
 

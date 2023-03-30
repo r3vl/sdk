@@ -1,5 +1,6 @@
 import { Provider } from '@ethersproject/abstract-provider'
 import { Signer } from '@ethersproject/abstract-signer'
+import { GelatoRelay, CallWithERC2771Request } from "@gelatonetwork/relay-sdk"
 
 import {
   InvalidConfigError,
@@ -22,6 +23,9 @@ import {
   getAuroraSdk,
   getAuroraTestnetSdk
 } from '@dethcrypto/eth-sdk-client'
+import { ethers } from 'ethers'
+
+const relay = new GelatoRelay()
 
 const sdks = {
   [chainIds.goerli]: getGoerliSdk,
@@ -44,6 +48,7 @@ export default class Base {
   private readonly _provider: Provider
   protected readonly _includeEnsNames: boolean
   protected readonly _revPathAddress: string | undefined
+  protected readonly _gasLessKey: string | undefined
 
   constructor({
     chainId,
@@ -51,7 +56,8 @@ export default class Base {
     ensProvider,
     signer,
     includeEnsNames = false,
-    revPathAddress
+    revPathAddress,
+    gasLessKey
   }: ClientConfig) {
     if (includeEnsNames && !provider && !ensProvider)
       throw new InvalidConfigError(
@@ -64,6 +70,7 @@ export default class Base {
     this._signer = signer
     this._includeEnsNames = includeEnsNames
     this._revPathAddress = revPathAddress
+    this._gasLessKey = gasLessKey
   }
 
   protected _initV0RevPath() {
@@ -113,11 +120,29 @@ export default class Base {
   }
 
   protected _initV2RevPath() {
+    const signer = this._signer
+    const gasLessKey = this._gasLessKey
     const sdk =  sdks[this._chainId](this._signer || this._provider)
+    
+    const signatureCall = async (request: CallWithERC2771Request) => {
+      const provider = new ethers.providers.Web3Provider((window as any).ethereum)
+      const user = await signer?.getAddress()
+
+      if (!user || !gasLessKey) return
+
+      return relay.sponsoredCallERC2771(
+        { ...request, user },
+        provider,
+        gasLessKey
+      )
+    }
 
     if (!this._revPathAddress) return {
       byPass: true,
-      sdk
+      sdk,
+      relay: {
+        signatureCall
+      }
     }
 
     const revPathV2Read = PathLibraryV2__factory.connect(
@@ -132,7 +157,10 @@ export default class Base {
     return {
       revPathV2Read,
       revPathV2Write,
-      sdk
+      sdk,
+      relay: {
+        signatureCall
+      }
     }
   }
 

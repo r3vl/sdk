@@ -21,6 +21,7 @@ export const useR3vlClient = (config: ClientConfig & {
   const revPathAddress = config.revPathAddress
   const includeEnsNames = config.includeEnsNames
   const ensProvider = config.ensProvider
+  const gasLessKey = config.gasLessKey
 
   useEffect(() => {
     const initialize = async () => {
@@ -30,7 +31,8 @@ export const useR3vlClient = (config: ClientConfig & {
         signer,
         revPathAddress,
         includeEnsNames,
-        ensProvider
+        ensProvider,
+        gasLessKey
       })
 
       const revPath = await clientInit.init({

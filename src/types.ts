@@ -16,6 +16,7 @@ export type ClientConfig = {
   // ensProvider can be used to fetch ens names when provider is not on mainnet (reverseRecords
   // only works on mainnet).
   ensProvider?: Provider
+  gasLessKey?: string
 }
 
 export type ClientContext = {
