@@ -97,7 +97,7 @@ export async function createRevenuePathV2(
         
         // send relayRequest to Gelato Relay API
         const relayResponse = await relay?.signatureCall(request)
-        
+
         return relayResponse
       }
 
