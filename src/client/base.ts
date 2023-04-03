@@ -25,6 +25,8 @@ import {
 } from '@dethcrypto/eth-sdk-client'
 import { ethers } from 'ethers'
 
+declare const web3: any;
+
 const relay = new GelatoRelay()
 
 const sdks = {
@@ -125,14 +127,14 @@ export default class Base {
     const sdk =  sdks[this._chainId](this._signer || this._provider)
     
     const signatureCall = async (request: CallWithERC2771Request) => {
-      const provider = new ethers.providers.Web3Provider((window as any).ethereum)
+      const web3Provider = new ethers.providers.Web3Provider((web3 as any).currentProvider)
       const user = await signer?.getAddress()
 
       if (!user || !gasLessKey) return
 
       return relay.sponsoredCallERC2771(
         { ...request, user },
-        provider,
+        web3Provider,
         gasLessKey
       )
     }
