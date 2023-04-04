@@ -50,7 +50,6 @@ export default class Base {
   private readonly _provider: Provider
   protected readonly _includeEnsNames: boolean
   protected readonly _revPathAddress: string | undefined
-  protected readonly _gasLessKey: string | undefined
 
   constructor({
     chainId,
@@ -58,8 +57,7 @@ export default class Base {
     ensProvider,
     signer,
     includeEnsNames = false,
-    revPathAddress,
-    gasLessKey
+    revPathAddress
   }: ClientConfig) {
     if (includeEnsNames && !provider && !ensProvider)
       throw new InvalidConfigError(
@@ -72,7 +70,6 @@ export default class Base {
     this._signer = signer
     this._includeEnsNames = includeEnsNames
     this._revPathAddress = revPathAddress
-    this._gasLessKey = gasLessKey
   }
 
   protected _initV0RevPath() {
@@ -120,30 +117,30 @@ export default class Base {
       sdk
     }
   }
+  
+  async signatureCall(request: CallWithERC2771Request, gasLessKey: string) {
+    const web3Provider = new ethers.providers.Web3Provider((web3 as any).currentProvider)
+    const user = await this._signer?.getAddress()
+
+    if (!user || !gasLessKey) throw new Error("Can't execute Gelato SDK.")
+
+    const r = await relay.sponsoredCallERC2771(
+      { ...request, user },
+      web3Provider,
+      gasLessKey
+    )
+
+    return r
+  }
 
   protected _initV2RevPath() {
-    const signer = this._signer
-    const gasLessKey = this._gasLessKey
-    const sdk =  sdks[this._chainId](this._signer || this._provider)
-    
-    const signatureCall = async (request: CallWithERC2771Request) => {
-      const web3Provider = new ethers.providers.Web3Provider((web3 as any).currentProvider)
-      const user = await signer?.getAddress()
-
-      if (!user || !gasLessKey) return
-
-      return relay.sponsoredCallERC2771(
-        { ...request, user },
-        web3Provider,
-        gasLessKey
-      )
-    }
+    const sdk = sdks[this._chainId](this._signer || this._provider)
 
     if (!this._revPathAddress) return {
       byPass: true,
       sdk,
       relay: {
-        signatureCall
+        signatureCall: this.signatureCall.bind(this)
       }
     }
 
@@ -161,7 +158,7 @@ export default class Base {
       revPathV2Write,
       sdk,
       relay: {
-        signatureCall
+        signatureCall: this.signatureCall.bind(this)
       }
     }
   }

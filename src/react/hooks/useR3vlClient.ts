@@ -31,8 +31,7 @@ export const useR3vlClient = (config: ClientConfig & {
         signer,
         revPathAddress,
         includeEnsNames,
-        ensProvider,
-        gasLessKey
+        ensProvider
       })
 
       const revPath = await clientInit.init({
@@ -41,19 +40,34 @@ export const useR3vlClient = (config: ClientConfig & {
 
       const signerAddress = await signer?.getAddress()
 
-      const { initClient, resetClient, currentChainId, currentSignerAddress } = context
+      const { initClient, resetClient, currentChainId, currentSignerAddress, gasLessKey: currentGaslessKey } = context
+
       if (
         (currentChainId && currentChainId !== chainId) ||
         (currentSignerAddress && currentSignerAddress !== signerAddress)
       ) {
         resetClient()
 
-        setTimeout(() => initClient(revPathAddress, revPath, chainId, config.customDefaultKey, signerAddress), 200)
+        setTimeout(() => initClient(
+          revPathAddress,
+          revPath,
+          chainId,
+          config.customDefaultKey,
+          signerAddress,
+          currentGaslessKey || gasLessKey
+        ), 200)
 
         return;
       }
 
-      initClient(revPathAddress, revPath, chainId, config.customDefaultKey, signerAddress)
+      initClient(
+        revPathAddress,
+        revPath,
+        chainId,
+        config.customDefaultKey,
+        signerAddress,
+        currentGaslessKey || gasLessKey
+      )
     }
 
     if (chainId && provider) initialize()
@@ -63,7 +77,8 @@ export const useR3vlClient = (config: ClientConfig & {
     provider,
     signer,
     includeEnsNames,
-    ensProvider
+    ensProvider,
+    gasLessKey
   ])
 
   return context

@@ -32,6 +32,7 @@ export async function createRevenuePathV2(
   opts?: {
     customGasLimit?: number
     isGasLess?: boolean
+    gasLessKey?: string
   }
 ) {
   const { sdk, _chainId, relay } = this
@@ -96,7 +97,7 @@ export async function createRevenuePathV2(
         };
         
         // send relayRequest to Gelato Relay API
-        const relayResponse = await relay?.signatureCall(request)
+        const relayResponse = await relay?.signatureCall(request, opts.gasLessKey)
 
         return relayResponse
       }
