@@ -45,3 +45,35 @@ export async function withdrawFundsV2(this: R3vlClient, { walletAddress, isERC20
     console.error(error)
   }
 }
+
+export async function withdrawFundsGasLessV2(this: R3vlClient, { walletAddress, isERC20 }: FnArgs, opts: { gasLessKey: string }) {
+  const { revPathV2Write, _chainId, relay } = this
+
+  if (!revPathV2Write) return false
+
+  try {
+    let tx 
+
+    if (walletAddress) {
+      if (isERC20) {
+        tx = await revPathV2Write.populateTransaction.release(tokenList[isERC20][_chainId], walletAddress)
+      } else {
+        tx = await revPathV2Write.populateTransaction.release(ethers.constants.AddressZero, walletAddress)
+      }
+    } else {
+      tx = await revPathV2Write.populateTransaction.distributePendingTokens(isERC20 ? tokenList[isERC20][_chainId] : ethers.constants.AddressZero)
+    }
+
+    const request = {
+      chainId: _chainId,
+      target: revPathV2Write.address,
+      data: tx
+    };
+
+    const relayResponse = await relay?.signatureCall(request, opts.gasLessKey)
+
+    return relayResponse
+  } catch (error) {
+    console.error(error)
+  }
+}
