@@ -1,4 +1,4 @@
-import React, { createContext, useState, useMemo, useEffect } from 'react'
+import React, { createContext, useState, useMemo } from 'react'
 import { QueryClient, QueryClientProvider, UseQueryOptions } from '@tanstack/react-query'
 
 import { persistQueryClient } from '@tanstack/react-query-persist-client'
@@ -6,10 +6,10 @@ import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persist
 
 import { compress, decompress } from 'lz-string'
 
-import { R3vlClient, RevenuePath } from "../client"
+import { RevenuePath } from "../client"
 import { ClientConfig } from '../types'
 
-export type UserQueryOPTs = Omit<UseQueryOptions<any, any, any, any>, 'queryKey' | 'queryFn' | 'initialData'> & { logContext?: boolean }
+export type UserQueryOPTs = Omit<UseQueryOptions<any, any, any, any>, 'queryKey' | 'queryFn' | 'initialData'> & { logContext?: boolean }
 
 export type AddressInput = `0x${string}`
 
@@ -19,10 +19,18 @@ export type ClientType = {
 }
 
 type R3vlContextType = ClientType & {
+  gasLessKey?: string
   contextHash?: string
   currentChainId?: number
   currentSignerAddress?: string
-  initClient: (objKey: string | undefined, revPath: RevenuePath, currentChainId: number, customDefaultKey?: string, currentSignerAddress?: string) => void
+  initClient: (
+    objKey: string | undefined,
+    revPath: RevenuePath,
+    currentChainId: number,
+    customDefaultKey?: string,
+    currentSignerAddress?: string,
+    gasLessKey?: string
+  ) => void
   resetClient: () => void
 }
 
@@ -62,6 +70,7 @@ export const R3vlProvider: React.FC<Props> = ({
   client: _client
 }: Props) => {
   const [clients, setClient] = useState<ClientType>({})
+  const [gasLessKey, setGaslessKey] = useState<string | undefined>()
   const [currentChainId, setCurrentChainId] = useState<number | undefined>()
   const [currentSignerAddress, setCurrentSignerAddress] = useState<string | undefined>()
   const { queryClient } = _client
@@ -69,11 +78,19 @@ export const R3vlProvider: React.FC<Props> = ({
     return prev + `[${curr}-${currentChainId}-${currentSignerAddress}]`
   }, '')
 
-  const initClient = (objKey: string | undefined, revPath: RevenuePath, _currentChainId: number, customDefaultKey?: string,  _currentSignerAddress?: string) => {
+  const initClient = (
+    objKey: string | undefined,
+    revPath: RevenuePath,
+    _currentChainId: number,
+    customDefaultKey?: string,
+    _currentSignerAddress?: string,
+    _gasLessKey?: string,
+  ) => {
     setClient((clients) => ({ ...clients, [objKey || customDefaultKey || 'default']: revPath }))
 
     setCurrentChainId(_currentChainId)
     setCurrentSignerAddress(_currentSignerAddress)
+    setGaslessKey(_gasLessKey)
   }
 
   const resetClient = () => {
@@ -84,7 +101,15 @@ export const R3vlProvider: React.FC<Props> = ({
   }
 
   const contextMemo = useMemo(
-    () => ({ ...clients, contextHash, currentChainId, currentSignerAddress, initClient, resetClient }),
+    () => ({
+      ...clients,
+      contextHash,
+      currentChainId,
+      currentSignerAddress,
+      initClient,
+      resetClient,
+      gasLessKey
+    }),
     [contextHash]
   )
 

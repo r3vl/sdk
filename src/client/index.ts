@@ -10,9 +10,9 @@ import { AddressInput } from "../react"
 
 import { transferOwnershipV2 } from "../transferOwnershipV2"
 
-import { withdrawableV0, FnArgs as WithdrawableV0Args } from '../withdrawableV0'
+import { FnArgs as WithdrawableV0Args } from '../withdrawableV0'
 import { withdrawnV0, FnArgs as WithdrawnV0Args } from '../withdrawnV0'
-import { withdrawableV1, FnArgs as WithdrawableV1Args } from '../withdrawableV1'
+import {  FnArgs as WithdrawableV1Args } from '../withdrawableV1'
 import { withdrawableV2, FnArgs as WithdrawableV2Args } from "../withdrawableV2"
 import { withdrawnV1, FnArgs as WithdrawnV1Args } from '../withdrawnV1'
 
@@ -24,11 +24,11 @@ import { addRevenueTierV1, AddRevenueTierV1Args } from "../addRevenueTierV1"
 import { withdrawnFundsV2, FnArgs as WithdrawnV2Args } from "../withdrawnV2"
 import { withdrawFundsV0, FnArgs as WithdrawV0Args } from "../withdrawV0"
 import { withdrawFundsV1, FnArgs as WithdrawV1Args } from "../withdrawV1"
-import { withdrawFundsV2, FnArgs as WithdrawV2Args } from "../withdrawV2"
-import { getRevenuePathsV0, getRevPathWithdrawEventsV0 } from "../eventsV0"
-import { getRevenuePathsV1, getRevPathWithdrawEventsV1 } from "../eventsV1"
+import { withdrawFundsV2, FnArgs as WithdrawV2Args, withdrawFundsGasLessV2 } from "../withdrawV2"
+import { getRevenuePathsV0 } from "../eventsV0"
+import { getRevenuePathsV1 } from "../eventsV1"
 import { getRevenuePathsV2, getRevPathTransactionEventsV2 } from "../eventsV2"
-import { tiersV1, TierType as TierTypeV1, FnArgs as TiersV1Args } from "../tiersV1"
+import { tiersV1, FnArgs as TiersV1Args } from "../tiersV1"
 import { tiersV2 } from "../tiersV2"
 import { updateRevenueTiersV2, FnArgs as UpdateRevenueTiersV2Args } from "../updateRevenueTiersV2"
 import { updateLimitsV2, FnArgs as UpdateLimitsV2Args } from "../updateLimitsV2"
@@ -38,6 +38,7 @@ import { createRevenuePathV2, FnArgs as CreateRevenuePathV2Args } from "../creat
 import { RevenuePathCreatedEvent as RevenuePathCreatedEventV0 } from "../typechain/ReveelMainV0"
 import { RevenuePathCreatedEvent as RevenuePathCreatedEventV1 } from "../typechain/ReveelMainV1"
 import { RevenuePathCreatedEvent as RevenuePathCreatedEventV2 } from "../typechain/ReveelMainV2"
+import { RelayResponse } from "@gelatonetwork/relay-sdk"
 
 export type RevenuePathsList = {
   address: string
@@ -60,8 +61,9 @@ export type RevenuePath = {
   transactionEvents?: (rePath: string) => Promise<any> | ReturnType<typeof getRevPathTransactionEventsV2>
   revenuePaths: () => Promise<RevenuePathsList | any>
   withdraw: (args: WithdrawV1Args) => void
+  withdrawGasLess?: (args: WithdrawV1Args, opts: { gasLessKey: string }) => Promise<any>
   tiers?: (args?: TiersV1Args) => ReturnType<typeof tiersV1> | ReturnType<typeof tiersV2>
-  createRevenuePath?: (args: CreateRevenuePathV1Args | CreateRevenuePathV2Args | any /* TODO: remove any */, opts?: { customGasLimit?: number }) => Promise<undefined | ethers.ContractReceipt | ethers.ContractTransaction>
+  createRevenuePath?: (args: CreateRevenuePathV1Args | CreateRevenuePathV2Args | any /* TODO: remove any */, opts?: { customGasLimit?: number; isGasLess?: boolean; gasLessKey?: string }) => Promise<undefined | ethers.ContractReceipt | ethers.ContractTransaction | RelayResponse>
   updateRevenueTier?: (args: UpdateRevenueTierV1Args) => Promise<ethers.ContractReceipt | undefined>
   updateErc20Distribution?: (args: UpdateErc20DistributionArgs) => Promise<ethers.ContractReceipt | undefined>
   updateFinalFund?: (args: UpdateFinalFundArgs) => Promise<void>
@@ -80,6 +82,7 @@ export class R3vlClient extends Base {
   revPathV2Read?: PathLibraryV2
   revPathV2Write?: PathLibraryV2
   sdk?: MainnetSdk | GoerliSdk | PolygonSdk | PolygonMumbaiSdk | ArbitrumOneSdk | ArbitrumTestnetSdk
+  relay?: { signatureCall: any }
   initialized = false
 
   constructor({
@@ -168,9 +171,10 @@ export class R3vlClient extends Base {
     return {
       v: 2,
       init: () => {
-        const { revPathV2Read, revPathV2Write, sdk, byPass } = this._initV2RevPath()
+        const { revPathV2Read, revPathV2Write, sdk, byPass, relay } = this._initV2RevPath()
 
         this.sdk = sdk
+        this.relay = relay
         this.initialized = true
 
         if (byPass) return true
@@ -183,7 +187,8 @@ export class R3vlClient extends Base {
       transactionEvents: (revPath: string) => getRevPathTransactionEventsV2.call(this, revPath),
       revenuePaths: () => getRevenuePathsV2.call(this),
       withdraw: (args: WithdrawV2Args) => withdrawFundsV2.call(this, args),
-      createRevenuePath: (args: CreateRevenuePathV2Args, opts?: { customGasLimit?: number }) => createRevenuePathV2.call(this, args, opts),
+      withdrawGasLess: (args: WithdrawV2Args, opts: { gasLessKey: string }) => withdrawFundsGasLessV2.call(this, args, opts),
+      createRevenuePath: (args: CreateRevenuePathV2Args, opts?: { customGasLimit?: number, isGasLess?: boolean, gasLessKey?: string }) => createRevenuePathV2.call(this, args, opts),
       updateRevenueTiers: (args: UpdateRevenueTiersV2Args) => updateRevenueTiersV2.call(this, args),
       updateLimits: (args: UpdateLimitsV2Args) => updateLimitsV2.call(this, args),
       addRevenueTiers: (args: AddRevenueTiersV2Args) => addRevenueTiersV2.call(this, args),

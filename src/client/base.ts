@@ -1,5 +1,6 @@
 import { Provider } from '@ethersproject/abstract-provider'
 import { Signer } from '@ethersproject/abstract-signer'
+import { GelatoRelay, CallWithERC2771Request } from "@gelatonetwork/relay-sdk"
 
 import {
   InvalidConfigError,
@@ -22,6 +23,11 @@ import {
   getAuroraSdk,
   getAuroraTestnetSdk
 } from '@dethcrypto/eth-sdk-client'
+import { ethers } from 'ethers'
+
+declare const web3: any;
+
+const relay = new GelatoRelay()
 
 const sdks = {
   [chainIds.goerli]: getGoerliSdk,
@@ -111,13 +117,31 @@ export default class Base {
       sdk
     }
   }
+  
+  async signatureCall(request: CallWithERC2771Request, gasLessKey: string) {
+    const web3Provider = new ethers.providers.Web3Provider((web3 as any).currentProvider)
+    const user = await this._signer?.getAddress()
+
+    if (!user || !gasLessKey) throw new Error("Can't execute Gelato SDK.")
+
+    const r = await relay.sponsoredCallERC2771(
+      { ...request, user },
+      web3Provider,
+      gasLessKey
+    )
+
+    return r
+  }
 
   protected _initV2RevPath() {
-    const sdk =  sdks[this._chainId](this._signer || this._provider)
+    const sdk = sdks[this._chainId](this._signer || this._provider)
 
     if (!this._revPathAddress) return {
       byPass: true,
-      sdk
+      sdk,
+      relay: {
+        signatureCall: this.signatureCall.bind(this)
+      }
     }
 
     const revPathV2Read = PathLibraryV2__factory.connect(
@@ -132,7 +156,10 @@ export default class Base {
     return {
       revPathV2Read,
       revPathV2Write,
-      sdk
+      sdk,
+      relay: {
+        signatureCall: this.signatureCall.bind(this)
+      }
     }
   }
 

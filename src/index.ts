@@ -9,4 +9,4 @@ export {
   useR3vlClient,
   useTransactionEvents,
   useRevenuePathTiers
-} from "./react/hooks";
+} from "./react/hooks"

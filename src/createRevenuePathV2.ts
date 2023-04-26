@@ -1,5 +1,5 @@
 import { BigNumberish, constants, errors, ethers, utils } from 'ethers'
-import { chainIds, tokenList } from './constants/tokens';
+import { chainIds, tokenList } from './constants/tokens'
 import { R3vlClient } from './client'
 
 export type FnArgs = {
@@ -31,9 +31,11 @@ export async function createRevenuePathV2(
   } : FnArgs,
   opts?: {
     customGasLimit?: number
+    isGasLess?: boolean
+    gasLessKey?: string
   }
 ) {
-  const { sdk, _chainId } = this
+  const { sdk, _chainId, relay } = this
 
   if (!sdk) return
 
@@ -69,7 +71,7 @@ export async function createRevenuePathV2(
   })
 
   try {
-    const estimateGas = await contract.estimateGas.createRevenuePath(
+    console.log("CREATE_REVENUE_PATH_PAYLOAD",
       walletList,
       formatedDistribution, 
       formatedTokens,
@@ -78,40 +80,63 @@ export async function createRevenuePathV2(
       mutabilityDisabled
     )
 
-    console.log("CREATE_REVENUE_PATH_PAYLOAD", walletList,
-      formatedDistribution, 
-      formatedTokens,
-      formatedLimits,
-      name,
-      mutabilityDisabled,
-      estimateGas,
-      {
-        gasLimit: opts?.customGasLimit || increaseGasLimit(estimateGas, _chainId),
-      }
-    )
-    const tx = await contract.createRevenuePath(
-      walletList,
-      formatedDistribution, 
-      formatedTokens,
-      formatedLimits,
-      name,
-      mutabilityDisabled,
-      {
-        gasLimit: opts?.customGasLimit || increaseGasLimit(estimateGas, _chainId),
-      }
-    )
+    if (opts?.isGasLess && relay?.signatureCall) {
+      const { data } = await contract.populateTransaction.createRevenuePath(
+        walletList,
+        formatedDistribution, 
+        formatedTokens,
+        formatedLimits,
+        name,
+        mutabilityDisabled
+        )
+        
+        const request = {
+          chainId: _chainId,
+          target: contract.address,
+          data: data as any
+        };
+        
+        // send relayRequest to Gelato Relay API
+        const relayResponse = await relay?.signatureCall(request, opts.gasLessKey)
 
-    // const result = await tx?.wait()
+        return relayResponse
+      }
 
-    // console.log(result, 'createRevenuePathV2 Result');
-    
-    return tx
-  } catch (error: any) {
-    console.error(error, 'createRevenuePathV2 Error')
+      const estimateGas = await contract.estimateGas.createRevenuePath(
+        walletList,
+        formatedDistribution, 
+        formatedTokens,
+        formatedLimits,
+        name,
+        mutabilityDisabled
+      )
+      
+      const tx = await contract.createRevenuePath(
+        walletList,
+        formatedDistribution, 
+        formatedTokens,
+        formatedLimits,
+        name,
+        mutabilityDisabled,
+        {
+          gasLimit: opts?.customGasLimit || increaseGasLimit(estimateGas, _chainId),
+        }
+        )
+        
+        // const result = await tx?.wait()
+        
+        // console.log(result, 'createRevenuePathV2 Result');
+        
+        return tx
+      } catch (error: any) {
+        console.error(error, 'createRevenuePathV2 Error')
+
     const pathLibraryContract = 'pathLibraryV2' in sdk ? sdk.pathLibraryV2 : undefined;
-    if(pathLibraryContract) {
+
+    if (pathLibraryContract) {
       const errorData = error?.error?.data?.originalError?.data;
-      if(errorData) {
+
+      if (errorData) {
         throw pathLibraryContract.interface.parseError(errorData);
       }
     }

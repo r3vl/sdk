@@ -4,7 +4,7 @@ import { communitySigner } from "./utils";
 async function main() {
   const signer = communitySigner()
 
-  if(!signer) return
+  if (!signer) return
 
   // await updateRevenueTiersV2(
   //   signer,
