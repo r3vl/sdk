@@ -7,6 +7,7 @@ export const useR3vlClient = (config: ClientConfig & {
   initV0?: boolean
   initV1?: boolean
   initV2?: boolean
+  initV2Final?: boolean
   customDefaultKey?: string
 }) => {
   const context = useContext(R3vlContext)

@@ -10,7 +10,7 @@ import {
 
 import type { ClientConfig } from '../types'
 import { chainIds, ChainIds } from '../constants/tokens'
-import { PathLibraryV0__factory, PathLibraryV1__factory, PathLibraryV2__factory } from '../typechain'
+import { PathLibraryV0__factory, PathLibraryV1__factory, PathLibraryV2__factory  } from '../typechain'
 import {
   getMainnetSdk,
   getGoerliSdk,
@@ -160,6 +160,18 @@ export default class Base {
       relay: {
         signatureCall: this.signatureCall.bind(this)
       }
+    }
+  }
+
+  protected _initV2FinalRevPath() {
+    const sdk = sdks[this._chainId](this._signer || this._provider)
+
+    if (!this._revPathAddress) return {
+      sdk,
+    }
+
+    return {
+      sdk,
     }
   }
 

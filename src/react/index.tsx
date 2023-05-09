@@ -58,6 +58,7 @@ interface Props {
     initV0?: boolean
     initV1?: boolean
     initV2?: boolean
+    initV2Final?: boolean
   }
   children: React.ReactNode
   client: {

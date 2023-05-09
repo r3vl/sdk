@@ -57,10 +57,10 @@ export type RevenuePath = {
   v: number
   init: () => void
   withdrawable?: (args?: WithdrawableV0Args | WithdrawableV1Args | WithdrawableV2Args) => Promise<any | undefined>
-  withdrawn: (args?: WithdrawnV0Args | WithdrawnV1Args | WithdrawnV2Args, getBN?: boolean) => Promise<number | undefined>
+  withdrawn?: (args?: WithdrawnV0Args | WithdrawnV1Args | WithdrawnV2Args, getBN?: boolean) => Promise<number | undefined>
   transactionEvents?: (rePath: string) => Promise<any> | ReturnType<typeof getRevPathTransactionEventsV2>
-  revenuePaths: () => Promise<RevenuePathsList | any>
-  withdraw: (args: WithdrawV1Args) => void
+  revenuePaths?: () => Promise<RevenuePathsList | any>
+  withdraw?: (args: WithdrawV1Args) => void
   withdrawGasLess?: (args: WithdrawV1Args, opts: { gasLessKey: string }) => Promise<any>
   tiers?: (args?: TiersV1Args) => ReturnType<typeof tiersV1> | ReturnType<typeof tiersV2>
   createRevenuePath?: (args: CreateRevenuePathV1Args | CreateRevenuePathV2Args | any /* TODO: remove any */, opts?: { customGasLimit?: number; isGasLess?: boolean; gasLessKey?: string }) => Promise<undefined | ethers.ContractReceipt | ethers.ContractTransaction | RelayResponse>
@@ -107,8 +107,9 @@ export class R3vlClient extends Base {
     initV0?: boolean
     initV1?: boolean
     initV2?: boolean
+    initV2Final?: boolean
   }) {
-    const { v0, v1 , v2 } = this
+    const { v0, v1 , v2, v2Final } = this
 
     const byPass = v2.init()
     v1.init()
@@ -118,6 +119,7 @@ export class R3vlClient extends Base {
 
     if (opts?.initV0) return v0
     if (opts?.initV1) return v1
+    if (opts?.initV2Final) return v2Final
     if (byPass === true || opts?.initV2) return v2
 
     return v2
@@ -194,6 +196,18 @@ export class R3vlClient extends Base {
       addRevenueTiers: (args: AddRevenueTiersV2Args) => addRevenueTiersV2.call(this, args),
       tiers: () => tiersV2.call(this),
       transferOwnerhip: (newOwner: AddressInput) => transferOwnershipV2.call(this, newOwner)
+    }
+  }
+
+  get v2Final() {
+    return {
+      v: 200,
+      init: () => {
+        const { sdk } = this._initV2FinalRevPath()
+
+        this.sdk = sdk
+      },
+      createRevenuePath: (args: CreateRevenuePathV2Args, opts?: { customGasLimit?: number, isGasLess?: boolean}) => createRevenuePathV2.call(this, args, opts),
     }
   }
 }
