@@ -5,7 +5,7 @@ import { FnArgs as CreateRevenuePathV2Args } from "../../createRevenuePathV2"
 import { ContractReceipt, ContractTransaction } from "ethers"
 import { RelayResponse } from "@gelatonetwork/relay-sdk"
 
-export const useCreateRevenuePath = (opts?: { customGasLimit?: number }) => {
+export const useCreateRevenuePath = (opts?: { customGasLimit?: number; isGasLess?: boolean }) => {
   const ctx = useContext(R3vlContext)
   const client = ctx?.default
   const gasLessKey = ctx?.gasLessKey

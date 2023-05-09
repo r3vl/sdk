@@ -22,7 +22,7 @@ describe('Main', () => {
 
   const provider = communityProvider()
   const signer = communitySigner()
-  const chainId = 1
+  const chainId = 5
   const wrapper = ({ children }: { children: any }) => {
     return (
       <R3vlProvider client={client}>
@@ -92,61 +92,24 @@ describe('Main', () => {
             chainId,
             provider,
             signer,
-            initV0: true,
-            customDefaultKey: 'v0'
+            initV2Final: true
           })
 
-          const r = useRevenuePaths("0x538C138B73836b811c148B3E4c3683B7B923A0E7", { cacheTime: 0, staleTime: 0 }, { customDefaultKey: 'v0' })
+          const r = useRevenuePaths()
 
-          console.log("REVS", r.data?.map((aa: any) => aa?.eventPayload && aa.eventPayload.args._walletName))
+          console.log("REVS", r.dataRaw && r.dataRaw[0].eventPayload)
           return r
         },
         { wrapper }
       )
-
-      await waitForNextUpdate()
-      await waitForNextUpdate()
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
+      await waitForNextUpdate({ timeout: 10000 })
+      await waitForNextUpdate({ timeout: 10000 })
+      await waitForNextUpdate({ timeout: 10000 })
+      await waitForNextUpdate({ timeout: 10000 })
+      await waitForNextUpdate({ timeout: 10000 })
+      await waitForNextUpdate({ timeout: 10000 })
+      await waitForNextUpdate({ timeout: 10000 })
+      await waitForNextUpdate({ timeout: 10000 })
 
       expect(result.current).toBeTruthy()
     })

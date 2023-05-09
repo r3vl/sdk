@@ -10,7 +10,7 @@ import {
 
 import type { ClientConfig } from '../types'
 import { chainIds, ChainIds } from '../constants/tokens'
-import { PathLibraryV0__factory, PathLibraryV1__factory, PathLibraryV2__factory  } from '../typechain'
+import { PathLibraryV0__factory, PathLibraryV1__factory, PathLibraryV2__factory, PathLibraryV2Final__factory  } from '../typechain'
 import {
   getMainnetSdk,
   getGoerliSdk,
@@ -170,7 +170,13 @@ export default class Base {
       sdk,
     }
 
+    const revPathV2FinalRead = PathLibraryV2Final__factory.connect(
+      this._revPathAddress,
+      this._provider
+    )
+
     return {
+      revPathV2FinalRead,
       sdk,
     }
   }

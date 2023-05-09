@@ -1,10 +1,11 @@
 import { ethers } from "ethers"
 import { MainnetSdk, GoerliSdk, PolygonSdk, PolygonMumbaiSdk, ArbitrumOneSdk, ArbitrumTestnetSdk } from "@dethcrypto/eth-sdk-client"
+import { RelayResponse } from "@gelatonetwork/relay-sdk"
 
 import Base from "./base"
 
 import type { ClientConfig } from '../types'
-import { PathLibraryV0, PathLibraryV1, PathLibraryV2 } from '../typechain'
+import { PathLibraryV0, PathLibraryV1, PathLibraryV2, PathLibraryV2Final } from '../typechain'
 
 import { AddressInput } from "../react"
 
@@ -28,6 +29,7 @@ import { withdrawFundsV2, FnArgs as WithdrawV2Args, withdrawFundsGasLessV2 } fro
 import { getRevenuePathsV0 } from "../eventsV0"
 import { getRevenuePathsV1 } from "../eventsV1"
 import { getRevenuePathsV2, getRevPathTransactionEventsV2 } from "../eventsV2"
+import { getRevenuePathsV2Final } from "../eventsV2Final"
 import { tiersV1, FnArgs as TiersV1Args } from "../tiersV1"
 import { tiersV2 } from "../tiersV2"
 import { updateRevenueTiersV2, FnArgs as UpdateRevenueTiersV2Args } from "../updateRevenueTiersV2"
@@ -35,10 +37,10 @@ import { updateLimitsV2, FnArgs as UpdateLimitsV2Args } from "../updateLimitsV2"
 import { addRevenueTiersV2, FnArgs as AddRevenueTiersV2Args } from "../addRevenueTiersV2"
 import { createRevenuePathV1, FnArgs as CreateRevenuePathV1Args } from "../createRevenuePathV1"
 import { createRevenuePathV2, FnArgs as CreateRevenuePathV2Args } from "../createRevenuePathV2"
+import { createRevenuePathV2Final } from "../createRevenuePathV2Final"
 import { RevenuePathCreatedEvent as RevenuePathCreatedEventV0 } from "../typechain/ReveelMainV0"
 import { RevenuePathCreatedEvent as RevenuePathCreatedEventV1 } from "../typechain/ReveelMainV1"
 import { RevenuePathCreatedEvent as RevenuePathCreatedEventV2 } from "../typechain/ReveelMainV2"
-import { RelayResponse } from "@gelatonetwork/relay-sdk"
 
 export type RevenuePathsList = {
   address: string
@@ -81,6 +83,7 @@ export class R3vlClient extends Base {
   revPathV1Write?: PathLibraryV1
   revPathV2Read?: PathLibraryV2
   revPathV2Write?: PathLibraryV2
+  revPathV2FinalRead?: PathLibraryV2Final
   sdk?: MainnetSdk | GoerliSdk | PolygonSdk | PolygonMumbaiSdk | ArbitrumOneSdk | ArbitrumTestnetSdk
   relay?: { signatureCall: any }
   initialized = false
@@ -203,11 +206,13 @@ export class R3vlClient extends Base {
     return {
       v: 200,
       init: () => {
-        const { sdk } = this._initV2FinalRevPath()
+        const { sdk, revPathV2FinalRead } = this._initV2FinalRevPath()
 
+        this.revPathV2FinalRead = revPathV2FinalRead
         this.sdk = sdk
       },
-      createRevenuePath: (args: CreateRevenuePathV2Args, opts?: { customGasLimit?: number, isGasLess?: boolean}) => createRevenuePathV2.call(this, args, opts),
+      revenuePaths: () => getRevenuePathsV2Final.call(this),
+      createRevenuePath: (args: CreateRevenuePathV2Args, opts?: { customGasLimit?: number, isGasLess?: boolean}) => createRevenuePathV2Final.call(this, args, opts),
     }
   }
 }
