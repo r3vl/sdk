@@ -47,9 +47,9 @@ export default defineConfig({
       pathLibraryV1: '0x0000000000000000000000000000000000000000',
       pathLibraryV2: '0x81d5b18d28368636c7d3C7565025203E9dBfA00b',
       pathLibraryV2Final: '0x0000000000000000000000000000000000000000',
-      weth: '0xA6FA4fB5f76172d178d61B04b0ecd319C5d1C0aa',
-      usdc: '0xe6b8a5CF854791412c1f6EFC7CAf629f5Df1c747',
-      dai: '0x001B3B4d0F3714Ca98ba10F6042DaEbF0B1B7b6F'
+      weth: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
+      usdc: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
+      dai: '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063'
     },
     arbitrumTestnet: {
       reveelMainV1: '0x0000000000000000000000000000000000000000',
