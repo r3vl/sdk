@@ -105,3 +105,7 @@ export const contractsDeployedV2 = {
   [chainIds.arbitrum]: 43_041_420,
   [chainIds.arbitrumGoerli]: 2_131_251
 }
+
+export const contractsDeployedV2Final = {
+  [chainIds.goerli]: 8_939_571,
+}

@@ -1,6 +1,6 @@
 import { MainnetSdk } from '@dethcrypto/eth-sdk-client';
 import { R3vlClient } from './client';
-import { contractsDeployedV2 } from './constants/tokens';
+import { contractsDeployedV2Final } from './constants/tokens';
 import { RevenuePathCreatedEvent } from './typechain/ReveelMainV2Final';
 
 /**
@@ -24,7 +24,7 @@ export async function getRevenuePathsV2Final(this: R3vlClient) {
 
   const allPaths = await contract.queryFilter(
     contract.filters.RevenuePathCreated(),
-    contractsDeployedV2[_chainId],
+    contractsDeployedV2Final[_chainId],
     'latest'
   )
 
