@@ -15,6 +15,7 @@ import { FnArgs as WithdrawableV0Args } from '../withdrawableV0'
 import { withdrawnV0, FnArgs as WithdrawnV0Args } from '../withdrawnV0'
 import {  FnArgs as WithdrawableV1Args } from '../withdrawableV1'
 import { withdrawableV2, FnArgs as WithdrawableV2Args } from "../withdrawableV2"
+import { withdrawableV2Final } from "../withdrawableV2Final"
 import { withdrawnV1, FnArgs as WithdrawnV1Args } from '../withdrawnV1'
 
 import { updateRevenueTierV1, UpdateRevenueTierV1Args } from "../updateRevenueTierV1"
@@ -23,15 +24,17 @@ import { updateErc20Distribution, UpdateErc20DistributionArgs } from "../updateE
 import { addRevenueTierV1, AddRevenueTierV1Args } from "../addRevenueTierV1"
 
 import { withdrawnFundsV2, FnArgs as WithdrawnV2Args } from "../withdrawnV2"
+import { withdrawnFundsV2Final } from "../withdrawnV2Final"
 import { withdrawFundsV0, FnArgs as WithdrawV0Args } from "../withdrawV0"
 import { withdrawFundsV1, FnArgs as WithdrawV1Args } from "../withdrawV1"
 import { withdrawFundsV2, FnArgs as WithdrawV2Args, withdrawFundsGasLessV2 } from "../withdrawV2"
 import { getRevenuePathsV0 } from "../eventsV0"
 import { getRevenuePathsV1 } from "../eventsV1"
 import { getRevenuePathsV2, getRevPathTransactionEventsV2 } from "../eventsV2"
-import { getRevenuePathsV2Final } from "../eventsV2Final"
+import { getRevenuePathsV2Final, getRevPathTransactionEventsV2Final } from "../eventsV2Final"
 import { tiersV1, FnArgs as TiersV1Args } from "../tiersV1"
 import { tiersV2 } from "../tiersV2"
+import { tiersV2Final } from "../tiersV2Final"
 import { updateRevenueTiersV2, FnArgs as UpdateRevenueTiersV2Args } from "../updateRevenueTiersV2"
 import { updateLimitsV2, FnArgs as UpdateLimitsV2Args } from "../updateLimitsV2"
 import { addRevenueTiersV2, FnArgs as AddRevenueTiersV2Args } from "../addRevenueTiersV2"
@@ -204,14 +207,18 @@ export class R3vlClient extends Base {
 
   get v2Final() {
     return {
-      v: 200,
+      v: 20,
       init: () => {
         const { sdk, revPathV2FinalRead } = this._initV2FinalRevPath()
 
         this.revPathV2FinalRead = revPathV2FinalRead
         this.sdk = sdk
       },
+      withdrawable: (args?: WithdrawableV2Args) => withdrawableV2Final.call(this, args),
+      withdrawn: (args?: WithdrawnV2Args) => withdrawnFundsV2Final.call(this, args),
+      transactionEvents: (revPath: string) => getRevPathTransactionEventsV2Final.call(this, revPath),
       revenuePaths: () => getRevenuePathsV2Final.call(this),
+      tiers: () => tiersV2Final.call(this),
       createRevenuePath: (args: CreateRevenuePathV2Args, opts?: { customGasLimit?: number, isGasLess?: boolean}) => createRevenuePathV2Final.call(this, args, opts),
     }
   }

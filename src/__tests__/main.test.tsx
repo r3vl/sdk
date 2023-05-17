@@ -97,7 +97,7 @@ describe('Main', () => {
 
           const r = useRevenuePaths()
 
-          console.log("REVS", r.dataRaw && r.dataRaw[0].eventPayload)
+          console.log("REVS", r.dataRaw && r.dataRaw?.length)
           return r
         },
         { wrapper }

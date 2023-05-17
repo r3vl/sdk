@@ -178,6 +178,9 @@ export default class Base {
     return {
       revPathV2FinalRead,
       sdk,
+      relay: {
+        signatureCall: this.signatureCall.bind(this)
+      }
     }
   }
 
