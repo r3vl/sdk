@@ -65,11 +65,12 @@ describe('Main', () => {
           useR3vlClient({
             chainId,
             provider,
-            revPathAddress: '0x37b96f962b508C813aF545B767a6D1C0C9Eda472',
-            initV2: true,
+            revPathAddress: '0x98555010314434fd6c1fd9e7358b05b821e385ad',
+            initV2Final: true,
+            revPathMetadata: JSON.parse('{"walletList":[["0x538C138B73836b811c148B3E4c3683B7B923A0E7","0x5e5E38626d419Df414e5AFd06121DFb041AEe2B2"],["0x5e5E38626d419Df414e5AFd06121DFb041AEe2B2"]],"distribution":[[50,50],[100]],"tiers":[{"eth":"0.01"}],"name":"Test V2 Integration Meta 2","mutabilityDisabled":true}')
           })
 
-          const r = useBalances('0x37b96f962b508C813aF545B767a6D1C0C9Eda472', { walletAddress: "0x2f2581c49A79880561032094887F59bd6d777F75" })
+          const r = useBalances('0x98555010314434fd6c1fd9e7358b05b821e385ad')
 
           console.log("META:::", r.data)
           return r.data

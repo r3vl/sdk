@@ -89,6 +89,7 @@ export class R3vlClient extends Base {
   revPathV2FinalRead?: PathLibraryV2Final
   sdk?: MainnetSdk | GoerliSdk | PolygonSdk | PolygonMumbaiSdk | ArbitrumOneSdk | ArbitrumTestnetSdk
   relay?: { signatureCall: any }
+  revPathMetadata?: { walletList: [[string]]; distribution: [[number]], tiers: {[t: string]: number}[] }
   initialized = false
 
   constructor({
@@ -114,14 +115,16 @@ export class R3vlClient extends Base {
     initV1?: boolean
     initV2?: boolean
     initV2Final?: boolean
+    revPathMetadata?: { walletList: [[string]]; distribution: [[number]], tiers: {[t: string]: number}[] }
   }) {
     const { v0, v1 , v2, v2Final } = this
 
     const byPass = v2.init()
+    v2Final.init()
     v1.init()
     v0.init()
 
-    // const { revPathV1Read, revPathV2Read } = this
+    if (opts?.revPathMetadata) this.revPathMetadata = opts?.revPathMetadata
 
     if (opts?.initV0) return v0
     if (opts?.initV1) return v1
