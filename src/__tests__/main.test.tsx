@@ -70,7 +70,7 @@ describe('Main', () => {
             revPathMetadata: JSON.parse('{"walletList":[["0x538C138B73836b811c148B3E4c3683B7B923A0E7","0x5e5E38626d419Df414e5AFd06121DFb041AEe2B2"],["0x5e5E38626d419Df414e5AFd06121DFb041AEe2B2"]],"distribution":[[50,50],[100]],"tiers":[{"eth":"0.01"}],"name":"Test V2 Integration Meta 2","mutabilityDisabled":true}')
           })
 
-          const r = useBalances('0x98555010314434fd6c1fd9e7358b05b821e385ad')
+          const r = useBalances('0x98555010314434fd6c1fd9e7358b05b821e385ad', { walletAddress: "0x538C138B73836b811c148B3E4c3683B7B923A0E7" })
 
           console.log("META:::", r.data)
           return r.data
