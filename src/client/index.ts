@@ -124,7 +124,8 @@ export class R3vlClient extends Base {
     v1.init()
     v0.init()
 
-    if (opts?.revPathMetadata) this.revPathMetadata = opts?.revPathMetadata
+    if (opts?.revPathMetadata)
+      localStorage.setItem(`r3vl-metadata-${this._revPathAddress}`, JSON.stringify(opts?.revPathMetadata))
 
     if (opts?.initV0) return v0
     if (opts?.initV1) return v1

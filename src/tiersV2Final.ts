@@ -2,7 +2,8 @@ import { ethers } from 'ethers'
 
 import { R3vlClient } from './client'
 import { getTokenListByAddress } from './constants/tokens'
-import { withdrawableTiersV2 } from './withdrawableV2'
+import { withdrawableTiersV2Final } from './withdrawableV2Final'
+import { parseWalletTier } from './withdrawableV2Final'
 
 
 export type TierType = {
@@ -17,8 +18,9 @@ export type TierType = {
  *  V2
  */
 export async function tiersV2Final(this: R3vlClient): Promise<TierType[] | undefined> {
-  const { revPathV2FinalRead, sdk, _chainId } = this
+  const { revPathV2FinalRead, sdk, _revPathAddress } = this
   const _context = this
+  const revPathMetadata = JSON.parse(localStorage.getItem(`r3vl-metadata-${_revPathAddress}`) || "")
 
   if (!revPathV2FinalRead || !sdk) throw new Error("ERROR:.")
 
@@ -41,10 +43,10 @@ export async function tiersV2Final(this: R3vlClient): Promise<TierType[] | undef
     currentTierDAIPromise,
   ])
   
-  const walletsDistributedETHPromise = withdrawableTiersV2.call(_context)
-  const walletsDistributedWETHPromise = withdrawableTiersV2.call(_context, { isERC20: 'weth' })
-  const walletsDistributedUSDCPromise = withdrawableTiersV2.call(_context, { isERC20: 'usdc' })
-  const walletsDistributedDAIPromise = withdrawableTiersV2.call(_context, { isERC20: 'dai' })
+  const walletsDistributedETHPromise = withdrawableTiersV2Final.call(_context)
+  const walletsDistributedWETHPromise = withdrawableTiersV2Final.call(_context, { isERC20: 'weth' })
+  const walletsDistributedUSDCPromise = withdrawableTiersV2Final.call(_context, { isERC20: 'usdc' })
+  const walletsDistributedDAIPromise = withdrawableTiersV2Final.call(_context, { isERC20: 'dai' })
 
   const [
     walletsDistributedETH,
@@ -59,7 +61,7 @@ export async function tiersV2Final(this: R3vlClient): Promise<TierType[] | undef
   ])
 
   for (let i = 0; i < tiersNumber?.toNumber(); i++) {
-    const walletList = await revPathV2FinalRead.getRevenueTier(i)
+    const walletList = (revPathMetadata?.walletList[i] || []) as string[]
 
     // const availableETH = await revPathV2FinalRead.getTierDistributedAmount(ethers.constants.AddressZero, i)
     // const availableWETH = await revPathV2FinalRead.getTierDistributedAmount(sdk.weth.address, i)
@@ -88,7 +90,7 @@ export async function tiersV2Final(this: R3vlClient): Promise<TierType[] | undef
 
 
     for (const wallet of walletList) {
-      const p = await revPathV2FinalRead.getRevenueProportion(i, wallet)
+      const p = parseWalletTier(revPathMetadata, i, walletList.indexOf(wallet)).proportion
 
       proportions[wallet] =  parseFloat(ethers.utils.formatEther(p))
 

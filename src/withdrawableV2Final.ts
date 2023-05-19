@@ -8,7 +8,7 @@ export type FnArgs = {
   isERC20?: keyof typeof tokenList
 }
 
-const parseWalletTier = (metadata: any, tierNumber: number, walletIndex: number, isERC20?: string) => {
+export const parseWalletTier = (metadata: any, tierNumber: number, walletIndex: number, isERC20?: string) => {
   const _tier = metadata.tiers[tierNumber]
   const walletLimit = metadata.distribution[tierNumber][walletIndex]
 
@@ -16,12 +16,8 @@ const parseWalletTier = (metadata: any, tierNumber: number, walletIndex: number,
     _tier?.[isERC20 as any] as string || "0" :
     _tier?.eth || "0"
 
-  // const tierLimit = isERC20 ?
-  // ethers.utils.parseEther(ethers.utils.formatUnits(_tier?.[isERC20 as any] as string || "0")) :
-  // ethers.utils.parseEther(_tier?.eth || "0")
-
   return {
-    proportion: walletLimit,
+    proportion: ethers.utils.parseEther(walletLimit + ""),
     limit: ethers.utils.parseEther((walletLimit /  100 * tierLimit) + "")
   }
 }
@@ -30,7 +26,8 @@ const parseWalletTier = (metadata: any, tierNumber: number, walletIndex: number,
  *  V2
  */
 export async function withdrawableV2Final(this: R3vlClient, payload?: FnArgs) {
-  const { revPathV2FinalRead, _chainId, sdk, revPathMetadata } = this
+  const { revPathV2FinalRead, _chainId, sdk, _revPathAddress } = this
+  const revPathMetadata = JSON.parse(localStorage.getItem(`r3vl-metadata-${_revPathAddress}`) || "")
 
   if (!revPathV2FinalRead || !sdk) throw new Error("ERROR:")
 
@@ -130,7 +127,8 @@ export async function withdrawableV2Final(this: R3vlClient, payload?: FnArgs) {
 }
 
 export async function withdrawableTiersV2Final(this: R3vlClient, payload?: FnArgs) {
-  const { revPathV2FinalRead, _chainId, sdk, revPathMetadata } = this
+  const { revPathV2FinalRead, _chainId, sdk, _revPathAddress } = this
+  const revPathMetadata = JSON.parse(localStorage.getItem(`r3vl-metadata-${_revPathAddress}`) || "")
 
   if (!revPathV2FinalRead || !sdk) throw new Error("ERROR:")
 
