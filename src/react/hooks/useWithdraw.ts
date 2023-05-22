@@ -18,7 +18,7 @@ export const useWithdraw = (revPathAddress: AddressInput) => {
     isERC20,
     onTxCreated,
   }: {
-    walletAddress: string,
+    walletAddress: any,
     isERC20?: keyof typeof tokenList
     onTxCreated?: (tx: ContractTransaction) => void
   }) => {

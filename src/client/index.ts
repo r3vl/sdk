@@ -28,6 +28,7 @@ import { withdrawnFundsV2Final } from "../withdrawnV2Final"
 import { withdrawFundsV0, FnArgs as WithdrawV0Args } from "../withdrawV0"
 import { withdrawFundsV1, FnArgs as WithdrawV1Args } from "../withdrawV1"
 import { withdrawFundsV2, FnArgs as WithdrawV2Args, withdrawFundsGasLessV2 } from "../withdrawV2"
+import { withdrawFundsV2Final, FnArgs as WithdrawV2FinalArgs } from "../withdrawV2Final"
 import { getRevenuePathsV0 } from "../eventsV0"
 import { getRevenuePathsV1 } from "../eventsV1"
 import { getRevenuePathsV2, getRevPathTransactionEventsV2 } from "../eventsV2"
@@ -65,7 +66,7 @@ export type RevenuePath = {
   withdrawn?: (args?: WithdrawnV0Args | WithdrawnV1Args | WithdrawnV2Args, getBN?: boolean) => Promise<number | undefined>
   transactionEvents?: (rePath: string) => Promise<any> | ReturnType<typeof getRevPathTransactionEventsV2>
   revenuePaths?: () => Promise<RevenuePathsList | any>
-  withdraw?: (args: WithdrawV1Args) => void
+  withdraw?: (args: any) => any
   withdrawGasLess?: (args: WithdrawV1Args, opts: { gasLessKey: string }) => Promise<any>
   tiers?: (args?: TiersV1Args) => ReturnType<typeof tiersV1> | ReturnType<typeof tiersV2>
   createRevenuePath?: (args: CreateRevenuePathV1Args | CreateRevenuePathV2Args | any /* TODO: remove any */, opts?: { customGasLimit?: number; isGasLess?: boolean; gasLessKey?: string }) => Promise<undefined | ethers.ContractReceipt | ethers.ContractTransaction | RelayResponse>
@@ -87,6 +88,7 @@ export class R3vlClient extends Base {
   revPathV2Read?: PathLibraryV2
   revPathV2Write?: PathLibraryV2
   revPathV2FinalRead?: PathLibraryV2Final
+  revPathV2FinalWrite?: PathLibraryV2Final
   sdk?: MainnetSdk | GoerliSdk | PolygonSdk | PolygonMumbaiSdk | ArbitrumOneSdk | ArbitrumTestnetSdk
   relay?: { signatureCall: any }
   revPathMetadata?: { walletList: [[string]]; distribution: [[number]], tiers: {[t: string]: number}[] }
@@ -213,13 +215,15 @@ export class R3vlClient extends Base {
     return {
       v: 20,
       init: () => {
-        const { sdk, revPathV2FinalRead } = this._initV2FinalRevPath()
+        const { sdk, revPathV2FinalRead, revPathV2FinalWrite } = this._initV2FinalRevPath()
 
         this.revPathV2FinalRead = revPathV2FinalRead
+        this.revPathV2FinalWrite = revPathV2FinalWrite
         this.sdk = sdk
       },
       withdrawable: (args?: WithdrawableV2Args) => withdrawableV2Final.call(this, args),
       withdrawn: (args?: WithdrawnV2Args) => withdrawnFundsV2Final.call(this, args),
+      withdraw: (args: WithdrawV2FinalArgs) => withdrawFundsV2Final.call(this, args),
       transactionEvents: (revPath: string) => getRevPathTransactionEventsV2Final.call(this, revPath),
       revenuePaths: () => getRevenuePathsV2Final.call(this),
       tiers: () => tiersV2Final.call(this),

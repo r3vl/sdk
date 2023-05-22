@@ -174,9 +174,14 @@ export default class Base {
       this._revPathAddress,
       this._provider
     )
+    const revPathV2FinalWrite = this._signer ? PathLibraryV2Final__factory.connect(
+      this._revPathAddress,
+      this._signer
+    ) : undefined
 
     return {
       revPathV2FinalRead,
+      revPathV2FinalWrite,
       sdk,
       relay: {
         signatureCall: this.signatureCall.bind(this)
