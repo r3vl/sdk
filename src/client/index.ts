@@ -65,7 +65,7 @@ export type RevenuePath = {
   withdrawable?: (args?: WithdrawableV0Args | WithdrawableV1Args | WithdrawableV2Args) => Promise<any | undefined>
   withdrawn?: (args?: WithdrawnV0Args | WithdrawnV1Args | WithdrawnV2Args, getBN?: boolean) => Promise<number | undefined>
   transactionEvents?: (rePath: string) => Promise<any> | ReturnType<typeof getRevPathTransactionEventsV2>
-  revenuePaths?: () => Promise<RevenuePathsList | any>
+  revenuePaths?: (args?: { startBlock?: number }) => Promise<RevenuePathsList | any>
   withdraw?: (args: any) => any
   withdrawGasLess?: (args: WithdrawV1Args, opts: { gasLessKey: string }) => Promise<any>
   tiers?: (args?: TiersV1Args) => ReturnType<typeof tiersV1> | ReturnType<typeof tiersV2>
@@ -77,7 +77,7 @@ export type RevenuePath = {
   updateLimits?: (args: UpdateLimitsV2Args) => Promise<ethers.ContractReceipt | undefined>
   addRevenueTier?: (args: AddRevenueTierV1Args) => Promise<ethers.ContractReceipt | undefined>
   updateRevenueTiers?: (args: UpdateRevenueTiersV2Args) => Promise<ethers.ContractReceipt | ethers.ContractTransaction | undefined>
-  transferOwnerhip?: (args: any) => Promise<any>
+  transferOwnerhip?: (args: any, opts?: { isGasLess?: boolean; gasLessKey?: string }) => Promise<any>
 }
 
 export class R3vlClient extends Base {
@@ -151,7 +151,7 @@ export class R3vlClient extends Base {
       // withdrawable: (args?: WithdrawableV0Args) => withdrawableV0.call(this, args),
       withdrawn: (args?: WithdrawnV0Args) => withdrawnV0.call(this, args),
       // transactionEvents: () => getRevPathWithdrawEventsV0.call(this),
-      revenuePaths: () => getRevenuePathsV0.call(this),
+      revenuePaths: (args?: { startBlock?: number }) => getRevenuePathsV0.call(this, args),
       withdraw: (args: WithdrawV0Args) => withdrawFundsV0.call(this, args)
     }
   }
@@ -175,7 +175,7 @@ export class R3vlClient extends Base {
       updateFinalFund: (args: UpdateFinalFundArgs) => updateFinalFund.call(this, args),
       addRevenueTier: (args: AddRevenueTierV1Args) => addRevenueTierV1.call(this, args),
       // transactionEvents: () => getRevPathWithdrawEventsV1.call(this),
-      revenuePaths: () => getRevenuePathsV1.call(this),
+      revenuePaths: (args?: { startBlock?: number }) => getRevenuePathsV1.call(this, args),
       withdraw: (args: WithdrawV1Args) => withdrawFundsV1.call(this, args),
       tiers: (args?: TiersV1Args) => tiersV1.call(this, args as any)
     }
@@ -199,7 +199,7 @@ export class R3vlClient extends Base {
       withdrawable: (args?: WithdrawableV2Args) => withdrawableV2.call(this, args),
       withdrawn: (args?: WithdrawnV2Args) => withdrawnFundsV2.call(this, args),
       transactionEvents: (revPath: string) => getRevPathTransactionEventsV2.call(this, revPath),
-      revenuePaths: () => getRevenuePathsV2.call(this),
+      revenuePaths: (args?: { startBlock?: number }) => getRevenuePathsV2.call(this, args),
       withdraw: (args: WithdrawV2Args) => withdrawFundsV2.call(this, args),
       withdrawGasLess: (args: WithdrawV2Args, opts: { gasLessKey: string }) => withdrawFundsGasLessV2.call(this, args, opts),
       createRevenuePath: (args: CreateRevenuePathV2Args, opts?: { customGasLimit?: number, isGasLess?: boolean, gasLessKey?: string }) => createRevenuePathV2.call(this, args, opts),
@@ -207,7 +207,7 @@ export class R3vlClient extends Base {
       updateLimits: (args: UpdateLimitsV2Args) => updateLimitsV2.call(this, args),
       addRevenueTiers: (args: AddRevenueTiersV2Args) => addRevenueTiersV2.call(this, args),
       tiers: () => tiersV2.call(this),
-      transferOwnerhip: (newOwner: AddressInput) => transferOwnershipV2.call(this, newOwner)
+      transferOwnerhip: (newOwner: AddressInput, opts?: { customGasLimit?: number, isGasLess?: boolean}) => transferOwnershipV2.call(this, newOwner, opts)
     }
   }
 
@@ -225,7 +225,7 @@ export class R3vlClient extends Base {
       withdrawn: (args?: WithdrawnV2Args) => withdrawnFundsV2Final.call(this, args),
       withdraw: (args: WithdrawV2FinalArgs) => withdrawFundsV2Final.call(this, args),
       transactionEvents: (revPath: string) => getRevPathTransactionEventsV2Final.call(this, revPath),
-      revenuePaths: () => getRevenuePathsV2Final.call(this),
+      revenuePaths: (args?: { startBlock?: number }) => getRevenuePathsV2Final.call(this, args),
       tiers: () => tiersV2Final.call(this),
       createRevenuePath: (args: CreateRevenuePathV2Args, opts?: { customGasLimit?: number, isGasLess?: boolean}) => createRevenuePathV2Final.call(this, args, opts),
     }

@@ -215,6 +215,42 @@ describe('Main', () => {
     })
   })
 
+  test('Test transferOwnership', async () => {
+    await act(async () => {
+      const { result, waitForNextUpdate } = renderHook(
+        () => {
+          const r = useR3vlClient({
+            chainId,
+            provider,
+            signer,
+            revPathAddress: '0x05e22f1706310A23C79e94798f3cc82D4B05981E',
+            initV2: true,
+          })
+
+          return r as any
+        },
+        { wrapper }
+      )
+
+      await waitForNextUpdate({ timeout: 20000 })
+
+
+      const response = result?.current &&
+        result.current["0x05e22f1706310A23C79e94798f3cc82D4B05981E"] &&
+        result.current["0x05e22f1706310A23C79e94798f3cc82D4B05981E"]?.transferOwnerhip &&
+        await result.current["0x05e22f1706310A23C79e94798f3cc82D4B05981E"]?.transferOwnerhip(
+          "0x538C138B73836b811c148B3E4c3683B7B923A0E7",
+          { isGasLess: true, gasLessKey: "td_LNEKbeMG7OK0OS159IAS3rJTQK8i0kr19NehIxcQ_" }
+        )
+
+      console.log(
+        "META::", response
+      )
+
+      expect(result).toBeTruthy()
+    })
+  })
+
   // test('Test useBalances', async () => {
   //   const HookTester = () => {
   //     useR3vlClient({

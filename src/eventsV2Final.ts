@@ -10,7 +10,9 @@ import { RevenuePathCreatedEvent } from './typechain/ReveelMainV2Final';
 /**
  * all revenue paths V2
  */
-export async function getRevenuePathsV2Final(this: R3vlClient) {
+export async function getRevenuePathsV2Final(this: R3vlClient, opts?: {
+  startBlock?: number
+}) {
   const { sdk, _chainId } = this
   
   if (!sdk) throw new Error("SDK not initialized")
@@ -24,7 +26,7 @@ export async function getRevenuePathsV2Final(this: R3vlClient) {
 
   const allPaths = await contract.queryFilter(
     contract.filters.RevenuePathCreated(),
-    contractsDeployedV2Final[_chainId],
+    opts?.startBlock || contractsDeployedV2Final[_chainId],
     'latest'
   )
 

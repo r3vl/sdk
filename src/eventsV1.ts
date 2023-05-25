@@ -9,7 +9,9 @@ import { RevenuePathCreatedEvent } from './typechain/ReveelMainV1';
 /**
  * all revenue paths V1
  */
-export async function getRevenuePathsV1(this: R3vlClient) {
+export async function getRevenuePathsV1(this: R3vlClient, opts?: {
+  startBlock?: number
+}) {
   const { sdk } = this
 
   if (!sdk) return null
@@ -23,6 +25,8 @@ export async function getRevenuePathsV1(this: R3vlClient) {
 
   const allPaths = await contract.queryFilter(
     contract.filters.RevenuePathCreated(),
+    opts?.startBlock || undefined,
+    "latest"
   )
 
   const uniquePathAddresses: string[] = []
