@@ -92,6 +92,18 @@
         "internalType": "bool",
         "name": "enabledGassless",
         "type": "bool"
+      },
+      {
+        "indexed": false,
+        "internalType": "address[][]",
+        "name": "walletList",
+        "type": "address[][]"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256[][]",
+        "name": "distribution",
+        "type": "uint256[][]"
       }
     ],
     "name": "RevenuePathCreated",
