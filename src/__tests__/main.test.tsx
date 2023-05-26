@@ -65,12 +65,12 @@ describe('Main', () => {
           useR3vlClient({
             chainId,
             provider,
-            revPathAddress: '0x98555010314434fd6c1fd9e7358b05b821e385ad',
+            revPathAddress: '0xd63c43fffc695d00DC29Be73F5e13DA2683db34A',
             initV2Final: true,
-            revPathMetadata: JSON.parse('{"walletList":[["0x538C138B73836b811c148B3E4c3683B7B923A0E7","0x5e5E38626d419Df414e5AFd06121DFb041AEe2B2"],["0x5e5E38626d419Df414e5AFd06121DFb041AEe2B2"]],"distribution":[[50,50],[100]],"tiers":[{"eth":"0.01"}],"name":"Test V2 Integration Meta 2","mutabilityDisabled":true}')
+            revPathMetadata: JSON.parse('{"walletList":[["0x0807c5C8Fa8a8229870CFecb6E2E71Dcb6a78261","0x5e5E38626d419Df414e5AFd06121DFb041AEe2B2"],["0x538C138B73836b811c148B3E4c3683B7B923A0E7","0x5e5E38626d419Df414e5AFd06121DFb041AEe2B2"]],"distribution":[[50,50],["80",20]],"tiers":[{"eth":"0.01"}],"name":"Test V2 Aldo/Fernando","mutabilityDisabled":false}')
           })
 
-          const r = useBalances('0x98555010314434fd6c1fd9e7358b05b821e385ad', { walletAddress: "0x538C138B73836b811c148B3E4c3683B7B923A0E7" })
+          const r = useBalances('0xd63c43fffc695d00DC29Be73F5e13DA2683db34A', { walletAddress: "0x5e5E38626d419Df414e5AFd06121DFb041AEe2B2" })
 
           console.log("META:::", r.data)
           return r.data
@@ -98,7 +98,7 @@ describe('Main', () => {
 
           const r = useRevenuePaths()
 
-          console.log("REVS", r.dataRaw && r.dataRaw?.length)
+          console.log("REVS", r?.dataRaw && r.dataRaw?.[0].eventPayload)
           return r
         },
         { wrapper }
@@ -194,14 +194,14 @@ describe('Main', () => {
             chainId,
             provider,
             signer,
-            revPathAddress: '0x98555010314434fd6c1fd9e7358b05b821e385ad',
+            revPathAddress: '0xd63c43fffc695d00DC29Be73F5e13DA2683db34A',
             initV2Final: true,
-            revPathMetadata: JSON.parse('{"walletList":[["0x538C138B73836b811c148B3E4c3683B7B923A0E7","0x5e5E38626d419Df414e5AFd06121DFb041AEe2B2"],["0x5e5E38626d419Df414e5AFd06121DFb041AEe2B2"]],"distribution":[[50,50],[100]],"tiers":[{"eth":"0.01"}],"name":"Test V2 Integration Meta 2","mutabilityDisabled":true}')
+            revPathMetadata: JSON.parse('{"walletList":[["0x0807c5C8Fa8a8229870CFecb6E2E71Dcb6a78261","0x5e5E38626d419Df414e5AFd06121DFb041AEe2B2"],["0x538C138B73836b811c148B3E4c3683B7B923A0E7","0x5e5E38626d419Df414e5AFd06121DFb041AEe2B2"]],"distribution":[[50,50],["80",20]],"tiers":[{"eth":"0.01"}],"name":"Test V2 Aldo/Fernando","mutabilityDisabled":false}')
           })
 
-          const r = useRevenuePathTiers('0x98555010314434fd6c1fd9e7358b05b821e385ad')
+          const r = useRevenuePathTiers('0xd63c43fffc695d00DC29Be73F5e13DA2683db34A')
 
-          console.log("MMMMM", r.data?.[0]?.available)
+          console.log("MMMMM", r.data?.[1])
           return r
         },
         { wrapper }
