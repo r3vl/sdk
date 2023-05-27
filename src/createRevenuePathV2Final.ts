@@ -1,6 +1,6 @@
-import { BigNumberish, constants, errors, ethers, utils } from 'ethers'
+import { BigNumberish, ethers, utils } from 'ethers'
 import { chainIds, tokenList } from './constants/tokens'
-import { R3vlClient } from './client'
+import { GaslessOpts, GeneralOpts, R3vlClient } from './client'
 
 export type FnArgs = {
   walletList: string[][],
@@ -29,13 +29,9 @@ export async function createRevenuePathV2Final(
     name, 
     mutabilityDisabled 
   } : FnArgs,
-  opts?: {
-    customGasLimit?: number
-    isGasLess?: boolean
-    gasLessKey?: string
-  }
+  opts?: GeneralOpts & GaslessOpts
 ) {
-  const { sdk, _chainId } = this
+  const { sdk, _chainId, relay } = this
 
   if (!sdk) return
 
@@ -81,6 +77,29 @@ export async function createRevenuePathV2Final(
       mutabilityDisabled
     )
 
+    if (opts?.isGasLess && relay?.signatureCall) {
+      const { data } = await contract.populateTransaction.createRevenuePath(
+        walletList,
+        formatedDistribution, 
+        formatedTokens,
+        formatedLimits,
+        name,
+        !!opts?.isGasLess,
+        mutabilityDisabled
+      )
+        
+      const request = {
+        chainId: _chainId,
+        target: contract.address,
+        data: data as any
+      };
+      
+      // send relayRequest to Gelato Relay API
+      const relayResponse = await relay?.signatureCall(request, opts.gasLessKey)
+
+      return relayResponse
+    }
+
     const estimateGas = await contract.estimateGas.createRevenuePath(
       walletList,
       formatedDistribution, 
@@ -103,12 +122,12 @@ export async function createRevenuePathV2Final(
         gasLimit: opts?.customGasLimit || increaseGasLimit(estimateGas, _chainId),
       }
     )
-      
-      return tx
+
+    return tx
   } catch (error: any) {
     console.error(error, 'createRevenuePathV2 Error')
 
-      const pathLibraryContract = 'pathLibraryV2' in sdk ? sdk.pathLibraryV2 : undefined;
+    const pathLibraryContract = 'pathLibraryV2' in sdk ? sdk.pathLibraryV2 : undefined;
 
     if (pathLibraryContract) {
       const errorData = error?.error?.data?.originalError?.data;

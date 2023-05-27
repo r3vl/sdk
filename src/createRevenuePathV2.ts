@@ -1,6 +1,6 @@
-import { BigNumberish, constants, errors, ethers, utils } from 'ethers'
+import { BigNumberish, ethers, utils } from 'ethers'
 import { chainIds, tokenList } from './constants/tokens'
-import { R3vlClient } from './client'
+import { GaslessOpts, GeneralOpts, R3vlClient } from './client'
 
 export type FnArgs = {
   walletList: string[][],
@@ -29,11 +29,7 @@ export async function createRevenuePathV2(
     name, 
     mutabilityDisabled 
   } : FnArgs,
-  opts?: {
-    customGasLimit?: number
-    isGasLess?: boolean
-    gasLessKey?: string
-  }
+  opts?: GeneralOpts & GaslessOpts
 ) {
   const { sdk, _chainId, relay } = this
 
