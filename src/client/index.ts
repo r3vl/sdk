@@ -1,6 +1,7 @@
 import { ethers } from "ethers"
 import { MainnetSdk, GoerliSdk, PolygonSdk, PolygonMumbaiSdk, ArbitrumOneSdk, ArbitrumTestnetSdk } from "@dethcrypto/eth-sdk-client"
 import { RelayResponse } from "@gelatonetwork/relay-sdk"
+import axios from "axios"
 
 import Base from "./base"
 
@@ -45,7 +46,9 @@ import { createRevenuePathV2Final } from "../createRevenuePathV2Final"
 import { RevenuePathCreatedEvent as RevenuePathCreatedEventV0 } from "../typechain/ReveelMainV0"
 import { RevenuePathCreatedEvent as RevenuePathCreatedEventV1 } from "../typechain/ReveelMainV1"
 import { RevenuePathCreatedEvent as RevenuePathCreatedEventV2 } from "../typechain/ReveelMainV2"
-import axios from "axios"
+import { transferOwnershipV2Final } from "../transferOwnershipV2Final"
+import { updateRevenueTiersV2Final } from "../updateRevenueTiersV2Final"
+import { updateLimitsV2Final } from "../updateLimitsV2Final"
 
 export type RevenuePathsList = {
   address: string
@@ -257,9 +260,12 @@ export class R3vlClient extends Base {
       withdrawn: (args?: WithdrawnV2Args) => withdrawnFundsV2Final.call(this, args),
       withdraw: (args: WithdrawV2FinalArgs) => withdrawFundsV2Final.call(this, args),
       transactionEvents: (revPath: string) => getRevPathTransactionEventsV2Final.call(this, revPath),
-      revenuePaths: (args?: { startBlock?: number }) => getRevenuePathsV2Final.call(this, args),
-      tiers: () => tiersV2Final.call(this),
       createRevenuePath: (args: CreateRevenuePathV2Args, opts?: GeneralOpts & GaslessOpts) => createRevenuePathV2Final.call(this, args, opts),
+      updateRevenueTiers: (args: UpdateRevenueTiersV2Args) => updateRevenueTiersV2Final.call(this, args),
+      updateLimits: (args: UpdateLimitsV2Args) => updateLimitsV2Final.call(this, args),
+      revenuePaths: (args?: { startBlock?: number }) => getRevenuePathsV2Final.call(this, args),
+      transferOwnerhip: (newOwner: AddressInput, opts?: GeneralOpts & GaslessOpts) => transferOwnershipV2Final.call(this, newOwner, opts),
+      tiers: () => tiersV2Final.call(this),
     }
   }
 }
