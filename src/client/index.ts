@@ -142,25 +142,27 @@ export class R3vlClient extends Base {
     v1.init()
     v0.init()
 
-    if (opts?.initV2Final && !opts?.revPathMetadata && !opts?.apiKey) throw new Error("Couldn't initialize V2 Revenue Path")
+    if (opts?.initV2Final && this._revPathAddress) {
+      if (!opts?.revPathMetadata && !opts?.apiKey) throw new Error("Couldn't initialize V2 Revenue Path")
 
-    if (opts?.initV2Final && opts?.revPathMetadata)
-      localStorage.setItem(`r3vl-metadata-${this._revPathAddress}`, JSON.stringify(opts?.revPathMetadata))
+      if (opts?.revPathMetadata)
+        localStorage.setItem(`r3vl-metadata-${this._revPathAddress}`, JSON.stringify(opts?.revPathMetadata))
 
-    if (opts?.initV2Final && opts?.apiKey) {
-      localStorage.setItem(`r3vl-sdk-apiKey`, opts.apiKey)
+      if (opts?.apiKey) {
+        localStorage.setItem(`r3vl-sdk-apiKey`, opts.apiKey)
 
-      try {
-        const response = await axios.get(`${R3vlClient.API_HOST}/revPathMetadata?chainId=${this._chainId}&${this._revPathAddress}`, {
-          headers: {
-            Authorization: `Bearer ${opts.apiKey}`
-          }
-        })
-        const [{ metadata }] = response.data
-  
-        localStorage.setItem(`r3vl-metadata-${this._revPathAddress}`, metadata)
-      } catch (_err) {
-        throw new Error("Couldn't find metadata for V2 Revenue Path")
+        try {
+          const response = await axios.get(`${R3vlClient.API_HOST}/revPathMetadata?chainId=${this._chainId}&${this._revPathAddress}`, {
+            headers: {
+              Authorization: `Bearer ${opts.apiKey}`
+            }
+          })
+          const [{ metadata }] = response.data
+    
+          localStorage.setItem(`r3vl-metadata-${this._revPathAddress}`, metadata)
+        } catch (_err) {
+          throw new Error("Couldn't find metadata for V2 Revenue Path")
+        }
       }
     }
 
