@@ -45,6 +45,7 @@ import { createRevenuePathV2Final } from "../createRevenuePathV2Final"
 import { RevenuePathCreatedEvent as RevenuePathCreatedEventV0 } from "../typechain/ReveelMainV0"
 import { RevenuePathCreatedEvent as RevenuePathCreatedEventV1 } from "../typechain/ReveelMainV1"
 import { RevenuePathCreatedEvent as RevenuePathCreatedEventV2 } from "../typechain/ReveelMainV2"
+import axios from "axios"
 
 export type RevenuePathsList = {
   address: string
@@ -81,6 +82,8 @@ export type RevenuePath = {
 }
 
 export class R3vlClient extends Base {
+  static API_HOST = "https://us-central1-ui-v2-66a48.cloudfunctions.net/api"
+
   revPathV0Read?: PathLibraryV0
   revPathV0Write?: PathLibraryV0
   revPathV1Read?: PathLibraryV1
@@ -118,6 +121,7 @@ export class R3vlClient extends Base {
     initV2?: boolean
     initV2Final?: boolean
     revPathMetadata?: { walletList: [[string]]; distribution: [[number]], tiers: {[t: string]: number}[] }
+    apiKey?: string
   }) {
     const { v0, v1 , v2, v2Final } = this
 
@@ -126,8 +130,27 @@ export class R3vlClient extends Base {
     v1.init()
     v0.init()
 
-    if (opts?.revPathMetadata)
+    if (opts?.initV2Final && !opts?.revPathMetadata && !opts?.apiKey) throw new Error("Couldn't initialize V2 Revenue Path")
+
+    if (opts?.initV2Final && opts?.revPathMetadata)
       localStorage.setItem(`r3vl-metadata-${this._revPathAddress}`, JSON.stringify(opts?.revPathMetadata))
+
+    if (opts?.initV2Final && opts?.apiKey) {
+      localStorage.setItem(`r3vl-sdk-apiKey`, opts.apiKey)
+
+      try {
+        const response = await axios.get(`${R3vlClient.API_HOST}/revPathMetadata?chainId=${this._chainId}&${this._revPathAddress}`, {
+          headers: {
+            Authorization: `Bearer ${opts.apiKey}`
+          }
+        })
+        const [{ metadata }] = response.data
+  
+        localStorage.setItem(`r3vl-metadata-${this._revPathAddress}`, metadata)
+      } catch (_err) {
+        throw new Error("Couldn't find metadata for V2 Revenue Path")
+      }
+    }
 
     if (opts?.initV0) return v0
     if (opts?.initV1) return v1

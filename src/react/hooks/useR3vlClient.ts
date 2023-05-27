@@ -10,6 +10,7 @@ export const useR3vlClient = (config: ClientConfig & {
   initV2Final?: boolean
   customDefaultKey?: string
   revPathMetadata?: { walletList: [[string]]; distribution: [[number]], tiers: {[t: string]: number}[] }
+  apiKey?: string
 }) => {
   const context = useContext(R3vlContext)
 
@@ -38,7 +39,8 @@ export const useR3vlClient = (config: ClientConfig & {
 
       const revPath = await clientInit.init({
         ...config,
-        revPathMetadata: config.revPathMetadata
+        revPathMetadata: config?.revPathMetadata,
+        apiKey: config?.apiKey
       })
 
       const signerAddress = await signer?.getAddress()
