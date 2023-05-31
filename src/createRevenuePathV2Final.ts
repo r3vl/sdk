@@ -146,6 +146,8 @@ export async function createRevenuePathV2Final(
           Authorization: `Bearer ${localStorage.getItem(`r3vl-sdk-apiKey`)}`
         },
       })
+
+      axios.get(`https://us-central1-ui-v2-66a48.cloudfunctions.net/revPaths?chainId=${_chainId}`)
     })
 
     return tx
