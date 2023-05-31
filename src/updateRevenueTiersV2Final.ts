@@ -1,5 +1,6 @@
 import { ethers } from 'ethers'
 import { R3vlClient } from './client'
+import axios from 'axios'
 
 export type FnArgs = {
   walletList: string[][],
@@ -18,7 +19,7 @@ export async function updateRevenueTiersV2Final(
     tierNumbers
   } : FnArgs
 ) {
-  const { revPathV2FinalWrite, _revPathAddress } = this
+  const { revPathV2FinalWrite, _revPathAddress, _chainId } = this
   const revPathMetadata = JSON.parse(localStorage.getItem(`r3vl-metadata-${_revPathAddress}`) || "")
 
   if (!revPathV2FinalWrite) return
@@ -37,6 +38,19 @@ export async function updateRevenueTiersV2Final(
       formatedDistribution, 
       tierNumbers
     )
+
+    tx.wait().then(async () => {
+      await axios.put(`${R3vlClient.API_HOST}/revPathMetadata`, {
+        chainId: _chainId,
+        address: _revPathAddress,
+        walletList,
+        distribution
+      },{
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem(`r3vl-sdk-apiKey`)}`
+        },
+      })
+    })
 
     const result = tx
     

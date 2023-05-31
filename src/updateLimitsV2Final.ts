@@ -1,6 +1,7 @@
 import { BigNumberish, constants, utils } from 'ethers'
 import { tokenList } from './constants/tokens';
 import { R3vlClient } from './client'
+import axios from 'axios';
 
 export type FnArgs = {
   tokens: string[],
@@ -19,7 +20,8 @@ export async function updateLimitsV2Final(
     tier
   } : FnArgs
 ) {
-  const { revPathV2FinalWrite, sdk, _chainId } = this
+  const { revPathV2FinalWrite, sdk, _revPathAddress, _chainId } = this
+  const revPathMetadata = JSON.parse(localStorage.getItem(`r3vl-metadata-${_revPathAddress}`) || "")
   
   if (!revPathV2FinalWrite || !sdk) return
 
@@ -57,6 +59,27 @@ export async function updateLimitsV2Final(
       formatedLimits, 
       tier,
     )
+
+    tx.wait().then(async () => {
+      const newTierLimits = tokens.map((t, i) => {
+        return  { [t]: newLimits[i] }
+      })
+      const tiers = revPathMetadata.tiers?.map((t: { [x: string]: number }, i: number) => {
+        if (tier === i) return newTierLimits
+
+        return t
+      })
+
+      await axios.put(`${R3vlClient.API_HOST}/revPathMetadata`, {
+        chainId: _chainId,
+        address: _revPathAddress,
+        tiers
+      },{
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem(`r3vl-sdk-apiKey`)}`
+        },
+      })
+    })
 
     const result = await tx?.wait()
 

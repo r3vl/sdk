@@ -1,6 +1,7 @@
 import { BigNumberish, ethers, utils } from 'ethers'
 import { chainIds, tokenList } from './constants/tokens'
 import { GaslessOpts, GeneralOpts, R3vlClient } from './client'
+import axios from 'axios'
 
 export type FnArgs = {
   walletList: string[][],
@@ -122,6 +123,30 @@ export async function createRevenuePathV2Final(
         gasLimit: opts?.customGasLimit || increaseGasLimit(estimateGas, _chainId),
       }
     )
+
+    tx.wait().then(async (result: any) => {
+      const payload = {
+        address: result?.logs[0].address,
+        name: name,
+        blockNumber: result.blockNumber,
+        metadata: JSON.stringify({ 
+          walletList, 
+          distribution, 
+          tiers, 
+          name, 
+          mutabilityDisabled 
+        }),
+      }
+
+      await axios.post(`${R3vlClient.API_HOST}/revPathMetadata`, {
+        chainId: _chainId,
+        payload
+      },{
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem(`r3vl-sdk-apiKey`)}`
+        },
+      })
+    })
 
     return tx
   } catch (error: any) {
