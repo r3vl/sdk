@@ -34,7 +34,7 @@ import { getRevenuePathsV0 } from "../eventsV0"
 import { getRevenuePathsV1 } from "../eventsV1"
 import { getRevenuePathsV2, getRevPathTransactionEventsV2 } from "../eventsV2"
 import { getRevenuePathsV2Final, getRevPathTransactionEventsV2Final } from "../eventsV2Final"
-import { tiersV1, FnArgs as TiersV1Args } from "../tiersV1"
+import { tiersV1 } from "../tiersV1"
 import { tiersV2 } from "../tiersV2"
 import { tiersV2Final } from "../tiersV2Final"
 import { updateRevenueTiersV2, FnArgs as UpdateRevenueTiersV2Args } from "../updateRevenueTiersV2"
@@ -65,6 +65,7 @@ export type RevenuePathsList = {
 
 export type GeneralOpts = {
   customGasLimit?: number;
+  revPathMetadata?: string
 }
 
 export type GaslessOpts = {
@@ -81,7 +82,7 @@ export type RevenuePath = {
   revenuePaths?: (args?: { startBlock?: number }) => Promise<RevenuePathsList | any>
   withdraw?: (args: any) => any
   withdrawGasLess?: (args: WithdrawV1Args, opts: { gasLessKey: string }) => Promise<any>
-  tiers?: (args?: TiersV1Args) => ReturnType<typeof tiersV1> | ReturnType<typeof tiersV2>
+  tiers?: (opts?: GeneralOpts) => ReturnType<typeof tiersV1> | ReturnType<typeof tiersV2>
   createRevenuePath?: (args: CreateRevenuePathV1Args | CreateRevenuePathV2Args | any /* TODO: remove any */, opts?: GeneralOpts & GaslessOpts) => Promise<undefined | ethers.ContractReceipt | ethers.ContractTransaction | RelayResponse>
   updateRevenueTier?: (args: UpdateRevenueTierV1Args) => Promise<ethers.ContractReceipt | undefined>
   updateErc20Distribution?: (args: UpdateErc20DistributionArgs) => Promise<ethers.ContractReceipt | undefined>
@@ -142,15 +143,15 @@ export class R3vlClient extends Base {
     v1.init()
     v0.init()
 
+    if (opts?.initV2Final && opts?.apiKey)
+    localStorage.setItem(`r3vl-sdk-apiKey`, opts.apiKey)
+
     if (opts?.initV2Final && this._revPathAddress) {
       if (!opts?.revPathMetadata && !opts?.apiKey) throw new Error("Couldn't initialize V2 Revenue Path")
 
-      if (opts?.revPathMetadata)
-        localStorage.setItem(`r3vl-metadata-${this._revPathAddress}`, JSON.stringify(opts?.revPathMetadata))
+      if (opts?.revPathMetadata) localStorage.setItem(`r3vl-metadata-${this._revPathAddress}`, JSON.stringify(opts?.revPathMetadata))
 
       if (opts?.apiKey) {
-        localStorage.setItem(`r3vl-sdk-apiKey`, opts.apiKey)
-
         try {
           const response = await axios.get(`${R3vlClient.API_HOST}/revPathMetadata?chainId=${this._chainId}&${this._revPathAddress}`, {
             headers: {
@@ -214,7 +215,7 @@ export class R3vlClient extends Base {
       // transactionEvents: () => getRevPathWithdrawEventsV1.call(this),
       revenuePaths: (args?: { startBlock?: number }) => getRevenuePathsV1.call(this, args),
       withdraw: (args: WithdrawV1Args) => withdrawFundsV1.call(this, args),
-      tiers: (args?: TiersV1Args) => tiersV1.call(this, args as any)
+      tiers: () => tiersV1.call(this)
     }
   }
 
@@ -267,7 +268,7 @@ export class R3vlClient extends Base {
       updateLimits: (args: UpdateLimitsV2Args) => updateLimitsV2Final.call(this, args),
       revenuePaths: (args?: { startBlock?: number }) => getRevenuePathsV2Final.call(this, args),
       transferOwnerhip: (newOwner: AddressInput, opts?: GeneralOpts & GaslessOpts) => transferOwnershipV2Final.call(this, newOwner, opts),
-      tiers: () => tiersV2Final.call(this),
+      tiers: (opts?: GeneralOpts) => tiersV2Final.call(this, opts),
     }
   }
 }

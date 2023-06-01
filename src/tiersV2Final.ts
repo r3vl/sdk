@@ -1,6 +1,6 @@
 import { ethers } from 'ethers'
 
-import { R3vlClient } from './client'
+import { GeneralOpts, R3vlClient } from './client'
 import { getTokenListByAddress } from './constants/tokens'
 import { withdrawableTiersV2Final } from './withdrawableV2Final'
 import { parseWalletTier } from './withdrawableV2Final'
@@ -17,10 +17,10 @@ export type TierType = {
 /**
  *  V2
  */
-export async function tiersV2Final(this: R3vlClient): Promise<TierType[] | undefined> {
+export async function tiersV2Final(this: R3vlClient, opts?: GeneralOpts): Promise<TierType[] | undefined> {
   const { revPathV2FinalRead, sdk, _revPathAddress } = this
   const _context = this
-  const revPathMetadata = JSON.parse(localStorage.getItem(`r3vl-metadata-${_revPathAddress}`) || "")
+  const revPathMetadata = opts?.revPathMetadata ? opts?.revPathMetadata : JSON.parse(localStorage.getItem(`r3vl-metadata-${_revPathAddress}`) || "")
 
   if (!revPathV2FinalRead || !sdk) throw new Error("ERROR:.")
 

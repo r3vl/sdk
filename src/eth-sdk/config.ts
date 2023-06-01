@@ -27,7 +27,7 @@ export default defineConfig({
       pathLibraryV2Final: '0x0e31f9e3d305a6d13d0e3a333dabe0130768eefd',
       weth: '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6',
       usdc: '0xD87Ba7A50B2E7E660f678A895E4B72E7CB4CCd9C',
-      dai: '0x41e38e70a36150D08A8c97aEC194321b5eB545A5'
+      dai: '0x11fe4b6ae13d2a6055c8d9cf65c55bac32b5d844'
     },
     polygonMumbai: {
       reveelMainV1: '0xb05Bcdfd259D08728db7517bf3c3CC4262D3b451',
