@@ -18,7 +18,7 @@ export const parseWalletTier = (metadata: any, tierNumber: number, walletIndex: 
 
   return {
     proportion: ethers.utils.parseEther(walletLimit + ""),
-    limit: ethers.utils.parseEther((walletLimit /  100 * tierLimit) + "")
+    limit: ethers.utils.parseEther((walletLimit /  100 * tierLimit).toLocaleString('fullwide', {maximumFractionDigits: 18}) + "")
   }
 }
 
