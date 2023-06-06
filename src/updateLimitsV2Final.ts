@@ -76,7 +76,7 @@ export async function updateLimitsV2Final(
         return t
       })
 
-      await axios.put(`${R3vlClient.API_HOST}/revPathMetadata`, {
+      await axios.put(`${R3vlClient.API_HOST}/api/revPathMetadata`, {
         chainId: _chainId,
         address: _revPathAddress,
         tiers

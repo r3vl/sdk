@@ -189,19 +189,21 @@ export default class Base {
     distribution: number[][],
     limits?: { [t: string]: number | string }[]
   }) {
-    const { _chainId, _signer } = this
+    return args
 
-    const r = await collectionReference.create([
-      `${_chainId}-${args.address}`,
-      _chainId,
-      args.name,
-      await _signer?.getAddress() || "",
-      JSON.stringify(args.walletList),
-      JSON.stringify(args.distribution),
-      JSON.stringify(args.limits)
-    ])
+    // const { _chainId, _signer } = this
 
-    return r
+    // const r = await collectionReference.create([
+    //   `${_chainId}-${args.address}`,
+    //   _chainId,
+    //   args.name,
+    //   await _signer?.getAddress() || "",
+    //   JSON.stringify(args.walletList),
+    //   JSON.stringify(args.distribution),
+    //   JSON.stringify(args.limits)
+    // ])
+
+    // return r
   }
 
   async signUpdateRevenuePath(args: {
@@ -210,16 +212,18 @@ export default class Base {
     distribution?: number[][],
     limits?: { [t: string]: number | string }[]
   }) {
-    const { _chainId } = this
+    return args
 
-    const r = 
-      await collectionReference.record(`${_chainId}-${args.address}`).call("updateTiers", [
-        args.walletList ? JSON.stringify(args.walletList) : false,
-        args.distribution ? JSON.stringify(args.distribution) : false,
-        args.limits ? JSON.stringify(args.limits) : false
-      ])
+    // const { _chainId } = this
 
-    return r
+    // const r = 
+    //   await collectionReference.record(`${_chainId}-${args.address}`).call("updateTiers", [
+    //     args.walletList ? JSON.stringify(args.walletList) : false,
+    //     args.distribution ? JSON.stringify(args.distribution) : false,
+    //     args.limits ? JSON.stringify(args.limits) : false
+    //   ])
+
+    // return r
   }
 
   protected _initV2RevPath() {
@@ -273,7 +277,7 @@ export default class Base {
 
       db.signer(async (data) => {
         return {
-          h: "eth-personal-sign1",
+          h: "eth-personal-sign",
           sig: await signer.signMessage(data)
         } as any;
       })

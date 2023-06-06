@@ -93,7 +93,7 @@ export async function createRevenuePathV2Final(
         }),
       }
 
-      await axios.post(`${R3vlClient.API_HOST}/revPathMetadata`, {
+      await axios.post(`${R3vlClient.API_HOST}/api/revPathMetadata`, {
         chainId: _chainId,
         payload
       },{
@@ -102,7 +102,7 @@ export async function createRevenuePathV2Final(
         },
       })
 
-      axios.get(`https://us-central1-ui-v2-66a48.cloudfunctions.net/revPaths?chainId=${_chainId}`)
+      axios.get(`${R3vlClient.API_HOST}/revPaths?chainId=${_chainId}`)
 
       signCreateRevenuePath({
         address: newRevPathAddress,

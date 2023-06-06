@@ -46,7 +46,7 @@ export async function updateRevenueTiersV2Final(
     )
 
     tx.wait().then(async () => {
-      await axios.put(`${R3vlClient.API_HOST}/revPathMetadata`, {
+      await axios.put(`${R3vlClient.API_HOST}/api/revPathMetadata`, {
         chainId: _chainId,
         address: _revPathAddress,
         walletList,

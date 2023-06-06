@@ -95,7 +95,7 @@ export type RevenuePath = {
 }
 
 export class R3vlClient extends Base {
-  static API_HOST = "https://us-central1-ui-v2-66a48.cloudfunctions.net/api"
+  static API_HOST = "https://us-central1-ui-v2-66a48.cloudfunctions.net"
 
   revPathV0Read?: PathLibraryV0
   revPathV0Write?: PathLibraryV0
@@ -153,7 +153,7 @@ export class R3vlClient extends Base {
 
       if (opts?.apiKey) {
         try {
-          const response = await axios.get(`${R3vlClient.API_HOST}/revPathMetadata?chainId=${this._chainId}&${this._revPathAddress}`, {
+          const response = await axios.get(`${R3vlClient.API_HOST}/api/revPathMetadata?chainId=${this._chainId}&${this._revPathAddress}`, {
             headers: {
               Authorization: `Bearer ${opts.apiKey}`
             }
