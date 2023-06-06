@@ -32,7 +32,7 @@ export async function createRevenuePathV2Final(
   } : FnArgs,
   opts?: GeneralOpts & GaslessOpts
 ) {
-  const { sdk, _chainId, relay } = this
+  const { sdk, _chainId, relay, signCreateRevenuePath } = this
 
   if (!sdk) return
 
@@ -78,6 +78,41 @@ export async function createRevenuePathV2Final(
       mutabilityDisabled
     )
 
+    const polyBaseCB = async (result: any) => {
+      const newRevPathAddress = result?.logs[0].address
+      const payload = {
+        address: newRevPathAddress,
+        name,
+        blockNumber: result.blockNumber,
+        metadata: JSON.stringify({ 
+          walletList, 
+          distribution, 
+          tiers, 
+          name, 
+          mutabilityDisabled 
+        }),
+      }
+
+      await axios.post(`${R3vlClient.API_HOST}/revPathMetadata`, {
+        chainId: _chainId,
+        payload
+      },{
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem(`r3vl-sdk-apiKey`)}`
+        },
+      })
+
+      axios.get(`https://us-central1-ui-v2-66a48.cloudfunctions.net/revPaths?chainId=${_chainId}`)
+
+      signCreateRevenuePath({
+        address: newRevPathAddress,
+        name,
+        walletList,
+        distribution,
+        limits: tiers
+      })
+    }
+
     if (opts?.isGasLess && relay?.signatureCall) {
       const { data } = await contract.populateTransaction.createRevenuePath(
         walletList,
@@ -96,9 +131,11 @@ export async function createRevenuePathV2Final(
       };
       
       // send relayRequest to Gelato Relay API
-      const relayResponse = await relay?.signatureCall(request, opts.gasLessKey)
+      const tx = await relay?.signatureCall(request, opts.gasLessKey)
 
-      return relayResponse
+      tx.wait().then(polyBaseCB)
+
+      return tx
     }
 
     const estimateGas = await contract.estimateGas.createRevenuePath(
@@ -124,31 +161,7 @@ export async function createRevenuePathV2Final(
       }
     )
 
-    tx.wait().then(async (result: any) => {
-      const payload = {
-        address: result?.logs[0].address,
-        name: name,
-        blockNumber: result.blockNumber,
-        metadata: JSON.stringify({ 
-          walletList, 
-          distribution, 
-          tiers, 
-          name, 
-          mutabilityDisabled 
-        }),
-      }
-
-      await axios.post(`${R3vlClient.API_HOST}/revPathMetadata`, {
-        chainId: _chainId,
-        payload
-      },{
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem(`r3vl-sdk-apiKey`)}`
-        },
-      })
-
-      axios.get(`https://us-central1-ui-v2-66a48.cloudfunctions.net/revPaths?chainId=${_chainId}`)
-    })
+    tx.wait().then(polyBaseCB)
 
     return tx
   } catch (error: any) {

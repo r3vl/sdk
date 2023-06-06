@@ -19,7 +19,7 @@ export async function updateRevenueTiersV2Final(
     tierNumbers
   } : FnArgs
 ) {
-  const { revPathV2FinalWrite, _revPathAddress, _chainId } = this
+  const { revPathV2FinalWrite, _revPathAddress, _chainId, signUpdateRevenuePath } = this
   const revPathMetadata = JSON.parse(localStorage.getItem(`r3vl-metadata-${_revPathAddress}`) || "")
 
   if (!revPathV2FinalWrite) return
@@ -31,6 +31,12 @@ export async function updateRevenueTiersV2Final(
   }) 
 
   try {
+    await signUpdateRevenuePath({
+      address: _revPathAddress || "",
+      walletList,
+      distribution
+    })
+
     const tx = await revPathV2FinalWrite.updateRevenueTiers(
       revPathMetadata.walletList,
       revPathMetadata.distribution,
@@ -59,4 +65,3 @@ export async function updateRevenueTiersV2Final(
     console.error(error, 'updateRevenueTiersV2 Error')
   }
 }
-

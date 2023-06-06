@@ -1,6 +1,7 @@
 import { Provider } from '@ethersproject/abstract-provider'
 import { Signer } from '@ethersproject/abstract-signer'
 import { GelatoRelay, CallWithERC2771Request } from "@gelatonetwork/relay-sdk"
+import { Polybase } from "@polybase/client";
 
 import {
   InvalidConfigError,
@@ -24,6 +25,7 @@ import {
   getAuroraTestnetSdk
 } from '@dethcrypto/eth-sdk-client'
 import { ethers } from 'ethers'
+import axios from 'axios';
 
 declare const web3: any;
 
@@ -41,6 +43,13 @@ const sdks = {
   [chainIds.aurora]: getAuroraSdk,
   [chainIds.auroraTestnet]: getAuroraTestnetSdk
 }
+
+const db = new Polybase({
+  defaultNamespace:
+    "pk/0xe8f7f7614541fab9e0f884b779d729c79806a77f9f83b7b249a0e18440c36d5f2a19cfb8f40f9fdc317fde32be13fb71366711f35d5cccf6d3a5095624e5c748/Test"
+})
+
+const collectionReference = db.collection("RevenuePath")
 
 export default class Base {
   protected readonly _chainId: ChainIds
@@ -119,16 +128,96 @@ export default class Base {
   }
   
   async signatureCall(request: CallWithERC2771Request, gasLessKey: string) {
+    const { _provider } = this
     const web3Provider = new ethers.providers.Web3Provider((web3 as any).currentProvider)
     const user = await this._signer?.getAddress()
 
     if (!user || !gasLessKey) throw new Error("Can't execute Gelato SDK.")
 
-    const r = await relay.sponsoredCallERC2771(
+    const { taskId } = await relay.sponsoredCallERC2771(
       { ...request, user },
       web3Provider,
       gasLessKey
     )
+
+    if (!taskId) {
+      throw new Error("Couldn't get response from Gelato SDK")
+    }
+
+    let txHash
+    let attempts = 0
+
+    while (!txHash) {
+      await new Promise((resolve) =>
+        setTimeout(() => resolve(true), 10_000),
+      )
+
+      try {
+        const { data } = await axios(
+          "https://relay.gelato.digital/tasks/status/" + taskId,
+        )
+
+        if (data.task?.taskState === "Cancelled") {
+          throw new Error(data.task?.lastCheckMessage)
+        }
+
+        txHash = data.task?.transactionHash
+      } catch (error: any) {
+        if (
+          error?.response &&
+          error.response?.status === 404 &&
+          attempts === 18
+        ) {
+          attempts = attempts + 1
+
+          continue
+        }
+
+        break
+      }
+    }
+
+    const tx = await _provider.getTransaction(txHash)
+
+    return tx
+  }
+
+  async signCreateRevenuePath(args: {
+    address: string,
+    name: string,
+    walletList: string[][],
+    distribution: number[][],
+    limits?: { [t: string]: number | string }[]
+  }) {
+    const { _chainId, _signer } = this
+
+    const r = await collectionReference.create([
+      `${_chainId}-${args.address}`,
+      _chainId,
+      args.name,
+      await _signer?.getAddress() || "",
+      JSON.stringify(args.walletList),
+      JSON.stringify(args.distribution),
+      JSON.stringify(args.limits)
+    ])
+
+    return r
+  }
+
+  async signUpdateRevenuePath(args: {
+    address: string,
+    walletList?: string[][],
+    distribution?: number[][],
+    limits?: { [t: string]: number | string }[]
+  }) {
+    const { _chainId } = this
+
+    const r = 
+      await collectionReference.record(`${_chainId}-${args.address}`).call("updateTiers", [
+        args.walletList ? JSON.stringify(args.walletList) : false,
+        args.distribution ? JSON.stringify(args.distribution) : false,
+        args.limits ? JSON.stringify(args.limits) : false
+      ])
 
     return r
   }
@@ -178,6 +267,17 @@ export default class Base {
       this._revPathAddress,
       this._signer
     ) : undefined
+
+    if (this._signer) {
+      const signer = this._signer
+
+      db.signer(async (data) => {
+        return {
+          h: "eth-personal-sign1",
+          sig: await signer.signMessage(data)
+        } as any;
+      })
+    }
 
     return {
       revPathV2FinalRead,
