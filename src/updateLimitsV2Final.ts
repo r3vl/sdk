@@ -54,14 +54,7 @@ export async function updateLimitsV2Final(
   })
 
   try {
-    const newTierLimits = tokens.map((t, i) => {
-      return  { [t]: newLimits[i] }
-    })
-
-    await signUpdateRevenuePath({
-      address: _revPathAddress || "",
-      limits: newTierLimits
-    })
+    
 
     const tx = await revPathV2FinalWrite.updateLimits(
       formatedTokens,
@@ -70,20 +63,19 @@ export async function updateLimitsV2Final(
     )
 
     tx.wait().then(async () => {
-      const tiers = revPathMetadata.tiers?.map((t: { [x: string]: number }, i: number) => {
+      const newTierLimits = tokens.map((t, i) => {
+        return  { [t]: newLimits[i] }
+      })
+
+      const limits = revPathMetadata.tiers?.map((t: { [x: string]: number }, i: number) => {
         if (tier === i) return newTierLimits
 
         return t
       })
 
-      await axios.put(`${R3vlClient.API_HOST}/api/revPathMetadata`, {
-        chainId: _chainId,
-        address: _revPathAddress,
-        tiers
-      },{
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem(`r3vl-sdk-apiKey`)}`
-        },
+      await signUpdateRevenuePath({
+        address: _revPathAddress || "",
+        limits,
       })
     })
 

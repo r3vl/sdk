@@ -26,6 +26,7 @@ import {
 } from '@dethcrypto/eth-sdk-client'
 import { ethers } from 'ethers'
 import axios from 'axios';
+import { R3vlClient } from '.';
 
 declare const web3: any;
 
@@ -182,13 +183,68 @@ export default class Base {
     return tx
   }
 
+  async authWallet() {
+    const { _signer } = this
+    const address = await _signer?.getAddress()
+
+    const msgRes = await axios.get(`${R3vlClient.API_HOST}/api/message`, {
+      params: { address }
+    });
+
+    const { messageToSign } = msgRes?.data || { messageToSign: null };
+
+    if (!messageToSign) {
+      throw new Error("Invalid message to sign")
+    }
+
+    const signature = await _signer?.signMessage?.(messageToSign)
+
+    const jwtResponse = await axios.get(
+      `${R3vlClient.API_HOST}/api/jwt?address=${address}&signature=${signature}`
+    );
+
+    const { customToken } = jwtResponse?.data || { customToken: null }
+
+    if (!customToken) {
+      throw new Error("Invalid JWT");
+    }
+
+    const { data } = await axios.get(
+      `${R3vlClient.API_HOST}/api/revPathMetadata?chainId=${5}`,
+      {
+        headers: {
+          Authorization: `Bearer ${customToken}`,
+          "x-api-key": "b672ee2f-c7a1-4278-91e1-728d07cff346"
+        }
+      }
+    );
+
+    return data
+  }
+
   async signCreateRevenuePath(args: {
     address: string,
     name: string,
     walletList: string[][],
     distribution: number[][],
     limits?: { [t: string]: number | string }[]
+    fBPayload: any
   }) {
+    const { _chainId, authWallet } = this
+    const { customToken } = await authWallet()
+
+    await axios.post(`${R3vlClient.API_HOST}/api/revPathMetadata`, {
+      chainId: _chainId,
+      payload: args.fBPayload
+    },{
+      headers: {
+        Authorization: `Bearer ${customToken}`,
+        'x-api-key': localStorage.getItem(`r3vl-sdk-apiKey`)
+      },
+    })
+
+    axios.get(`${R3vlClient.API_HOST}/revPaths?chainId=${_chainId}`)
+
     return args
 
     // const { _chainId, _signer } = this
@@ -212,6 +268,36 @@ export default class Base {
     distribution?: number[][],
     limits?: { [t: string]: number | string }[]
   }) {
+    const { _chainId, authWallet } = this
+    const { customToken } = await authWallet()
+
+    if (args.limits) {
+      await axios.put(`${R3vlClient.API_HOST}/revPathMetadata`, {
+        chainId: _chainId,
+        address: args.address,
+        tiers: args.limits
+      },{
+        headers: {
+          Authorization: `Bearer ${customToken}`,
+        'x-api-key': localStorage.getItem(`r3vl-sdk-apiKey`)
+        },
+      })
+
+      return args
+    }
+
+    await axios.put(`${R3vlClient.API_HOST}/api/revPathMetadata`, {
+      chainId: _chainId,
+      address: args.address,
+      walletList: args.walletList,
+      distribution: args.distribution
+    },{
+      headers: {
+        Authorization: `Bearer ${customToken}`,
+        'x-api-key': localStorage.getItem(`r3vl-sdk-apiKey`)
+      },
+    })
+
     return args
 
     // const { _chainId } = this

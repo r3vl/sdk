@@ -80,6 +80,7 @@ export async function createRevenuePathV2Final(
 
     const polyBaseCB = async (result: any) => {
       const newRevPathAddress = result?.logs[0].address
+
       const payload = {
         address: newRevPathAddress,
         name,
@@ -93,23 +94,13 @@ export async function createRevenuePathV2Final(
         }),
       }
 
-      await axios.post(`${R3vlClient.API_HOST}/api/revPathMetadata`, {
-        chainId: _chainId,
-        payload
-      },{
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem(`r3vl-sdk-apiKey`)}`
-        },
-      })
-
-      axios.get(`${R3vlClient.API_HOST}/revPaths?chainId=${_chainId}`)
-
       signCreateRevenuePath({
         address: newRevPathAddress,
         name,
         walletList,
         distribution,
-        limits: tiers
+        limits: tiers,
+        fBPayload: payload
       })
     }
 
