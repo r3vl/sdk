@@ -1,7 +1,6 @@
 import { BigNumberish, ethers, utils } from 'ethers'
 import { chainIds, tokenList } from './constants/tokens'
 import { GaslessOpts, GeneralOpts, R3vlClient } from './client'
-import axios from 'axios'
 
 export type FnArgs = {
   walletList: string[][],
@@ -32,7 +31,7 @@ export async function createRevenuePathV2Final(
   } : FnArgs,
   opts?: GeneralOpts & GaslessOpts
 ) {
-  const { sdk, _chainId, relay, signCreateRevenuePath } = this
+  const { sdk, _chainId, relay, apiSigner } = this
 
   if (!sdk) return
 
@@ -94,7 +93,7 @@ export async function createRevenuePathV2Final(
         }),
       }
 
-      signCreateRevenuePath({
+      await apiSigner?.signCreateRevenuePath({
         address: newRevPathAddress,
         name,
         walletList,
@@ -124,9 +123,11 @@ export async function createRevenuePathV2Final(
       // send relayRequest to Gelato Relay API
       const tx = await relay?.signatureCall(request, opts.gasLessKey)
 
-      tx.wait().then(polyBaseCB)
+      const result = await tx.wait()
 
-      return tx
+      await polyBaseCB(result)
+
+      return result
     }
 
     const estimateGas = await contract.estimateGas.createRevenuePath(
@@ -152,9 +153,11 @@ export async function createRevenuePathV2Final(
       }
     )
 
-    tx.wait().then(polyBaseCB)
+    const result = await tx.wait()
 
-    return tx
+    await polyBaseCB(result)
+
+    return result
   } catch (error: any) {
     console.error(error, 'createRevenuePathV2 Error')
 

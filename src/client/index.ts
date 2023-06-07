@@ -107,6 +107,7 @@ export class R3vlClient extends Base {
   revPathV2FinalWrite?: PathLibraryV2Final
   sdk?: MainnetSdk | GoerliSdk | PolygonSdk | PolygonMumbaiSdk | ArbitrumOneSdk | ArbitrumTestnetSdk
   relay?: { signatureCall: any }
+  apiSigner?: { signCreateRevenuePath: any, signUpdateRevenuePath: any }
   revPathMetadata?: { walletList: [[string]]; distribution: [[number]], tiers: {[t: string]: number}[] }
   initialized = false
 
@@ -253,11 +254,12 @@ export class R3vlClient extends Base {
     return {
       v: 20,
       init: () => {
-        const { sdk, revPathV2FinalRead, revPathV2FinalWrite } = this._initV2FinalRevPath()
+        const { sdk, revPathV2FinalRead, revPathV2FinalWrite, apiSigner } = this._initV2FinalRevPath()
 
         this.revPathV2FinalRead = revPathV2FinalRead
         this.revPathV2FinalWrite = revPathV2FinalWrite
         this.sdk = sdk
+        this.apiSigner = apiSigner
       },
       withdrawable: (args?: WithdrawableV2Args) => withdrawableV2Final.call(this, args),
       withdrawn: (args?: WithdrawnV2Args) => withdrawnFundsV2Final.call(this, args),

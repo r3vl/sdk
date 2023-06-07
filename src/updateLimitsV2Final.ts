@@ -1,7 +1,6 @@
 import { BigNumberish, constants, utils } from 'ethers'
 import { tokenList } from './constants/tokens';
 import { R3vlClient } from './client'
-import axios from 'axios';
 
 export type FnArgs = {
   tokens: string[],
@@ -20,7 +19,7 @@ export async function updateLimitsV2Final(
     tier
   } : FnArgs
 ) {
-  const { revPathV2FinalWrite, sdk, _revPathAddress, _chainId, signUpdateRevenuePath } = this
+  const { revPathV2FinalWrite, sdk, _revPathAddress, _chainId, apiSigner } = this
   const revPathMetadata = JSON.parse(localStorage.getItem(`r3vl-metadata-${_revPathAddress}`) || "")
   
   if (!revPathV2FinalWrite || !sdk) return
@@ -62,26 +61,22 @@ export async function updateLimitsV2Final(
       tier,
     )
 
-    tx.wait().then(async () => {
-      const newTierLimits = tokens.map((t, i) => {
-        return  { [t]: newLimits[i] }
-      })
-
-      const limits = revPathMetadata.tiers?.map((t: { [x: string]: number }, i: number) => {
-        if (tier === i) return newTierLimits
-
-        return t
-      })
-
-      await signUpdateRevenuePath({
-        address: _revPathAddress || "",
-        limits,
-      })
-    })
-
     const result = await tx?.wait()
 
-    console.log(result, 'updateLimitsV2 Result');
+    const newTierLimits = tokens.map((t, i) => {
+      return  { [t]: newLimits[i] }
+    })
+
+    const limits = revPathMetadata.tiers?.map((t: { [x: string]: number }, i: number) => {
+      if (tier === i) return newTierLimits
+
+      return t
+    })
+
+    await apiSigner?.signUpdateRevenuePath({
+      address: _revPathAddress || "",
+      limits,
+    })
     
     return result
   } catch (error) {

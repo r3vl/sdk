@@ -50,7 +50,7 @@ const db = new Polybase({
     "pk/0xe8f7f7614541fab9e0f884b779d729c79806a77f9f83b7b249a0e18440c36d5f2a19cfb8f40f9fdc317fde32be13fb71366711f35d5cccf6d3a5095624e5c748/Test"
 })
 
-const collectionReference = db.collection("RevenuePath")
+// const collectionReference = db.collection("RevenuePath")
 
 export default class Base {
   protected readonly _chainId: ChainIds
@@ -209,17 +209,7 @@ export default class Base {
       throw new Error("Invalid JWT");
     }
 
-    const { data } = await axios.get(
-      `${R3vlClient.API_HOST}/api/revPathMetadata?chainId=${5}`,
-      {
-        headers: {
-          Authorization: `Bearer ${customToken}`,
-          "x-api-key": "b672ee2f-c7a1-4278-91e1-728d07cff346"
-        }
-      }
-    );
-
-    return data
+    return { customToken }
   }
 
   async signCreateRevenuePath(args: {
@@ -231,7 +221,7 @@ export default class Base {
     fBPayload: any
   }) {
     const { _chainId, authWallet } = this
-    const { customToken } = await authWallet()
+    const { customToken } = await authWallet.call(this)
 
     await axios.post(`${R3vlClient.API_HOST}/api/revPathMetadata`, {
       chainId: _chainId,
@@ -243,7 +233,7 @@ export default class Base {
       },
     })
 
-    axios.get(`${R3vlClient.API_HOST}/revPaths?chainId=${_chainId}`)
+    await axios.get(`${R3vlClient.API_HOST}/revPaths?chainId=${_chainId}`)
 
     return args
 
@@ -269,7 +259,7 @@ export default class Base {
     limits?: { [t: string]: number | string }[]
   }) {
     const { _chainId, authWallet } = this
-    const { customToken } = await authWallet()
+    const { customToken } = await authWallet.call(this)
 
     if (args.limits) {
       await axios.put(`${R3vlClient.API_HOST}/revPathMetadata`, {
@@ -347,6 +337,13 @@ export default class Base {
 
     if (!this._revPathAddress) return {
       sdk,
+      relay: {
+        signatureCall: this.signatureCall.bind(this),
+      },
+      apiSigner: {
+        signCreateRevenuePath: this.signCreateRevenuePath.bind(this),
+        signUpdateRevenuePath: this.signUpdateRevenuePath.bind(this)
+      }
     }
 
     const revPathV2FinalRead = PathLibraryV2Final__factory.connect(
@@ -374,7 +371,11 @@ export default class Base {
       revPathV2FinalWrite,
       sdk,
       relay: {
-        signatureCall: this.signatureCall.bind(this)
+        signatureCall: this.signatureCall.bind(this),
+      },
+      apiSigner: {
+        signCreateRevenuePath: this.signCreateRevenuePath.bind(this),
+        signUpdateRevenuePath: this.signUpdateRevenuePath.bind(this)
       }
     }
   }
