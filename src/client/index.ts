@@ -107,7 +107,7 @@ export class R3vlClient extends Base {
   revPathV2FinalWrite?: PathLibraryV2Final
   sdk?: MainnetSdk | GoerliSdk | PolygonSdk | PolygonMumbaiSdk | ArbitrumOneSdk | ArbitrumTestnetSdk
   relay?: { signatureCall: any }
-  apiSigner?: { signCreateRevenuePath: any, signUpdateRevenuePath: any }
+  apiSigner?: { signCreateRevenuePath: any, signUpdateRevenuePath: any, authWallet: () => Promise<{ customToken: string }> }
   revPathMetadata?: { walletList: [[string]]; distribution: [[number]], tiers: {[t: string]: number}[] }
   initialized = false
 

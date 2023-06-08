@@ -37,12 +37,14 @@ export async function updateRevenueTiersV2Final(
       formatedDistribution, 
       tierNumbers
     )
+
+    const { customToken } = await apiSigner?.authWallet() || { customToken: null }
     
     await apiSigner?.signUpdateRevenuePath({
       address: _revPathAddress || "",
       walletList,
       distribution
-    })
+    }, customToken)
 
     const result = await tx.wait()
     

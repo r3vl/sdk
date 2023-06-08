@@ -73,10 +73,12 @@ export async function updateLimitsV2Final(
       return t
     })
 
+    const { customToken } = await apiSigner?.authWallet() || { customToken: null }
+
     await apiSigner?.signUpdateRevenuePath({
       address: _revPathAddress || "",
       limits,
-    })
+    }, customToken)
     
     return result
   } catch (error) {

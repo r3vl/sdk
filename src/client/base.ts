@@ -219,9 +219,9 @@ export default class Base {
     distribution: number[][],
     limits?: { [t: string]: number | string }[]
     fBPayload: any
-  }) {
-    const { _chainId, authWallet } = this
-    const { customToken } = await authWallet.call(this)
+  }, customToken: string) {
+    const { _chainId } = this
+    // const { customToken } = await authWallet.call(this)
 
     await axios.post(`${R3vlClient.API_HOST}/api/revPathMetadata`, {
       chainId: _chainId,
@@ -257,9 +257,9 @@ export default class Base {
     walletList?: string[][],
     distribution?: number[][],
     limits?: { [t: string]: number | string }[]
-  }) {
-    const { _chainId, authWallet } = this
-    const { customToken } = await authWallet.call(this)
+  }, customToken: string) {
+    const { _chainId } = this
+    // const { customToken } = await authWallet.call(this)
 
     if (args.limits) {
       await axios.put(`${R3vlClient.API_HOST}/revPathMetadata`, {
@@ -342,7 +342,8 @@ export default class Base {
       },
       apiSigner: {
         signCreateRevenuePath: this.signCreateRevenuePath.bind(this),
-        signUpdateRevenuePath: this.signUpdateRevenuePath.bind(this)
+        signUpdateRevenuePath: this.signUpdateRevenuePath.bind(this),
+        authWallet: this.authWallet.bind(this)
       }
     }
 
@@ -375,7 +376,8 @@ export default class Base {
       },
       apiSigner: {
         signCreateRevenuePath: this.signCreateRevenuePath.bind(this),
-        signUpdateRevenuePath: this.signUpdateRevenuePath.bind(this)
+        signUpdateRevenuePath: this.signUpdateRevenuePath.bind(this),
+        authWallet: this.authWallet.bind(this)
       }
     }
   }

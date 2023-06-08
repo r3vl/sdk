@@ -77,7 +77,7 @@ export async function createRevenuePathV2Final(
       mutabilityDisabled
     )
 
-    const polyBaseCB = async (result: any) => {
+    const storeDB = async (result: any, customToken: string) => {
       const newRevPathAddress = result?.logs[0].address
 
       const payload = {
@@ -100,7 +100,7 @@ export async function createRevenuePathV2Final(
         distribution,
         limits: tiers,
         fBPayload: payload
-      })
+      }, customToken)
     }
 
     if (opts?.isGasLess && relay?.signatureCall) {
@@ -119,13 +119,15 @@ export async function createRevenuePathV2Final(
         target: contract.address,
         data: data as any
       };
+
+      const { customToken } = await apiSigner?.authWallet() || { customToken: "" }
       
       // send relayRequest to Gelato Relay API
       const tx = await relay?.signatureCall(request, opts.gasLessKey)
 
       const result = await tx.wait()
 
-      await polyBaseCB(result)
+      await storeDB(result, customToken)
 
       return result
     }
@@ -139,6 +141,8 @@ export async function createRevenuePathV2Final(
       !!opts?.isGasLess,
       mutabilityDisabled
     )
+
+    const { customToken } = await apiSigner?.authWallet() || { customToken: "" }
     
     const tx = await contract.createRevenuePath(
       walletList,
@@ -155,7 +159,7 @@ export async function createRevenuePathV2Final(
 
     const result = await tx.wait()
 
-    await polyBaseCB(result)
+    await storeDB(result, customToken)
 
     return result
   } catch (error: any) {
