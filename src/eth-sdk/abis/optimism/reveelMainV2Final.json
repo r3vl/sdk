@@ -213,7 +213,13 @@
       }
     ],
     "name": "createRevenuePath",
-    "outputs": [],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "pathAddress",
+        "type": "address"
+      }
+    ],
     "stateMutability": "nonpayable",
     "type": "function"
   },

@@ -8,11 +8,6 @@
       },
       {
         "internalType": "uint32",
-        "name": "_platformFee",
-        "type": "uint32"
-      },
-      {
-        "internalType": "uint32",
         "name": "_gasFee",
         "type": "uint32"
       },
@@ -32,12 +27,12 @@
   },
   {
     "inputs": [],
-    "name": "PlatformFeeNotAppropriate",
+    "name": "ZeroAddressProvided",
     "type": "error"
   },
   {
     "inputs": [],
-    "name": "ZeroAddressProvided",
+    "name": "gasFeeNotAppropriate",
     "type": "error"
   },
   {
@@ -77,7 +72,7 @@
     "inputs": [
       {
         "indexed": true,
-        "internalType": "contract ReveelPathInstance",
+        "internalType": "contract SimpleReveelPathInstance",
         "name": "path",
         "type": "address"
       },
@@ -95,15 +90,15 @@
       },
       {
         "indexed": false,
-        "internalType": "address[][]",
+        "internalType": "address[]",
         "name": "walletList",
-        "type": "address[][]"
+        "type": "address[]"
       },
       {
         "indexed": false,
-        "internalType": "uint256[][]",
+        "internalType": "uint256[]",
         "name": "distribution",
-        "type": "uint256[][]"
+        "type": "uint256[]"
       }
     ],
     "name": "RevenuePathCreated",
@@ -127,12 +122,12 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "address",
-        "name": "newLibrary",
-        "type": "address"
+        "internalType": "uint32",
+        "name": "newFeePercentage",
+        "type": "uint32"
       }
     ],
-    "name": "UpdatedLibraryAddress",
+    "name": "UpdatedGasFee",
     "type": "event"
   },
   {
@@ -140,12 +135,12 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "uint32",
-        "name": "newFeePercentage",
-        "type": "uint32"
+        "internalType": "address",
+        "name": "newLibrary",
+        "type": "address"
       }
     ],
-    "name": "UpdatedPlatformFee",
+    "name": "UpdatedLibraryAddress",
     "type": "event"
   },
   {
@@ -177,24 +172,14 @@
   {
     "inputs": [
       {
-        "internalType": "address[][]",
-        "name": "_walletList",
-        "type": "address[][]"
-      },
-      {
-        "internalType": "uint256[][]",
-        "name": "_distribution",
-        "type": "uint256[][]"
-      },
-      {
         "internalType": "address[]",
-        "name": "_tokenList",
+        "name": "_walletList",
         "type": "address[]"
       },
       {
-        "internalType": "uint256[][]",
-        "name": "_limitSequence",
-        "type": "uint256[][]"
+        "internalType": "uint256[]",
+        "name": "_distribution",
+        "type": "uint256[]"
       },
       {
         "internalType": "string",
@@ -225,12 +210,12 @@
   },
   {
     "inputs": [],
-    "name": "getLibraryAddress",
+    "name": "getGasFee",
     "outputs": [
       {
-        "internalType": "address",
+        "internalType": "uint32",
         "name": "",
-        "type": "address"
+        "type": "uint32"
       }
     ],
     "stateMutability": "view",
@@ -238,12 +223,12 @@
   },
   {
     "inputs": [],
-    "name": "getPlatformFee",
+    "name": "getLibraryAddress",
     "outputs": [
       {
-        "internalType": "uint32",
+        "internalType": "address",
         "name": "",
-        "type": "uint32"
+        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -330,12 +315,12 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "_libraryAddress",
-        "type": "address"
+        "internalType": "uint32",
+        "name": "newFeePercentage",
+        "type": "uint32"
       }
     ],
-    "name": "setLibraryAddress",
+    "name": "setGasFee",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -343,12 +328,12 @@
   {
     "inputs": [
       {
-        "internalType": "uint32",
-        "name": "newFeePercentage",
-        "type": "uint32"
+        "internalType": "address",
+        "name": "_libraryAddress",
+        "type": "address"
       }
     ],
-    "name": "setPlatformFee",
+    "name": "setLibraryAddress",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

@@ -1,15 +1,5 @@
 [
   {
-    "inputs": [],
-    "name": "DuplicateWalletEntry",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "FinalTierLimitNotUpdatable",
-    "type": "error"
-  },
-  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -37,64 +27,12 @@
   },
   {
     "inputs": [],
-    "name": "OnlyExistingTierLimitsCanBeUpdated",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "OnlyExistingTiersCanBeUpdated",
-    "type": "error"
-  },
-  {
-    "inputs": [],
     "name": "RevenuePathNotMutable",
     "type": "error"
   },
   {
     "inputs": [],
-    "name": "TierLimitGivenZero",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "TokenLimitNotValid",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "tokenCount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "limitListCount",
-        "type": "uint256"
-      }
-    ],
-    "name": "TokensAndTierLimitMismatch",
-    "type": "error"
-  },
-  {
-    "inputs": [],
     "name": "TotalShareNot100",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "tiers",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "limits",
-        "type": "uint256"
-      }
-    ],
-    "name": "TotalTierLimitsMismatch",
     "type": "error"
   },
   {
@@ -114,16 +52,6 @@
     "type": "error"
   },
   {
-    "inputs": [],
-    "name": "ZeroAddressProvided",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "ZeroDistributionProvided",
-    "type": "error"
-  },
-  {
     "anonymous": false,
     "inputs": [
       {
@@ -140,50 +68,6 @@
       }
     ],
     "name": "DepositETH",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "account",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "payment",
-        "type": "uint256"
-      }
-    ],
-    "name": "ERC20PaymentReleased",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "FeeDistributed",
     "type": "event"
   },
   {
@@ -241,31 +125,6 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "account",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "payment",
-        "type": "uint256"
-      }
-    ],
-    "name": "PaymentReleased",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
         "indexed": false,
         "internalType": "address[][]",
         "name": "wallets",
@@ -286,49 +145,18 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "uint256[]",
-        "name": "tierNumbers",
-        "type": "uint256[]"
-      },
-      {
-        "indexed": false,
-        "internalType": "address[][]",
-        "name": "wallets",
-        "type": "address[][]"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256[][]",
-        "name": "distributions",
-        "type": "uint256[][]"
-      }
-    ],
-    "name": "RevenueTierUpdated",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "tier",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
         "internalType": "address[]",
-        "name": "tokenList",
+        "name": "wallets",
         "type": "address[]"
       },
       {
         "indexed": false,
         "internalType": "uint256[]",
-        "name": "newLimits",
+        "name": "distributions",
         "type": "uint256[]"
       }
     ],
-    "name": "TierLimitUpdated",
+    "name": "RevenueTierUpdated",
     "type": "event"
   },
   {
@@ -344,12 +172,6 @@
         "indexed": true,
         "internalType": "uint256",
         "name": "amount",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "tier",
         "type": "uint256"
       }
     ],
@@ -370,47 +192,6 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "VERSION",
-    "outputs": [
-      {
-        "internalType": "uint8",
-        "name": "",
-        "type": "uint8"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address[][]",
-        "name": "_walletList",
-        "type": "address[][]"
-      },
-      {
-        "internalType": "uint256[][]",
-        "name": "_distribution",
-        "type": "uint256[][]"
-      },
-      {
-        "internalType": "address[][]",
-        "name": "_addWalletList",
-        "type": "address[][]"
-      },
-      {
-        "internalType": "uint256[][]",
-        "name": "_addDistribution",
-        "type": "uint256[][]"
-      }
-    ],
-    "name": "addRevenueTiers",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "address",
@@ -418,38 +199,19 @@
         "type": "address"
       },
       {
-        "internalType": "address[][]",
+        "internalType": "address[]",
         "name": "_walletList",
-        "type": "address[][]"
+        "type": "address[]"
       },
       {
-        "internalType": "uint256[][]",
+        "internalType": "uint256[]",
         "name": "_distribution",
-        "type": "uint256[][]"
+        "type": "uint256[]"
       }
     ],
     "name": "distributePendingTokens",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      }
-    ],
-    "name": "getCurrentTier",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "tierNumber",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -460,6 +222,19 @@
         "internalType": "bool",
         "name": "required",
         "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getGasFee",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -512,111 +287,12 @@
   },
   {
     "inputs": [],
-    "name": "getPlatformFee",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "getRevenuePathHash",
     "outputs": [
       {
         "internalType": "bytes32",
         "name": "",
         "type": "bytes32"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "tier",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "account",
-        "type": "address"
-      }
-    ],
-    "name": "getRevenueProportion",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "proportion",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "tierNumber",
-        "type": "uint256"
-      }
-    ],
-    "name": "getRevenueTier",
-    "outputs": [
-      {
-        "internalType": "address[]",
-        "name": "_walletList",
-        "type": "address[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "tier",
-        "type": "uint256"
-      }
-    ],
-    "name": "getTierDistributedAmount",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "tier",
-        "type": "uint256"
-      }
-    ],
-    "name": "getTierWalletCount",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -640,30 +316,6 @@
       {
         "internalType": "uint256",
         "name": "amount",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "tier",
-        "type": "uint256"
-      }
-    ],
-    "name": "getTokenTierLimits",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
         "type": "uint256"
       }
     ],
@@ -707,19 +359,6 @@
       {
         "internalType": "uint256",
         "name": "amount",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getTotalRevenueTiers",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "total",
         "type": "uint256"
       }
     ],
@@ -804,30 +443,20 @@
   {
     "inputs": [
       {
-        "internalType": "address[][]",
-        "name": "_walletList",
-        "type": "address[][]"
-      },
-      {
-        "internalType": "uint256[][]",
-        "name": "_distribution",
-        "type": "uint256[][]"
-      },
-      {
         "internalType": "address[]",
-        "name": "_tokenList",
+        "name": "_walletList",
         "type": "address[]"
       },
       {
-        "internalType": "uint256[][]",
-        "name": "_limitSequence",
-        "type": "uint256[][]"
+        "internalType": "uint256[]",
+        "name": "_distribution",
+        "type": "uint256[]"
       },
       {
         "components": [
           {
             "internalType": "uint32",
-            "name": "platformFee",
+            "name": "gasFee",
             "type": "uint32"
           },
           {
@@ -846,7 +475,7 @@
             "type": "address"
           }
         ],
-        "internalType": "struct ReveelPathInstance.PathInfo",
+        "internalType": "struct SimpleReveelPathInstance.PathInfo",
         "name": "pathInfo",
         "type": "tuple"
       },
@@ -906,14 +535,14 @@
         "type": "address[]"
       },
       {
-        "internalType": "address[][]",
+        "internalType": "address[]",
         "name": "_walletList",
-        "type": "address[][]"
+        "type": "address[]"
       },
       {
-        "internalType": "uint256[][]",
+        "internalType": "uint256[]",
         "name": "_distribution",
-        "type": "uint256[][]"
+        "type": "uint256[]"
       },
       {
         "internalType": "bool",
@@ -963,50 +592,12 @@
     "inputs": [
       {
         "internalType": "address[]",
-        "name": "tokenList",
+        "name": "_walletList",
         "type": "address[]"
       },
       {
         "internalType": "uint256[]",
-        "name": "newLimits",
-        "type": "uint256[]"
-      },
-      {
-        "internalType": "uint256",
-        "name": "tier",
-        "type": "uint256"
-      }
-    ],
-    "name": "updateLimits",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address[][]",
-        "name": "_walletList",
-        "type": "address[][]"
-      },
-      {
-        "internalType": "uint256[][]",
         "name": "_distribution",
-        "type": "uint256[][]"
-      },
-      {
-        "internalType": "address[][]",
-        "name": "_updatedWalletList",
-        "type": "address[][]"
-      },
-      {
-        "internalType": "uint256[][]",
-        "name": "_updatedDistribution",
-        "type": "uint256[][]"
-      },
-      {
-        "internalType": "uint256[]",
-        "name": "_tierNumbers",
         "type": "uint256[]"
       }
     ],
