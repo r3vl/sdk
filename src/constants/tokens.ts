@@ -109,3 +109,7 @@ export const contractsDeployedV2 = {
 export const contractsDeployedV2Final = {
   [chainIds.goerli]: 8_939_571,
 }
+
+export const contractsDeployedSimple = {
+  [chainIds.goerli]: 9_098_183,
+}

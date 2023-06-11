@@ -49,6 +49,13 @@ import { RevenuePathCreatedEvent as RevenuePathCreatedEventV2 } from "../typecha
 import { transferOwnershipV2Final } from "../transferOwnershipV2Final"
 import { updateRevenueTiersV2Final } from "../updateRevenueTiersV2Final"
 import { updateLimitsV2Final } from "../updateLimitsV2Final"
+import { withdrawableSimple, FnArgs as WithdrawableSimpleArgs } from "../withdrawableSimple"
+import { withdrawnFundsSimple } from "../withdrawnSimple"
+import { withdrawFundsSimple } from "../withdrawSimple"
+import { getRevenuePathsSimple, getRevPathTransactionEventsSimple } from "../eventsSimple"
+import { createRevenuePathSimple } from "../createRevenuePathSimple"
+import { updateRevenueTiersSimple } from "../updateRevenueTiersSimple"
+import { tiersSimple } from "../tiersSimple"
 
 export type RevenuePathsList = {
   address: string
@@ -82,7 +89,7 @@ export type RevenuePath = {
   revenuePaths?: (args?: { startBlock?: number }) => Promise<RevenuePathsList | any>
   withdraw?: (args: any) => any
   withdrawGasLess?: (args: WithdrawV1Args, opts: { gasLessKey: string }) => Promise<any>
-  tiers?: (opts?: GeneralOpts) => ReturnType<typeof tiersV1> | ReturnType<typeof tiersV2>
+  tiers?: (opts?: GeneralOpts) => ReturnType<typeof tiersV1> | ReturnType<typeof tiersV2> | ReturnType<typeof tiersSimple>
   createRevenuePath?: (args: CreateRevenuePathV1Args | CreateRevenuePathV2Args | any /* TODO: remove any */, opts?: GeneralOpts & GaslessOpts) => Promise<undefined | ethers.ContractReceipt | ethers.ContractTransaction | RelayResponse>
   updateRevenueTier?: (args: UpdateRevenueTierV1Args) => Promise<ethers.ContractReceipt | undefined>
   updateErc20Distribution?: (args: UpdateErc20DistributionArgs) => Promise<ethers.ContractReceipt | undefined>
@@ -135,21 +142,25 @@ export class R3vlClient extends Base {
     initV0?: boolean
     initV1?: boolean
     initV2?: boolean
+    initSimple?: boolean
     initV2Final?: boolean
     revPathMetadata?: { walletList: [[string]]; distribution: [[number]], tiers: {[t: string]: number}[] }
     apiKey?: string
   }) {
-    const { v0, v1 , v2, v2Final } = this
+    const { v0, v1 , v2, v2Final, simple } = this
 
     const byPass = v2.init()
+    simple.init()
     v2Final.init()
     v1.init()
     v0.init()
 
-    if (opts?.initV2Final && opts?.apiKey)
+    const isMetadataRequired = opts?.initV2Final || opts?.initSimple
+
+    if (isMetadataRequired && opts?.apiKey)
     localStorage.setItem(`r3vl-sdk-apiKey`, opts.apiKey)
 
-    if (opts?.initV2Final && this._revPathAddress) {
+    if (isMetadataRequired && this._revPathAddress) {
       if (!opts?.revPathMetadata && !opts?.apiKey) throw new Error("Couldn't initialize V2 Revenue Path")
 
       if (opts?.revPathMetadata) localStorage.setItem(`r3vl-metadata-${this._revPathAddress}`, JSON.stringify(opts?.revPathMetadata))
@@ -173,6 +184,7 @@ export class R3vlClient extends Base {
     if (opts?.initV0) return v0
     if (opts?.initV1) return v1
     if (opts?.initV2Final) return v2Final
+    if (opts?.initSimple) return simple
     if (byPass === true || opts?.initV2) return v2
 
     return v2
@@ -260,15 +272,11 @@ export class R3vlClient extends Base {
           sdk,
           revPathV2FinalRead,
           revPathV2FinalWrite,
-          revPathSimpleRead,
-          revPathSimpleWrite,
           apiSigner
         } = this._initV2FinalRevPath()
 
         this.revPathV2FinalRead = revPathV2FinalRead
         this.revPathV2FinalWrite = revPathV2FinalWrite
-        this.revPathSimpleRead = revPathSimpleRead
-        this.revPathSimpleWrite = revPathSimpleWrite
         this.sdk = sdk
         this.apiSigner = apiSigner
       },
@@ -282,6 +290,34 @@ export class R3vlClient extends Base {
       revenuePaths: (args?: { startBlock?: number }) => getRevenuePathsV2Final.call(this, args),
       transferOwnerhip: (newOwner: AddressInput, opts?: GeneralOpts & GaslessOpts) => transferOwnershipV2Final.call(this, newOwner, opts),
       tiers: (opts?: GeneralOpts) => tiersV2Final.call(this, opts),
+    }
+  }
+
+  get simple() {
+    return {
+      v: 21,
+      init: () => {
+        const {
+          sdk,
+          revPathSimpleRead,
+          revPathSimpleWrite,
+          apiSigner
+        } = this._initSimpleRevPath()
+
+        this.revPathSimpleRead = revPathSimpleRead
+        this.revPathSimpleWrite = revPathSimpleWrite
+        this.sdk = sdk
+        this.apiSigner = apiSigner
+      },
+      withdrawable: (args?: WithdrawableSimpleArgs) => withdrawableSimple.call(this, args),
+      withdrawn: (args?: WithdrawnV2Args) => withdrawnFundsSimple.call(this, args),
+      withdraw: (args: WithdrawV2FinalArgs) => withdrawFundsSimple.call(this, args),
+      transactionEvents: (revPath: string) => getRevPathTransactionEventsSimple.call(this, revPath),
+      createRevenuePath: (args: CreateRevenuePathV2Args, opts?: GeneralOpts & GaslessOpts) => createRevenuePathSimple.call(this, args, opts),
+      updateRevenueTiers: (args: UpdateRevenueTiersV2Args) => updateRevenueTiersSimple.call(this, args),
+      revenuePaths: (args?: { startBlock?: number }) => getRevenuePathsSimple.call(this, args),
+      // transferOwnerhip: (newOwner: AddressInput, opts?: GeneralOpts & GaslessOpts) => transferOwnershipSimple.call(this, newOwner, opts),
+      tiers: (opts?: GeneralOpts) => tiersSimple.call(this, opts),
     }
   }
 }

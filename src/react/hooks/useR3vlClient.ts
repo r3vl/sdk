@@ -8,6 +8,7 @@ export const useR3vlClient = (config: ClientConfig & {
   initV1?: boolean
   initV2?: boolean
   initV2Final?: boolean
+  initSimple?: boolean
   customDefaultKey?: string
   revPathMetadata?: { walletList: [[string]]; distribution: [[number]], tiers: {[t: string]: number}[] }
   apiKey?: string

@@ -356,6 +356,47 @@ export default class Base {
       this._signer
     ) : undefined
 
+    if (this._signer) {
+      const signer = this._signer
+
+      db.signer(async (data) => {
+        return {
+          h: "eth-personal-sign",
+          sig: await signer.signMessage(data)
+        } as any;
+      })
+    }
+
+    return {
+      revPathV2FinalRead,
+      revPathV2FinalWrite,
+      sdk,
+      relay: {
+        signatureCall: this.signatureCall.bind(this),
+      },
+      apiSigner: {
+        signCreateRevenuePath: this.signCreateRevenuePath.bind(this),
+        signUpdateRevenuePath: this.signUpdateRevenuePath.bind(this),
+        authWallet: this.authWallet.bind(this)
+      }
+    }
+  }
+
+  protected _initSimpleRevPath() {
+    const sdk = sdks[this._chainId](this._signer || this._provider)
+
+    if (!this._revPathAddress) return {
+      sdk,
+      relay: {
+        signatureCall: this.signatureCall.bind(this),
+      },
+      apiSigner: {
+        signCreateRevenuePath: this.signCreateRevenuePath.bind(this),
+        signUpdateRevenuePath: this.signUpdateRevenuePath.bind(this),
+        authWallet: this.authWallet.bind(this)
+      }
+    }
+
     const revPathSimpleRead = PathLibrarySimple__factory.connect(
       this._revPathAddress,
       this._provider
@@ -377,8 +418,6 @@ export default class Base {
     }
 
     return {
-      revPathV2FinalRead,
-      revPathV2FinalWrite,
       revPathSimpleRead,
       revPathSimpleWrite,
       sdk,
