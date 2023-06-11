@@ -6,7 +6,7 @@ import axios from "axios"
 import Base from "./base"
 
 import type { ClientConfig } from '../types'
-import { PathLibraryV0, PathLibraryV1, PathLibraryV2, PathLibraryV2Final } from '../typechain'
+import { PathLibrarySimple, PathLibraryV0, PathLibraryV1, PathLibraryV2, PathLibraryV2Final } from '../typechain'
 
 import { AddressInput } from "../react"
 
@@ -105,6 +105,8 @@ export class R3vlClient extends Base {
   revPathV2Write?: PathLibraryV2
   revPathV2FinalRead?: PathLibraryV2Final
   revPathV2FinalWrite?: PathLibraryV2Final
+  revPathSimpleRead?: PathLibrarySimple
+  revPathSimpleWrite?: PathLibrarySimple
   sdk?: MainnetSdk | GoerliSdk | PolygonSdk | PolygonMumbaiSdk | ArbitrumOneSdk | ArbitrumTestnetSdk
   relay?: { signatureCall: any }
   apiSigner?: { signCreateRevenuePath: any, signUpdateRevenuePath: any, authWallet: () => Promise<{ customToken: string }> }
@@ -254,10 +256,19 @@ export class R3vlClient extends Base {
     return {
       v: 20,
       init: () => {
-        const { sdk, revPathV2FinalRead, revPathV2FinalWrite, apiSigner } = this._initV2FinalRevPath()
+        const {
+          sdk,
+          revPathV2FinalRead,
+          revPathV2FinalWrite,
+          revPathSimpleRead,
+          revPathSimpleWrite,
+          apiSigner
+        } = this._initV2FinalRevPath()
 
         this.revPathV2FinalRead = revPathV2FinalRead
         this.revPathV2FinalWrite = revPathV2FinalWrite
+        this.revPathSimpleRead = revPathSimpleRead
+        this.revPathSimpleWrite = revPathSimpleWrite
         this.sdk = sdk
         this.apiSigner = apiSigner
       },

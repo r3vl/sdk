@@ -1,6 +1,6 @@
 import { ethers } from 'ethers'
 
-import { tokenList } from "./constants/tokens"
+import { chainIds, tokenList } from "./constants/tokens"
 import { R3vlClient } from './client'
 
 export type FnArgs = {
@@ -17,13 +17,15 @@ export async function withdrawnFundsV2Final(this: R3vlClient, payload?: FnArgs) 
 
   if (!revPathV2FinalRead || !sdk) throw new Error("ERROR:")
 
+  const AddressZero = _chainId === chainIds.polygonMumbai || _chainId === chainIds.polygon ? '0x0000000000000000000000000000000000001010' : ethers.constants.AddressZero
+
   const { walletAddress, isERC20 } = payload || { walletAddress: undefined, isERC20: undefined }
 
   try {
     let released = walletAddress ? await revPathV2FinalRead.getTokenWithdrawn(
-      isERC20 ? tokenList[isERC20][_chainId] : ethers.constants.AddressZero,
+      isERC20 ? tokenList[isERC20][_chainId] : AddressZero,
       walletAddress
-    ) : await revPathV2FinalRead.getTotalTokenReleased(isERC20 ? tokenList[isERC20][_chainId] : ethers.constants.AddressZero)
+    ) : await revPathV2FinalRead.getTotalTokenReleased(isERC20 ? tokenList[isERC20][_chainId] : AddressZero)
 
     if (isERC20) {
       const decimals = await (sdk as any)[isERC20].decimals()

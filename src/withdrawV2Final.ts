@@ -1,6 +1,6 @@
 import { ContractTransaction, ethers } from 'ethers'
 
-import { tokenList } from "./constants/tokens"
+import { chainIds, tokenList } from "./constants/tokens"
 import { R3vlClient } from './client'
 import { increaseGasLimit } from './createRevenuePathV2'
 
@@ -20,6 +20,8 @@ export async function withdrawFundsV2Final(this: R3vlClient, { walletAddress, sh
 
   if (!revPathV2FinalWrite) return false
 
+  const AddressZero = _chainId === chainIds.polygonMumbai || _chainId === chainIds.polygon ? '0x0000000000000000000000000000000000001010' : ethers.constants.AddressZero
+
   try {
     let tx
 
@@ -33,14 +35,12 @@ export async function withdrawFundsV2Final(this: R3vlClient, { walletAddress, sh
 
         tx = await revPathV2FinalWrite.release(tokenList[isERC20][_chainId], walletAddress, revPathMetadata.walletList, revPathMetadata.distribution, shouldDistribute, { gasLimit })
       } else {
-        console.log("RELEASE::", ethers.constants.AddressZero, walletAddress, revPathMetadata.walletList, revPathMetadata.distribution, shouldDistribute)
+        const gasLimit = increaseGasLimit(await revPathV2FinalWrite.estimateGas.release(AddressZero, walletAddress, revPathMetadata.walletList, revPathMetadata.distribution, shouldDistribute))
 
-        const gasLimit = increaseGasLimit(await revPathV2FinalWrite.estimateGas.release(ethers.constants.AddressZero, walletAddress, revPathMetadata.walletList, revPathMetadata.distribution, shouldDistribute))
-
-        tx = await revPathV2FinalWrite.release(ethers.constants.AddressZero, walletAddress, revPathMetadata.walletList, revPathMetadata.distribution, shouldDistribute, { gasLimit })
+        tx = await revPathV2FinalWrite.release(AddressZero, walletAddress, revPathMetadata.walletList, revPathMetadata.distribution, shouldDistribute, { gasLimit })
       }
     } else {
-      tx = await revPathV2FinalWrite.distributePendingTokens(isERC20 ? tokenList[isERC20][_chainId] : ethers.constants.AddressZero, revPathMetadata.walletList, revPathMetadata.distribution)
+      tx = await revPathV2FinalWrite.distributePendingTokens(isERC20 ? tokenList[isERC20][_chainId] : AddressZero, revPathMetadata.walletList, revPathMetadata.distribution)
     }
 
     onTxCreated && tx && onTxCreated(tx)
@@ -66,10 +66,10 @@ export async function withdrawFundsV2Final(this: R3vlClient, { walletAddress, sh
 //       if (isERC20) {
 //         tx = await revPathV2Write.populateTransaction.release(tokenList[isERC20][_chainId], walletAddress)
 //       } else {
-//         tx = await revPathV2Write.populateTransaction.release(ethers.constants.AddressZero, walletAddress)
+//         tx = await revPathV2Write.populateTransaction.release(AddressZero, walletAddress)
 //       }
 //     } else {
-//       tx = await revPathV2Write.populateTransaction.distributePendingTokens(isERC20 ? tokenList[isERC20][_chainId] : ethers.constants.AddressZero)
+//       tx = await revPathV2Write.populateTransaction.distributePendingTokens(isERC20 ? tokenList[isERC20][_chainId] : AddressZero)
 //     }
 
 //     const request = {

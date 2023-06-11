@@ -11,7 +11,7 @@ import {
 
 import type { ClientConfig } from '../types'
 import { chainIds, ChainIds } from '../constants/tokens'
-import { PathLibraryV0__factory, PathLibraryV1__factory, PathLibraryV2__factory, PathLibraryV2Final__factory  } from '../typechain'
+import { PathLibraryV0__factory, PathLibraryV1__factory, PathLibraryV2__factory, PathLibraryV2Final__factory, PathLibrarySimple__factory  } from '../typechain'
 import {
   getMainnetSdk,
   getGoerliSdk,
@@ -356,6 +356,15 @@ export default class Base {
       this._signer
     ) : undefined
 
+    const revPathSimpleRead = PathLibrarySimple__factory.connect(
+      this._revPathAddress,
+      this._provider
+    )
+    const revPathSimpleWrite = this._signer ? PathLibrarySimple__factory.connect(
+      this._revPathAddress,
+      this._signer
+    ) : undefined
+
     if (this._signer) {
       const signer = this._signer
 
@@ -370,6 +379,8 @@ export default class Base {
     return {
       revPathV2FinalRead,
       revPathV2FinalWrite,
+      revPathSimpleRead,
+      revPathSimpleWrite,
       sdk,
       relay: {
         signatureCall: this.signatureCall.bind(this),

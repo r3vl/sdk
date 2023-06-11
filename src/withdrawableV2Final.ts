@@ -1,6 +1,6 @@
 import { ethers } from 'ethers'
 
-import { tokenList } from "./constants/tokens"
+import { chainIds, tokenList } from "./constants/tokens"
 import { R3vlClient } from './client'
 
 export type FnArgs = {
@@ -31,11 +31,13 @@ export async function withdrawableV2Final(this: R3vlClient, payload?: FnArgs) {
 
   if (!revPathV2FinalRead || !sdk) throw new Error("ERROR:")
 
+  const AddressZero = _chainId === chainIds.polygonMumbai || _chainId === chainIds.polygon ? '0x0000000000000000000000000000000000001010' : ethers.constants.AddressZero
+
   const { isERC20, walletAddress } = payload || { isERC20: undefined, walletAddress: null }
 
   const divideBy = ethers.BigNumber.from(10000000)
   const totalTiersPromise = revPathV2FinalRead.getTotalRevenueTiers()
-  let pendingDistributionPromise = revPathV2FinalRead.getPendingDistributionAmount(isERC20 ? tokenList[isERC20][_chainId] : ethers.constants.AddressZero)
+  let pendingDistributionPromise = revPathV2FinalRead.getPendingDistributionAmount(isERC20 ? tokenList[isERC20][_chainId] : AddressZero)
 
   let [totalTiers, pendingDistribution] = await Promise.all([totalTiersPromise, pendingDistributionPromise])
   let decimals
@@ -50,7 +52,7 @@ export async function withdrawableV2Final(this: R3vlClient, payload?: FnArgs) {
   const distributedPromises = []
 
   for (let i = 0; i < totalTiers.toNumber(); i++) {
-    distributedPromises[i] = revPathV2FinalRead.getTierDistributedAmount(isERC20 ? tokenList[isERC20][_chainId] : ethers.constants.AddressZero, i)
+    distributedPromises[i] = revPathV2FinalRead.getTierDistributedAmount(isERC20 ? tokenList[isERC20][_chainId] : AddressZero, i)
   }
 
   const distributedAll = await Promise.all(distributedPromises)
@@ -68,7 +70,7 @@ export async function withdrawableV2Final(this: R3vlClient, payload?: FnArgs) {
   for (let i = 0; i < totalTiers.toNumber(); i++) {
     const wallets: any = {}
     const walletList = revPathMetadata?.walletList[i] || []
-    const tierLimitPromise = revPathV2FinalRead.getTokenTierLimits(isERC20 ? tokenList[isERC20][_chainId] : ethers.constants.AddressZero, i)
+    const tierLimitPromise = revPathV2FinalRead.getTokenTierLimits(isERC20 ? tokenList[isERC20][_chainId] : AddressZero, i)
 
     const [tierLimit] = await Promise.all([tierLimitPromise])
 
@@ -133,11 +135,13 @@ export async function withdrawableTiersV2Final(this: R3vlClient, payload?: FnArg
 
   if (!revPathV2FinalRead || !sdk) throw new Error("ERROR:")
 
+  const AddressZero = _chainId === chainIds.polygonMumbai || _chainId === chainIds.polygon ? '0x0000000000000000000000000000000000001010' : ethers.constants.AddressZero
+
   const { isERC20 } = payload || { isERC20: undefined }
 
   const divideBy = ethers.BigNumber.from(10000000)
   const totalTiers = await revPathV2FinalRead.getTotalRevenueTiers()
-  let pendingDistribution = await revPathV2FinalRead.getPendingDistributionAmount(isERC20 ? tokenList[isERC20][_chainId] : ethers.constants.AddressZero)
+  let pendingDistribution = await revPathV2FinalRead.getPendingDistributionAmount(isERC20 ? tokenList[isERC20][_chainId] : AddressZero)
 
   if (isERC20) {
     const decimals = await (sdk as any)[isERC20].decimals()
@@ -148,7 +152,7 @@ export async function withdrawableTiersV2Final(this: R3vlClient, payload?: FnArg
   const tiers = []
 
   for (let i = 0; i < totalTiers.toNumber(); i++) {
-    let distributed = await revPathV2FinalRead.getTierDistributedAmount(isERC20 ? tokenList[isERC20][_chainId] : ethers.constants.AddressZero, i)
+    let distributed = await revPathV2FinalRead.getTierDistributedAmount(isERC20 ? tokenList[isERC20][_chainId] : AddressZero, i)
 
     if (isERC20) {
       const decimals = await (sdk as any)[isERC20].decimals()
@@ -162,7 +166,7 @@ export async function withdrawableTiersV2Final(this: R3vlClient, payload?: FnArg
   for (let i = 0; i < totalTiers.toNumber(); i++) {
     const wallets: any = {}
     const walletList = revPathMetadata?.walletList[i] || []
-    const tierLimit = await revPathV2FinalRead.getTokenTierLimits(isERC20 ? tokenList[isERC20][_chainId] : ethers.constants.AddressZero, i)
+    const tierLimit = await revPathV2FinalRead.getTokenTierLimits(isERC20 ? tokenList[isERC20][_chainId] : AddressZero, i)
 
     let walletsTierLimit = ethers.BigNumber.from(0)
 
