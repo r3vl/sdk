@@ -72,7 +72,8 @@ export async function createRevenuePathSimple(
         name,
         walletList,
         distribution,
-        fBPayload: payload
+        fBPayload: payload,
+        isSimple: true
       }, customToken)
     }
 
@@ -92,7 +93,7 @@ export async function createRevenuePathSimple(
       };
 
       const { customToken } = await apiSigner?.authWallet() || { customToken: "" }
-      
+
       // send relayRequest to Gelato Relay API
       const tx = await relay?.signatureCall(request, opts.gasLessKey)
 

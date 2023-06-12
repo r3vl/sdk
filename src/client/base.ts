@@ -219,14 +219,16 @@ export default class Base {
     distribution: number[][],
     limits?: { [t: string]: number | string }[]
     fBPayload: any
+    isSimple: boolean
   }, customToken: string) {
     const { _chainId } = this
     // const { customToken } = await authWallet.call(this)
 
     await axios.post(`${R3vlClient.API_HOST}/api/revPathMetadata`, {
       chainId: _chainId,
+      isSimple: args.isSimple,
       payload: args.fBPayload
-    },{
+    }, {
       headers: {
         Authorization: `Bearer ${customToken}`,
         'x-api-key': localStorage.getItem(`r3vl-sdk-apiKey`)

@@ -67,10 +67,12 @@ export async function getRevPathTransactionEventsSimple(this: R3vlClient, _revPa
   const ownershipTransferred = await revPathSimpleRead.queryFilter(
     revPathSimpleRead.filters.OwnershipTransferred(),
   )
-  const paymentReleased: any = []
-  const eRC20PaymentReleased: any = []
+  const paymentReleased = await revPathSimpleRead.queryFilter(
+    revPathSimpleRead.filters.PaymentReleased(),
+  )
+  const eRC20PaymentReleased = await revPathSimpleRead.queryFilter(revPathSimpleRead.filters.ERC20PaymentReleased())
   const tokenDistributed = await revPathSimpleRead.queryFilter(revPathSimpleRead.filters.TokenDistributed())
-  
+
   const blockNumber = ownershipTransferred?.[0]?.blockNumber
 
   const depositETHPromise = revPathSimpleRead.queryFilter(revPathSimpleRead.filters.DepositETH())
