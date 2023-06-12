@@ -9,6 +9,15 @@ export type FnArgs = {
 }
 
 export const parseWalletTier = (metadata: any, tierNumber: number, walletIndex: number, isERC20?: string) => {
+  if (!metadata.tiers && metadata.walletList.length === 1) {
+    const walletLimit = metadata.distribution[tierNumber][walletIndex]
+
+    return {
+      proportion: ethers.utils.parseEther(walletLimit + ""),
+      limit: ethers.utils.parseEther((0).toLocaleString('fullwide', {maximumFractionDigits: 18}) + "")
+    }
+  }
+
   const _tier = metadata.tiers[tierNumber]
   const walletLimit = metadata.distribution[tierNumber][walletIndex]
 
