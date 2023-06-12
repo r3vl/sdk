@@ -51,7 +51,7 @@ export async function withdrawableSimple(this: R3vlClient, payload?: FnArgs) {
   const distributedPromises = []
 
   for (let i = 0; i < totalTiers; i++) {
-    distributedPromises[i] = revPathSimpleRead.getTotalTokenReleased(isERC20 ? tokenList[isERC20][_chainId] : AddressZero)
+    distributedPromises[i] = revPathSimpleRead.getTotalDistributedAmount(isERC20 ? tokenList[isERC20][_chainId] : AddressZero)
   }
 
   const distributedAll = await Promise.all(distributedPromises)
@@ -150,7 +150,7 @@ export async function withdrawableTiersSimple(this: R3vlClient, payload?: FnArgs
   const tiers = []
 
   for (let i = 0; i < totalTiers; i++) {
-    let distributed = await revPathSimpleRead.getTotalTokenReleased(isERC20 ? tokenList[isERC20][_chainId] : AddressZero)
+    let distributed = await revPathSimpleRead.getTotalDistributedAmount(isERC20 ? tokenList[isERC20][_chainId] : AddressZero)
 
     if (isERC20) {
       const decimals = await (sdk as any)[isERC20].decimals()
