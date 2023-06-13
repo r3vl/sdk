@@ -44,7 +44,7 @@ export const tokenList = {
   matic: {
     name: "Matic",
     [chainIds.polygon]: "0x0000000000000000000000000000000000001010",
-    [chainIds.polygonMumbai]: '0xca11bde05977b3631167028862be2a173976ca11'
+    [chainIds.polygonMumbai]: '0x0000000000000000000000000000000000001010'
   },
   weth: {
     name: "Wrapped Ether",
