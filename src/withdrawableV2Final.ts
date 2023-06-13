@@ -9,21 +9,12 @@ export type FnArgs = {
 }
 
 export const parseWalletTier = (metadata: any, tierNumber: number, walletIndex: number, isERC20?: string) => {
-  if (!metadata.tiers && metadata.walletList.length === 1) {
-    const walletLimit = metadata.distribution[tierNumber][walletIndex]
-
-    return {
-      proportion: ethers.utils.parseEther(walletLimit + ""),
-      limit: ethers.utils.parseEther((0).toLocaleString('fullwide', {maximumFractionDigits: 18}) + "")
-    }
-  }
-
   const _tier = metadata.tiers[tierNumber]
   const walletLimit = metadata.distribution[tierNumber][walletIndex]
 
   const tierLimit = isERC20 ?
     _tier?.[isERC20 as any] as string || "0" :
-    _tier?.eth || "0"
+    _tier?.eth || _tier?.matic || "0"
 
   return {
     proportion: ethers.utils.parseEther(walletLimit + ""),
@@ -113,7 +104,6 @@ export async function withdrawableV2Final(this: R3vlClient, payload?: FnArgs) {
         pendingDistribution = pendingDistribution.sub(walletTierLimit)
       } else if (pendingDistribution.lt(walletsTierLimit)) {
         let received = pendingDistribution.div(walletTierProportion.div(ethers.BigNumber.from(100)))
-
 
         if (received.gte(walletTierLimit) || pendingDistribution.gt(walletTierLimit)) received = walletTierLimit
         if (j + 1 === walletList.length && walletTierLimit.gte(pendingDistribution)) received = pendingDistribution

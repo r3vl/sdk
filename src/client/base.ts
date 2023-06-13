@@ -45,10 +45,10 @@ const sdks = {
   [chainIds.auroraTestnet]: getAuroraTestnetSdk
 }
 
-const db = new Polybase({
-  defaultNamespace:
-    "pk/0xe8f7f7614541fab9e0f884b779d729c79806a77f9f83b7b249a0e18440c36d5f2a19cfb8f40f9fdc317fde32be13fb71366711f35d5cccf6d3a5095624e5c748/Test"
-})
+// const db = new Polybase({
+//   defaultNamespace:
+//     "pk/0xe8f7f7614541fab9e0f884b779d729c79806a77f9f83b7b249a0e18440c36d5f2a19cfb8f40f9fdc317fde32be13fb71366711f35d5cccf6d3a5095624e5c748/Test"
+// })
 
 // const collectionReference = db.collection("RevenuePath")
 
@@ -358,16 +358,16 @@ export default class Base {
       this._signer
     ) : undefined
 
-    if (this._signer) {
-      const signer = this._signer
+    // if (this._signer) {
+    //   const signer = this._signer
 
-      db.signer(async (data) => {
-        return {
-          h: "eth-personal-sign",
-          sig: await signer.signMessage(data)
-        } as any;
-      })
-    }
+    //   db.signer(async (data) => {
+    //     return {
+    //       h: "eth-personal-sign",
+    //       sig: await signer.signMessage(data)
+    //     } as any;
+    //   })
+    // }
 
     return {
       revPathV2FinalRead,
@@ -408,16 +408,16 @@ export default class Base {
       this._signer
     ) : undefined
 
-    if (this._signer) {
-      const signer = this._signer
+    // if (this._signer) {
+    //   const signer = this._signer
 
-      db.signer(async (data) => {
-        return {
-          h: "eth-personal-sign",
-          sig: await signer.signMessage(data)
-        } as any;
-      })
-    }
+    //   db.signer(async (data) => {
+    //     return {
+    //       h: "eth-personal-sign",
+    //       sig: await signer.signMessage(data)
+    //     } as any;
+    //   })
+    // }
 
     return {
       revPathSimpleRead,

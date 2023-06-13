@@ -23,7 +23,7 @@ export const parseWalletTier = (metadata: any, tierNumber: number, walletIndex: 
 
   const tierLimit = isERC20 ?
     _tier?.[isERC20 as any] as string || "0" :
-    _tier?.eth || "0"
+    _tier?.eth || _tier?.matic || "0"
 
   return {
     proportion: ethers.utils.parseEther(walletLimit + ""),
