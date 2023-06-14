@@ -2,7 +2,7 @@ import { ethers } from 'ethers'
 
 import { GeneralOpts, R3vlClient } from './client'
 import { chainIds, getTokenListByAddress } from './constants/tokens'
-import { parseWalletTier } from './withdrawableV2Final'
+import { parseWalletTier } from './withdrawableSimple'
 import { withdrawableTiersSimple } from './withdrawableSimple'
 
 
