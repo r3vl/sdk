@@ -174,7 +174,7 @@ export class R3vlClient extends Base {
           })
           const [{ metadata }] = response.data
     
-          localStorage.setItem(`r3vl-metadata-${this._revPathAddress}`, { ...metadata, v: opts.initSimple ? 'simple' : 'v20' })
+          localStorage.setItem(`r3vl-metadata-${this._revPathAddress}`, { ...metadata, isSimple: opts.initSimple })
         } catch (_err) {
           throw new Error("Couldn't find metadata for V2 Revenue Path")
         }
