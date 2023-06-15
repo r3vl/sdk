@@ -37,7 +37,8 @@ export async function updateRevenueTiersSimple(
     await apiSigner?.signUpdateRevenuePath({
       address: _revPathAddress || "",
       walletList,
-      distribution
+      distribution,
+      isSimple: true
     }, customToken)
 
     const result = await tx.wait()

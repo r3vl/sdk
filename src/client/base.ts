@@ -259,6 +259,7 @@ export default class Base {
     walletList?: string[][],
     distribution?: number[][],
     limits?: { [t: string]: number | string }[]
+    isSimple: boolean
   }, customToken: string) {
     const { _chainId } = this
     // const { customToken } = await authWallet.call(this)
@@ -267,7 +268,8 @@ export default class Base {
       await axios.put(`${R3vlClient.API_HOST}/revPathMetadata`, {
         chainId: _chainId,
         address: args.address,
-        tiers: args.limits
+        tiers: args.limits,
+        isSimple: args.isSimple
       },{
         headers: {
           Authorization: `Bearer ${customToken}`,
@@ -282,7 +284,8 @@ export default class Base {
       chainId: _chainId,
       address: args.address,
       walletList: args.walletList,
-      distribution: args.distribution
+      distribution: args.distribution,
+      isSimple: args.isSimple
     },{
       headers: {
         Authorization: `Bearer ${customToken}`,
