@@ -35,6 +35,7 @@ export async function withdrawableV2Final(this: R3vlClient, payload?: FnArgs) {
 
   const { isERC20, walletAddress } = payload || { isERC20: undefined, walletAddress: null }
 
+  const divideBy = ethers.BigNumber.from(10000000)
   const totalTiersPromise = revPathV2FinalRead.getTotalRevenueTiers()
   let pendingDistributionPromise = revPathV2FinalRead.getPendingDistributionAmount(isERC20 ? tokenList[isERC20][_chainId] : AddressZero)
 
@@ -103,7 +104,7 @@ export async function withdrawableV2Final(this: R3vlClient, payload?: FnArgs) {
 
         pendingDistribution = pendingDistribution.sub(walletTierLimit)
       } else if (pendingDistribution.lt(walletsTierLimit)) {
-        let received = pendingDistribution.div(walletTierProportion.div(ethers.BigNumber.from(100)))
+        let received = pendingDistribution.mul(walletTierProportion).div(1000000000000000).div(100000)
 
         if (received.gte(walletTierLimit) || pendingDistribution.gt(walletTierLimit)) received = walletTierLimit
         if (j + 1 === walletList.length && walletTierLimit.gte(pendingDistribution)) received = pendingDistribution
@@ -191,7 +192,7 @@ export async function withdrawableTiersV2Final(this: R3vlClient, payload?: FnArg
         
         pendingDistribution = pendingDistribution.sub(walletTierLimit)
       } else if (pendingDistribution.lt(walletsTierLimit)) {
-        let received = pendingDistribution.div(divideBy).mul(walletTierProportion)
+        let received = pendingDistribution.mul(walletTierProportion).div(1000000000000000).div(100000)
 
         if (received.gte(walletTierLimit) || pendingDistribution.gt(walletTierLimit)) received = walletTierLimit
         if (j + 1 === walletList.length && walletTierLimit.gte(pendingDistribution)) received = pendingDistribution

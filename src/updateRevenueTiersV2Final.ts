@@ -27,7 +27,11 @@ export async function updateRevenueTiersV2Final(
      return item.map(el => {
       return Number(ethers.utils.parseUnits(el.toString(), 5).toString())
      })
-  }) 
+  })
+
+  revPathMetadata.distribution = revPathMetadata.distribution.map((d: number[]) => {
+    return d.map((_d: number) => _d * 100000)
+  })
 
   try {
     const tx = await revPathV2FinalWrite.updateRevenueTiers(

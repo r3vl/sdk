@@ -24,7 +24,7 @@ export async function updateRevenueTiersSimple(
      return item.map(el => {
       return Number(ethers.utils.parseUnits(el.toString(), 5).toString())
      })
-  }) 
+  })
 
   try {
     const tx = await revPathSimpleWrite.updateRevenueTiers(
