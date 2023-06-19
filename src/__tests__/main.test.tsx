@@ -22,7 +22,7 @@ describe('Main', () => {
 
   const provider = communityProvider()
   const signer = communitySigner()
-  const chainId = 80001
+  const chainId = 5
   const wrapper = ({ children }: { children: any }) => {
     return (
       <R3vlProvider client={client}>
@@ -55,33 +55,6 @@ describe('Main', () => {
       await waitForNextUpdate()
 
       await waitFor(() => expect(result?.current?.['0x663c5A6fd46E9c9D20c8C174FD555079f8879F87']?.v).toEqual(2))
-    })
-  })
-
-  test('Test useBalances', async () => {
-    await act(async () => {
-      const { result, waitForNextUpdate } = renderHook(
-        () => {
-          useR3vlClient({
-            chainId,
-            provider,
-            revPathAddress: '0x097997aBEd7f741c15A10168f5802d1770991C9c',
-            initV2Final: true,
-            revPathMetadata: JSON.parse('{"walletList":[["0x5e5E38626d419Df414e5AFd06121DFb041AEe2B2","0x538C138B73836b811c148B3E4c3683B7B923A0E7"],["0x538C138B73836b811c148B3E4c3683B7B923A0E7"]],"distribution":[[50,50],[100]],"tiers":[{"matic":"0.01"}],"name":"Test V2 Complex 3","mutabilityDisabled":false}')
-          })
-
-          const r = useBalances('0x097997aBEd7f741c15A10168f5802d1770991C9c', { walletAddress: "0x538C138B73836b811c148B3E4c3683B7B923A0E7" })
-
-          console.log("META:::", r.data)
-          return r.data
-        },
-        { wrapper }
-      )
-
-      await waitForNextUpdate({ timeout: 50000 })
-      await waitForNextUpdate({ timeout: 50000 })
-
-      expect(result?.current?.withdrawn).toBeGreaterThanOrEqual(0)
     })
   })
 
@@ -186,6 +159,33 @@ describe('Main', () => {
     })
   })
 
+  test('Test useBalances', async () => {
+    await act(async () => {
+      const { result, waitForNextUpdate } = renderHook(
+        () => {
+          useR3vlClient({
+            chainId,
+            provider,
+            revPathAddress: '0x08a4a080F59C4e611dD82432A291035B778fE486',
+            initV2Final: true,
+            revPathMetadata: JSON.parse('{"walletList":[["0x0807c5C8Fa8a8229870CFecb6E2E71Dcb6a78261","0x5e5E38626d419Df414e5AFd06121DFb041AEe2B2"],["0x0807c5C8Fa8a8229870CFecb6E2E71Dcb6a78261","0x5e5E38626d419Df414e5AFd06121DFb041AEe2B2","0x35224C95aa3E53a30cc3F6f64540618892a568D7"]],"distribution":[["90",10],[70,20,10]],"tiers":[{"eth":"0.001","weth":"0.001","usdc":"0.001","dai":"0.001"}],"name":"aldo_v2_newtest_5","mutabilityDisabled":false}')
+          })
+
+          const r = useBalances('0x08a4a080F59C4e611dD82432A291035B778fE486', { walletAddress: '0x35224C95aa3E53a30cc3F6f64540618892a568D7' })
+
+          console.log("BALANCES:::", r.data)
+          return r.data
+        },
+        { wrapper }
+      )
+
+      await waitForNextUpdate({ timeout: 50000 })
+      await waitForNextUpdate({ timeout: 50000 })
+
+      expect(result?.current?.withdrawn).toBeGreaterThanOrEqual(0)
+    })
+  })
+
   test('Test useRevenuePathTiers', async () => {
     await act(async () => {
       const { result, waitForNextUpdate } = renderHook(
@@ -194,20 +194,19 @@ describe('Main', () => {
             chainId,
             provider,
             signer,
-            revPathAddress: '0xd63c43fffc695d00DC29Be73F5e13DA2683db34A',
+            revPathAddress: '0x08a4a080F59C4e611dD82432A291035B778fE486',
             initV2Final: true,
-            revPathMetadata: JSON.parse('{"walletList":[["0x0807c5C8Fa8a8229870CFecb6E2E71Dcb6a78261","0x5e5E38626d419Df414e5AFd06121DFb041AEe2B2"],["0x538C138B73836b811c148B3E4c3683B7B923A0E7","0x5e5E38626d419Df414e5AFd06121DFb041AEe2B2"]],"distribution":[[50,50],["80",20]],"tiers":[{"eth":"0.01"}],"name":"Test V2 Aldo/Fernando","mutabilityDisabled":false}')
+            revPathMetadata: JSON.parse('{"walletList":[["0x0807c5C8Fa8a8229870CFecb6E2E71Dcb6a78261","0x5e5E38626d419Df414e5AFd06121DFb041AEe2B2"],["0x0807c5C8Fa8a8229870CFecb6E2E71Dcb6a78261","0x5e5E38626d419Df414e5AFd06121DFb041AEe2B2","0x35224C95aa3E53a30cc3F6f64540618892a568D7"]],"distribution":[["90",10],[70,20,10]],"tiers":[{"eth":"0.001","weth":"0.001","usdc":"0.001","dai":"0.001"}],"name":"aldo_v2_newtest_5","mutabilityDisabled":false}')
           })
 
-          const r = useRevenuePathTiers('0xd63c43fffc695d00DC29Be73F5e13DA2683db34A')
+          const r = useRevenuePathTiers('0x08a4a080F59C4e611dD82432A291035B778fE486')
 
-          console.log("MMMMM", r.data?.[1])
+          console.log("Tiers:", r.data?.[0], r.data?.[1])
           return r
         },
         { wrapper }
       )
 
-      await waitForNextUpdate({ timeout: 20000 })
       await waitForNextUpdate({ timeout: 20000 })
       await waitForNextUpdate({ timeout: 20000 })
 

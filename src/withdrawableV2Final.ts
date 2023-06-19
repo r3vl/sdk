@@ -35,7 +35,6 @@ export async function withdrawableV2Final(this: R3vlClient, payload?: FnArgs) {
 
   const { isERC20, walletAddress } = payload || { isERC20: undefined, walletAddress: null }
 
-  const divideBy = ethers.BigNumber.from(10000000)
   const totalTiersPromise = revPathV2FinalRead.getTotalRevenueTiers()
   let pendingDistributionPromise = revPathV2FinalRead.getPendingDistributionAmount(isERC20 ? tokenList[isERC20][_chainId] : AddressZero)
 
@@ -92,7 +91,7 @@ export async function withdrawableV2Final(this: R3vlClient, payload?: FnArgs) {
       const walletTierLimit = walletTier[j].limit
 
       if (parseFloat(ethers.utils.formatEther(tierLimit)) === 0) {
-        let received = (parseFloat(ethers.utils.formatEther(pendingDistribution.mul(100))) / 100) * (parseFloat(ethers.utils.formatEther(walletTierProportion)) / 100)
+        let received = parseFloat(ethers.utils.formatEther(pendingDistribution.mul(walletTierProportion).div(1000000000000000).div(100000)))
 
         wallets[walletList[j]] = received
 
@@ -138,7 +137,6 @@ export async function withdrawableTiersV2Final(this: R3vlClient, payload?: FnArg
 
   const { isERC20 } = payload || { isERC20: undefined }
 
-  const divideBy = ethers.BigNumber.from(10000000)
   const totalTiers = await revPathV2FinalRead.getTotalRevenueTiers()
   let pendingDistribution = await revPathV2FinalRead.getPendingDistributionAmount(isERC20 ? tokenList[isERC20][_chainId] : AddressZero)
 
@@ -180,7 +178,7 @@ export async function withdrawableTiersV2Final(this: R3vlClient, payload?: FnArg
       const walletTierLimit = parseWalletTier(revPathMetadata, i, j, isERC20).limit
       
       if (parseFloat(ethers.utils.formatEther(tierLimit)) === 0) {
-        let received = (parseFloat(ethers.utils.formatEther(pendingDistribution.mul(1000000))) / 1000000) * (parseFloat(ethers.utils.formatEther(walletTierProportion)) / 100)
+        let received = parseFloat(ethers.utils.formatEther(pendingDistribution.mul(walletTierProportion).div(1000000000000000).div(100000)))
 
         wallets[walletList[j]] = received
 

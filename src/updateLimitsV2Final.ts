@@ -53,7 +53,7 @@ export async function updateLimitsV2Final(
   })
 
   try {
-    
+    const { customToken } = await apiSigner?.authWallet() || { customToken: null }
 
     const tx = await revPathV2FinalWrite.updateLimits(
       formatedTokens,
@@ -72,8 +72,6 @@ export async function updateLimitsV2Final(
 
       return t
     })
-
-    const { customToken } = await apiSigner?.authWallet() || { customToken: null }
 
     await apiSigner?.signUpdateRevenuePath({
       address: _revPathAddress || "",

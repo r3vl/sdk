@@ -34,6 +34,8 @@ export async function updateRevenueTiersV2Final(
   })
 
   try {
+    const { customToken } = await apiSigner?.authWallet() || { customToken: null }
+
     const tx = await revPathV2FinalWrite.updateRevenueTiers(
       revPathMetadata.walletList,
       revPathMetadata.distribution,
@@ -42,8 +44,6 @@ export async function updateRevenueTiersV2Final(
       tierNumbers
     )
 
-    const { customToken } = await apiSigner?.authWallet() || { customToken: null }
-    
     await apiSigner?.signUpdateRevenuePath({
       address: _revPathAddress || "",
       walletList,
