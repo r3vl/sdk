@@ -46,6 +46,19 @@ export const tokenList = {
     [chainIds.polygon]: "0x0000000000000000000000000000000000001010",
     [chainIds.polygonMumbai]: '0x0000000000000000000000000000000000001010'
   },
+  wmatic: {
+    name: "Wrapped Matic",
+    [chainIds.goerli]: "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6",
+    [chainIds.mainnet]: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+    [chainIds.polygon]: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
+    [chainIds.optimism]: '0x4200000000000000000000000000000000000006',
+    [chainIds.arbitrum]: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
+    [chainIds.aurora]: '0xc9bdeed33cd01541e1eed10f90519d2c06fe3feb',
+    [chainIds.polygonMumbai]: '0xA6FA4fB5f76172d178d61B04b0ecd319C5d1C0aa',
+    [chainIds.optimismGoerli]: "0x4200000000000000000000000000000000000006",
+    [chainIds.arbitrumGoerli]: "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+    [chainIds.auroraTestnet]: "0xc9bdeed33cd01541e1eed10f90519d2c06fe3feb",
+  },
   weth: {
     name: "Wrapped Ether",
     [chainIds.goerli]: "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6",

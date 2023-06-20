@@ -121,7 +121,7 @@ export async function createRevenuePathV2Final(
         !!opts?.isGasLess,
         mutabilityDisabled
       )
-        
+
       const request = {
         chainId: _chainId,
         target: contract.address,
@@ -129,7 +129,7 @@ export async function createRevenuePathV2Final(
       };
 
       const { customToken } = await apiSigner?.authWallet() || { customToken: "" }
-      
+
       // send relayRequest to Gelato Relay API
       const tx = await relay?.signatureCall(request, opts.gasLessKey)
 
