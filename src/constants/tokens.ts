@@ -39,6 +39,7 @@ export const tokenList = {
   eth: {
     name: "Ethereum",
     [chainIds.goerli]: "0x0000000000000000000000000000000000000000",
+    [chainIds.optimism]: "0x0000000000000000000000000000000000000000",
     [chainIds.mainnet]: "0x0000000000000000000000000000000000000000",
   },
   matic: {
