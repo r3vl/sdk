@@ -31,10 +31,14 @@ export async function withdrawFundsV2Final(this: R3vlClient, { walletAddress, sh
 
     if (walletAddress) {
       if (isERC20) {
+        console.log("WITHDRAW/RELEASE_PAYLOAD:::", AddressZero, walletAddress, revPathMetadata.walletList, revPathMetadata.distribution, shouldDistribute)
+
         const gasLimit = increaseGasLimit(await revPathV2FinalWrite.estimateGas.release(tokenList[isERC20][_chainId], walletAddress, revPathMetadata.walletList, revPathMetadata.distribution, shouldDistribute))
 
         tx = await revPathV2FinalWrite.release(tokenList[isERC20][_chainId], walletAddress, revPathMetadata.walletList, revPathMetadata.distribution, shouldDistribute, { gasLimit })
       } else {
+        console.log("WITHDRAW/RELEASE_PAYLOAD:::", AddressZero, walletAddress, revPathMetadata.walletList, revPathMetadata.distribution, shouldDistribute)
+
         const gasLimit = increaseGasLimit(await revPathV2FinalWrite.estimateGas.release(AddressZero, walletAddress, revPathMetadata.walletList, revPathMetadata.distribution, shouldDistribute))
 
         tx = await revPathV2FinalWrite.release(AddressZero, walletAddress, revPathMetadata.walletList, revPathMetadata.distribution, shouldDistribute, { gasLimit })

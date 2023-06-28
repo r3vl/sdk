@@ -74,17 +74,18 @@ export async function getRevPathTransactionEventsV2Final(this: R3vlClient, _revP
 
   const blockNumber = ownershipTransferred?.[0]?.blockNumber
 
-  const depositETHPromise = revPathV2FinalRead.queryFilter(revPathV2FinalRead.filters.DepositETH())
+  const depositETH = await revPathV2FinalRead.queryFilter(revPathV2FinalRead.filters.DepositETH())
   const wethTransfersPromise = sdk?.weth.queryFilter(sdk?.weth.filters.Transfer(undefined, _revPathAddress), blockNumber, 'latest')
   const usdcTransfersPromise = sdk?.usdc.queryFilter(sdk?.usdc.filters.Transfer(undefined, _revPathAddress), blockNumber, 'latest')
   const daiTransfersPromise = sdk?.dai.queryFilter(sdk?.dai.filters.Transfer(undefined, _revPathAddress), blockNumber, 'latest')
 
-  const [
-    depositETH,
-    wethTransfers,
-    usdcTransfers,
-    daiTransfers
-  ] = await Promise.all([depositETHPromise, wethTransfersPromise, usdcTransfersPromise, daiTransfersPromise])
+  let wethTransfers: any = []
+  let usdcTransfers: any = []
+  let daiTransfers: any = []
+
+  try { wethTransfers = await wethTransfersPromise } catch (_err) { console.log("WETH_TXS_ERROR:", _err) }
+  try { usdcTransfers = await usdcTransfersPromise } catch (_err) { console.log("USDC_TXS_ERROR:", _err) }
+  try { daiTransfers = await daiTransfersPromise } catch (_err) { console.log("DAI_TXS_ERROR:", _err) }
 
   return {
     ownershipTransferred,

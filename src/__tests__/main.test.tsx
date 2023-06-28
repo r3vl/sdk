@@ -22,7 +22,7 @@ describe('Main', () => {
 
   const provider = communityProvider()
   const signer = communitySigner()
-  const chainId = 5
+  const chainId = 137
   const wrapper = ({ children }: { children: any }) => {
     return (
       <R3vlProvider client={client}>
@@ -140,12 +140,14 @@ describe('Main', () => {
           useR3vlClient({
             chainId,
             provider,
-            revPathAddress: '0xB593fDaa38010CCA96b32B432eEA8Ac35e41F2c1'
+            revPathAddress: '0xD41Fa1142E29742cbFe708C20cCcd690EC4A8E03',
+            initV2Final: true,
+            revPathMetadata: JSON.parse('{"walletList":[["0x0807c5C8Fa8a8229870CFecb6E2E71Dcb6a78261","0x5Ce5892FB75F63fB3c700ffe2Ac0Bb18F53dA80a"],["0x5Ce5892FB75F63fB3c700ffe2Ac0Bb18F53dA80a"]],"distribution":[["5","95"],[100]],"tiers":[{"matic":"0.5"}],"name":"Leo Polygon test path (1 tier) ","mutabilityDisabled":false}')
           })
 
-          const r = useTransactionEvents('0xB593fDaa38010CCA96b32B432eEA8Ac35e41F2c1')
+          const r = useTransactionEvents('0xD41Fa1142E29742cbFe708C20cCcd690EC4A8E03')
 
-          console.log("META:::", r.data)
+          console.log("TXS:::", r.data)
           return r
         },
         { wrapper }
