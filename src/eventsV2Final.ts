@@ -72,12 +72,12 @@ export async function getRevPathTransactionEventsV2Final(this: R3vlClient, _revP
   const eRC20PaymentReleased = await revPathV2FinalRead.queryFilter(revPathV2FinalRead.filters.ERC20PaymentReleased())
   const tokenDistributed = await revPathV2FinalRead.queryFilter(revPathV2FinalRead.filters.TokenDistributed())
 
-  const blockNumber = ownershipTransferred?.[0]?.blockNumber
+  // const blockNumber = ownershipTransferred?.[0]?.blockNumber
 
   const depositETH = await revPathV2FinalRead.queryFilter(revPathV2FinalRead.filters.DepositETH())
-  const wethTransfersPromise = sdk?.weth.queryFilter(sdk?.weth.filters.Transfer(undefined, _revPathAddress), blockNumber, 'latest')
-  const usdcTransfersPromise = sdk?.usdc.queryFilter(sdk?.usdc.filters.Transfer(undefined, _revPathAddress), blockNumber, 'latest')
-  const daiTransfersPromise = sdk?.dai.queryFilter(sdk?.dai.filters.Transfer(undefined, _revPathAddress), blockNumber, 'latest')
+  const wethTransfersPromise = sdk?.weth.queryFilter(sdk?.weth.filters.Transfer(undefined, _revPathAddress))
+  const usdcTransfersPromise = sdk?.usdc.queryFilter(sdk?.usdc.filters.Transfer(undefined, _revPathAddress))
+  const daiTransfersPromise = sdk?.dai.queryFilter(sdk?.dai.filters.Transfer(undefined, _revPathAddress))
 
   let wethTransfers: any = []
   let usdcTransfers: any = []

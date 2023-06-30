@@ -17,7 +17,7 @@ export async function withdrawnFundsSimple(this: R3vlClient, payload?: FnArgs) {
 
   if (!revPathSimpleRead || !sdk) throw new Error("ERROR:")
 
-  const AddressZero = _chainId === chainIds.polygonMumbai || _chainId === chainIds.polygon ? '0x0000000000000000000000000000000000001010' : ethers.constants.AddressZero
+  const AddressZero = /* _chainId === chainIds.polygonMumbai || _chainId === chainIds.polygon ? '0x0000000000000000000000000000000000001010' : */ ethers.constants.AddressZero
 
   const { walletAddress, isERC20 } = payload || { walletAddress: undefined, isERC20: undefined }
 

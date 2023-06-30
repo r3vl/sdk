@@ -31,7 +31,8 @@ export async function withdrawableV2Final(this: R3vlClient, payload?: FnArgs) {
 
   if (!revPathV2FinalRead || !sdk) throw new Error("ERROR:")
 
-  const AddressZero = _chainId === chainIds.polygonMumbai || _chainId === chainIds.polygon ? '0x0000000000000000000000000000000000001010' : ethers.constants.AddressZero
+  const AddressZero = /* _chainId === chainIds.polygonMumbai || _chainId === chainIds.polygon ? '0x0000000000000000000000000000000000001010' : */ ethers.constants.AddressZero
+  const AddressZeroMATIC = _chainId === chainIds.polygonMumbai || _chainId === chainIds.polygon ? '0x0000000000000000000000000000000000001010' : ethers.constants.AddressZero
 
   const { isERC20, walletAddress } = payload || { isERC20: undefined, walletAddress: null }
 
@@ -69,7 +70,7 @@ export async function withdrawableV2Final(this: R3vlClient, payload?: FnArgs) {
   for (let i = 0; i < totalTiers.toNumber(); i++) {
     const wallets: any = {}
     const walletList = revPathMetadata?.walletList[i] || []
-    const tierLimitPromise = revPathV2FinalRead.getTokenTierLimits(isERC20 ? tokenList[isERC20][_chainId] : AddressZero, i)
+    const tierLimitPromise = revPathV2FinalRead.getTokenTierLimits(isERC20 ? tokenList[isERC20][_chainId] : AddressZeroMATIC, i)
 
     const [tierLimit] = await Promise.all([tierLimitPromise])
 
@@ -133,7 +134,8 @@ export async function withdrawableTiersV2Final(this: R3vlClient, payload?: FnArg
 
   if (!revPathV2FinalRead || !sdk) throw new Error("ERROR:")
 
-  const AddressZero = _chainId === chainIds.polygonMumbai || _chainId === chainIds.polygon ? '0x0000000000000000000000000000000000001010' : ethers.constants.AddressZero
+  const AddressZero = /* _chainId === chainIds.polygonMumbai || _chainId === chainIds.polygon ? '0x0000000000000000000000000000000000001010' : */ ethers.constants.AddressZero
+  const AddressZeroMATIC = _chainId === chainIds.polygonMumbai || _chainId === chainIds.polygon ? '0x0000000000000000000000000000000000001010' : ethers.constants.AddressZero
 
   const { isERC20 } = payload || { isERC20: undefined }
 
@@ -163,7 +165,7 @@ export async function withdrawableTiersV2Final(this: R3vlClient, payload?: FnArg
   for (let i = 0; i < totalTiers.toNumber(); i++) {
     const wallets: any = {}
     const walletList = revPathMetadata?.walletList[i] || []
-    const tierLimit = await revPathV2FinalRead.getTokenTierLimits(isERC20 ? tokenList[isERC20][_chainId] : AddressZero, i)
+    const tierLimit = await revPathV2FinalRead.getTokenTierLimits(isERC20 ? tokenList[isERC20][_chainId] : AddressZeroMATIC, i)
 
     let walletsTierLimit = ethers.BigNumber.from(0)
 
@@ -187,7 +189,7 @@ export async function withdrawableTiersV2Final(this: R3vlClient, payload?: FnArg
 
       if (pendingDistribution.gte(walletsTierLimit)) {
         wallets[walletList[j]] = parseFloat(ethers.utils.formatEther(walletTierLimit))
-        
+
         pendingDistribution = pendingDistribution.sub(walletTierLimit)
       } else if (pendingDistribution.lt(walletsTierLimit)) {
         let received = pendingDistribution.mul(walletTierProportion).div(1000000000000000).div(100000)

@@ -40,7 +40,7 @@ export async function withdrawableSimple(this: R3vlClient, payload?: FnArgs) {
 
   if (!revPathSimpleRead || !sdk) throw new Error("ERROR:")
 
-  const AddressZero = _chainId === chainIds.polygonMumbai || _chainId === chainIds.polygon ? '0x0000000000000000000000000000000000001010' : ethers.constants.AddressZero
+  const AddressZero = /* _chainId === chainIds.polygonMumbai || _chainId === chainIds.polygon ? '0x0000000000000000000000000000000000001010' : */ ethers.constants.AddressZero
 
   const { isERC20, walletAddress } = payload || { isERC20: undefined, walletAddress: null }
 
@@ -141,7 +141,7 @@ export async function withdrawableTiersSimple(this: R3vlClient, payload?: FnArgs
 
   if (!revPathSimpleRead || !sdk) throw new Error("ERROR:")
 
-  const AddressZero = _chainId === chainIds.polygonMumbai || _chainId === chainIds.polygon ? '0x0000000000000000000000000000000000001010' : ethers.constants.AddressZero
+  const AddressZero = /* _chainId === chainIds.polygonMumbai || _chainId === chainIds.polygon ? '0x0000000000000000000000000000000000001010' : */ ethers.constants.AddressZero
 
   const { isERC20 } = payload || { isERC20: undefined }
 

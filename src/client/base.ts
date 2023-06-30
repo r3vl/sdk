@@ -383,7 +383,8 @@ export default class Base {
         signCreateRevenuePath: this.signCreateRevenuePath.bind(this),
         signUpdateRevenuePath: this.signUpdateRevenuePath.bind(this),
         authWallet: this.authWallet.bind(this)
-      }
+      },
+      getCurrentBlockNumber: async () => await this._provider.getBlockNumber()
     }
   }
 
@@ -433,7 +434,8 @@ export default class Base {
         signCreateRevenuePath: this.signCreateRevenuePath.bind(this),
         signUpdateRevenuePath: this.signUpdateRevenuePath.bind(this),
         authWallet: this.authWallet.bind(this)
-      }
+      },
+      getCurrentBlockNumber: async () => await this._provider.getBlockNumber()
     }
   }
 

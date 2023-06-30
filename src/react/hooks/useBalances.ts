@@ -35,7 +35,7 @@ export const useBalances = (revPathAddress: AddressInput, filter: {
     const earnings = client?.withdrawable ? await client?.withdrawable(filter) || 0 : 0 // TODO: Rename to received
     const _withdrawn = await client?.withdrawn?.(filter) || 0
     const withdrawn = _withdrawn > earnings ? earnings : _withdrawn
-    const withdrawable = earnings - withdrawn < 0.0001 ? 0 : earnings - withdrawn
+    const withdrawable = earnings - withdrawn < 0.0009 ? 0 : earnings - withdrawn
 
     return {
       withdrawn,

@@ -17,7 +17,7 @@ export async function withdrawnFundsV2Final(this: R3vlClient, payload?: FnArgs) 
 
   if (!revPathV2FinalRead || !sdk) throw new Error("ERROR:")
 
-  const AddressZero = _chainId === chainIds.polygonMumbai || _chainId === chainIds.polygon ? '0x0000000000000000000000000000000000001010' : ethers.constants.AddressZero
+  const AddressZero = /* _chainId === chainIds.polygonMumbai || _chainId === chainIds.polygon ? '0x0000000000000000000000000000000000001010' : */ ethers.constants.AddressZero
 
   const { walletAddress, isERC20 } = payload || { walletAddress: undefined, isERC20: undefined }
 
@@ -35,7 +35,10 @@ export async function withdrawnFundsV2Final(this: R3vlClient, payload?: FnArgs) 
 
     const totalTiers = await revPathV2FinalRead.getTotalRevenueTiers()
 
-    const result = totalTiers.toNumber() > 1 ? parseFloat(ethers.utils.formatEther(released)) + parseFloat(ethers.utils.formatEther(released)) * 0.0102 : parseFloat(ethers.utils.formatEther(released))
+    const pF = await revPathV2FinalRead.getPlatformFee()
+    const fee = (pF.toNumber() / 10000000) + 0.0002
+
+    const result = totalTiers.toNumber() > 1 || pF.toNumber() > 0 ? parseFloat(ethers.utils.formatEther(released)) + parseFloat(ethers.utils.formatEther(released)) * fee : parseFloat(ethers.utils.formatEther(released))
 
     return result
   } catch (error) {

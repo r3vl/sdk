@@ -84,8 +84,8 @@ export async function createRevenuePathV2Final(
       !!opts?.isGasLess,
       mutabilityDisabled
     )
+    const storeDB = async (result: any, customToken: string, isGasLess?: boolean) => {
 
-    const storeDB = async (result: any, customToken: string) => {
       const newRevPathAddress = result?.logs[0].address
 
       const payload = {
@@ -97,7 +97,8 @@ export async function createRevenuePathV2Final(
           distribution, 
           tiers, 
           name, 
-          mutabilityDisabled 
+          mutabilityDisabled,
+          isGasLess
         }),
       }
 
@@ -135,7 +136,7 @@ export async function createRevenuePathV2Final(
 
       const result = await tx.wait()
 
-      await storeDB(result, customToken)
+      await storeDB(result, customToken, true)
 
       return result
     }

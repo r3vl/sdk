@@ -156,6 +156,10 @@ describe('Main', () => {
       await waitForNextUpdate({ timeout: 50000 })
       await waitForNextUpdate({ timeout: 50000 })
       await waitForNextUpdate({ timeout: 50000 })
+      await waitForNextUpdate({ timeout: 50000 })
+      await waitForNextUpdate({ timeout: 50000 })
+      await waitForNextUpdate({ timeout: 50000 })
+      await waitForNextUpdate({ timeout: 50000 })
 
       expect(result?.current.data).toBeTruthy()
     })
@@ -168,12 +172,12 @@ describe('Main', () => {
           useR3vlClient({
             chainId,
             provider,
-            revPathAddress: '0x08a4a080F59C4e611dD82432A291035B778fE486',
+            revPathAddress: '0x3E3E2d2EF041B456eaEb53E543F92e3688bec41f',
             initV2Final: true,
-            revPathMetadata: JSON.parse('{"walletList":[["0x0807c5C8Fa8a8229870CFecb6E2E71Dcb6a78261","0x5e5E38626d419Df414e5AFd06121DFb041AEe2B2"],["0x0807c5C8Fa8a8229870CFecb6E2E71Dcb6a78261","0x5e5E38626d419Df414e5AFd06121DFb041AEe2B2","0x35224C95aa3E53a30cc3F6f64540618892a568D7"]],"distribution":[["90",10],[70,20,10]],"tiers":[{"eth":"0.001","weth":"0.001","usdc":"0.001","dai":"0.001"}],"name":"aldo_v2_newtest_5","mutabilityDisabled":false}')
+            revPathMetadata: JSON.parse('{"walletList":[["0x7001eD45D8C789417deBC101b6B0a7894Bee2337"],["0x7001eD45D8C789417deBC101b6B0a7894Bee2337","0xD6d0c9fC8F1f6cbCa3472052df3678E5b29b2DcA"]],"distribution":[[100],[50,50]],"tiers":[{"matic":"1"}],"name":"V2 Poly - GasOn TierOn MutOn","mutabilityDisabled":false}')
           })
 
-          const r = useBalances('0x08a4a080F59C4e611dD82432A291035B778fE486', { walletAddress: '0x35224C95aa3E53a30cc3F6f64540618892a568D7' })
+          const r = useBalances('0x3E3E2d2EF041B456eaEb53E543F92e3688bec41f')
 
           console.log("BALANCES:::", r.data)
           return r.data
@@ -181,6 +185,8 @@ describe('Main', () => {
         { wrapper }
       )
 
+      await waitForNextUpdate({ timeout: 50000 })
+      await waitForNextUpdate({ timeout: 50000 })
       await waitForNextUpdate({ timeout: 50000 })
       await waitForNextUpdate({ timeout: 50000 })
 
@@ -196,12 +202,12 @@ describe('Main', () => {
             chainId,
             provider,
             signer,
-            revPathAddress: '0x08a4a080F59C4e611dD82432A291035B778fE486',
+            revPathAddress: '0xD41Fa1142E29742cbFe708C20cCcd690EC4A8E03',
             initV2Final: true,
-            revPathMetadata: JSON.parse('{"walletList":[["0x0807c5C8Fa8a8229870CFecb6E2E71Dcb6a78261","0x5e5E38626d419Df414e5AFd06121DFb041AEe2B2"],["0x0807c5C8Fa8a8229870CFecb6E2E71Dcb6a78261","0x5e5E38626d419Df414e5AFd06121DFb041AEe2B2","0x35224C95aa3E53a30cc3F6f64540618892a568D7"]],"distribution":[["90",10],[70,20,10]],"tiers":[{"eth":"0.001","weth":"0.001","usdc":"0.001","dai":"0.001"}],"name":"aldo_v2_newtest_5","mutabilityDisabled":false}')
+            revPathMetadata: JSON.parse('{"walletList":[["0x0807c5C8Fa8a8229870CFecb6E2E71Dcb6a78261","0x5Ce5892FB75F63fB3c700ffe2Ac0Bb18F53dA80a"],["0x5Ce5892FB75F63fB3c700ffe2Ac0Bb18F53dA80a"]],"distribution":[["5","95"],[100]],"tiers":[{"matic":"0.5"}],"name":"Leo Polygon test path (1 tier) ","mutabilityDisabled":false}')
           })
 
-          const r = useRevenuePathTiers('0x08a4a080F59C4e611dD82432A291035B778fE486')
+          const r = useRevenuePathTiers('0xD41Fa1142E29742cbFe708C20cCcd690EC4A8E03')
 
           console.log("Tiers:", r.data?.[0], r.data?.[1])
           return r

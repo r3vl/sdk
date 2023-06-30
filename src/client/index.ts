@@ -87,7 +87,7 @@ export type RevenuePath = {
   withdrawn?: (args?: WithdrawnV0Args | WithdrawnV1Args | WithdrawnV2Args, getBN?: boolean) => Promise<number | undefined>
   transactionEvents?: (rePath: string) => Promise<any> | ReturnType<typeof getRevPathTransactionEventsV2>
   revenuePaths?: (args?: { startBlock?: number }) => Promise<RevenuePathsList | any>
-  withdraw?: (args: any) => any
+  withdraw?: (args: any, opts?: GaslessOpts) => any
   withdrawGasLess?: (args: WithdrawV1Args, opts: { gasLessKey: string }) => Promise<any>
   tiers?: (opts?: GeneralOpts) => ReturnType<typeof tiersV1> | ReturnType<typeof tiersV2> | ReturnType<typeof tiersSimple>
   createRevenuePath?: (args: CreateRevenuePathV1Args | CreateRevenuePathV2Args | any /* TODO: remove any */, opts?: GeneralOpts & GaslessOpts) => Promise<undefined | ethers.ContractReceipt | ethers.ContractTransaction | RelayResponse>
@@ -118,6 +118,7 @@ export class R3vlClient extends Base {
   relay?: { signatureCall: any }
   apiSigner?: { signCreateRevenuePath: any, signUpdateRevenuePath: any, authWallet: () => Promise<{ customToken: string }> }
   revPathMetadata?: { walletList: [[string]]; distribution: [[number]], tiers: {[t: string]: number}[] }
+  getCurrentBlockNumber?: () => Promise<number>
   initialized = false
 
   constructor({
@@ -272,17 +273,21 @@ export class R3vlClient extends Base {
           sdk,
           revPathV2FinalRead,
           revPathV2FinalWrite,
-          apiSigner
+          apiSigner,
+          relay,
+          getCurrentBlockNumber
         } = this._initV2FinalRevPath()
 
+        this.relay = relay
         this.revPathV2FinalRead = revPathV2FinalRead
         this.revPathV2FinalWrite = revPathV2FinalWrite
         this.sdk = sdk
         this.apiSigner = apiSigner
+        this.getCurrentBlockNumber = getCurrentBlockNumber
       },
       withdrawable: (args?: WithdrawableV2Args) => withdrawableV2Final.call(this, args),
       withdrawn: (args?: WithdrawnV2Args) => withdrawnFundsV2Final.call(this, args),
-      withdraw: (args: WithdrawV2FinalArgs) => withdrawFundsV2Final.call(this, args),
+      withdraw: (args: WithdrawV2FinalArgs, opts?: GaslessOpts) => withdrawFundsV2Final.call(this, args, opts),
       transactionEvents: (revPath: string) => getRevPathTransactionEventsV2Final.call(this, revPath),
       createRevenuePath: (args: CreateRevenuePathV2Args, opts?: GeneralOpts & GaslessOpts) => createRevenuePathV2Final.call(this, args, opts),
       updateRevenueTiers: (args: UpdateRevenueTiersV2Args) => updateRevenueTiersV2Final.call(this, args),
@@ -301,13 +306,17 @@ export class R3vlClient extends Base {
           sdk,
           revPathSimpleRead,
           revPathSimpleWrite,
-          apiSigner
+          apiSigner,
+          relay,
+          getCurrentBlockNumber
         } = this._initSimpleRevPath()
 
+        this.relay = relay
         this.revPathSimpleRead = revPathSimpleRead
         this.revPathSimpleWrite = revPathSimpleWrite
         this.sdk = sdk
         this.apiSigner = apiSigner
+        this.getCurrentBlockNumber = getCurrentBlockNumber
       },
       withdrawable: (args?: WithdrawableSimpleArgs) => withdrawableSimple.call(this, args),
       withdrawn: (args?: WithdrawnV2Args) => withdrawnFundsSimple.call(this, args),
