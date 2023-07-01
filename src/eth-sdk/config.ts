@@ -49,12 +49,12 @@ export default defineConfig({
     polygon: {
       reveelMainV1: '0x0000000000000000000000000000000000000000',
       reveelMainV2: '0xEF44D8e4eAb1ACB4922B983253B5B50386E8668E',
-      reveelMainV2Final: '0x9f5808662520633DaeB0f30ef6659e64189Cb193',
-      reveelMainSimple: '0xc61641DEEdf811C8A1F515DEF22C1f7a04891C83',
+      reveelMainV2Final: '0x491D8fCf021B16b9b62501b88A2Bdd35cb72Ade0',
+      reveelMainSimple: '0xEd649b6BB53d1A2ea670aee1EC0e45A350669a78',
       pathLibraryV1: '0x0000000000000000000000000000000000000000',
       pathLibraryV2: '0x81d5b18d28368636c7d3C7565025203E9dBfA00b',
-      pathLibraryV2Final: '0xA1b3C49DBFAcE5aFD60A67a9387a41FA6d6899e6',
-      pathLibrarySimple: '0x698A4Ccd56Cf95d489Ba5d5DC00C5A2BEA9837C4',
+      pathLibraryV2Final: '0xEdAD0FD63FAB918D4B218b37eC22299aEBeeaFeE',
+      pathLibrarySimple: '0x4ec39Bc9A75E2265B4b23564b0B38Ff4d6ecbb20',
       weth: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
       usdc: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
       dai: '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063'
