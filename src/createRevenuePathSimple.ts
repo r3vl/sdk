@@ -52,7 +52,7 @@ export async function createRevenuePathSimple(
       mutabilityDisabled
     )
 
-    const storeDB = async (result: any, customToken: string) => {
+    const storeDB = async (result: any, customToken: string, isGasLess?: boolean) => {
       const newRevPathAddress = result?.logs[0].address
 
       const payload = {
@@ -63,7 +63,8 @@ export async function createRevenuePathSimple(
           walletList, 
           distribution, 
           name, 
-          mutabilityDisabled 
+          mutabilityDisabled,
+          isGasLess
         }),
       }
 
@@ -99,7 +100,7 @@ export async function createRevenuePathSimple(
 
       const result = await tx.wait()
 
-      await storeDB(result, customToken)
+      await storeDB(result, customToken, true)
 
       return result
     }

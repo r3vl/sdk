@@ -7,8 +7,8 @@ export default defineConfig({
       reveelMainV0: '0x1b5aa0D926ea3c4C4485Ba447c9ABd9A5A128967',
       reveelMainV1: '0x320becCdfbed31a84A0c6E6F678320814B400BBe',
       reveelMainV2: '0xae4EfaEB758f149f9C780268986537E45Bd57d7C',
-      reveelMainV2Final: '0xcE6E206716a1dd753924d7685A93E33AC4CBAfEd',
-      reveelMainSimple: '0x59d95a65DC0CA28588F204CB3c84f637c6A325fe',
+      reveelMainV2Final: '0x19AA1Df5c022639AE3a0c3AB621Ba0299Da743d6',
+      reveelMainSimple: '0xA1b3C49DBFAcE5aFD60A67a9387a41FA6d6899e6',
       pathLibraryV0: '0x92582A5091A55A8Cd168A927ec100fDD13Ec0f20',
       pathLibraryV1: '0x9C23D192313b60225459bee71BC96cF49740418E',
       pathLibraryV2: '0x0000000000000000000000000000000000000000', // TODO: Get correct mainnet address
@@ -88,8 +88,8 @@ export default defineConfig({
     optimism: {
       reveelMainV1: '0xb05Bcdfd259D08728db7517bf3c3CC4262D3b451',
       reveelMainV2: '0xEF44D8e4eAb1ACB4922B983253B5B50386E8668E',
-      reveelMainV2Final: '0x4f881d7c70eaAE878c8c702366B9f7D3B1eB31c5',
-      reveelMainSimple: '0x348472Dcd59A79A5Bb0969D854ce08b62ba0D171',
+      reveelMainV2Final: '0xA740004d026E0d11A9E1B21E479d8daE967beB2B',
+      reveelMainSimple: '0xcE6E206716a1dd753924d7685A93E33AC4CBAfEd',
       pathLibraryV1: '0x0000000000000000000000000000000000000000',
       pathLibraryV2: '0x81d5b18d28368636c7d3C7565025203E9dBfA00b',
       pathLibraryV2Final: '0xea4dA7b550220534321C92197629b0BCa9bD451c',
