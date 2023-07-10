@@ -22,7 +22,7 @@ export async function tiersSimple(this: R3vlClient, opts?: GeneralOpts): Promise
 
   if (!revPathSimpleRead || !sdk) throw new Error("ERROR:.")
 
-  const AddressZero = /* _chainId === chainIds.polygonMumbai || _chainId === chainIds.polygon ? '0x0000000000000000000000000000000000001010' : */ ethers.constants.AddressZero
+  const AddressZero = _chainId === chainIds.polygonMumbai || _chainId === chainIds.polygon ? '0x0000000000000000000000000000000000001010' : ethers.constants.AddressZero
 
   const tiersNumber = 1
   const tiers = []

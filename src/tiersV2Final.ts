@@ -24,7 +24,7 @@ export async function tiersV2Final(this: R3vlClient, opts?: GeneralOpts): Promis
 
   if (!revPathV2FinalRead || !sdk) throw new Error("ERROR:.")
 
-  const AddressZero = /* _chainId === chainIds.polygonMumbai || _chainId === chainIds.polygon ? '0x0000000000000000000000000000000000001010' : */ ethers.constants.AddressZero
+  const AddressZero = _chainId === chainIds.polygonMumbai || _chainId === chainIds.polygon ? '0x0000000000000000000000000000000000001010' : ethers.constants.AddressZero
 
   const tiersNumber = await revPathV2FinalRead.getTotalRevenueTiers()
   const currentTierETHPromise = revPathV2FinalRead.getCurrentTier(AddressZero)
