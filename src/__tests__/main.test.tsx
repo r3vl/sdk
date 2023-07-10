@@ -22,7 +22,7 @@ describe('Main', () => {
 
   const provider = communityProvider()
   const signer = communitySigner()
-  const chainId = 137
+  const chainId = 10
   const wrapper = ({ children }: { children: any }) => {
     return (
       <R3vlProvider client={client}>
@@ -172,12 +172,12 @@ describe('Main', () => {
           useR3vlClient({
             chainId,
             provider,
-            revPathAddress: '0x3E3E2d2EF041B456eaEb53E543F92e3688bec41f',
+            revPathAddress: '0x0685bD9FaF7D16Ad2dC018715DFE16a6d42252A4',
             initV2Final: true,
-            revPathMetadata: JSON.parse('{"walletList":[["0x7001eD45D8C789417deBC101b6B0a7894Bee2337"],["0x7001eD45D8C789417deBC101b6B0a7894Bee2337","0xD6d0c9fC8F1f6cbCa3472052df3678E5b29b2DcA"]],"distribution":[[100],[50,50]],"tiers":[{"matic":"1"}],"name":"V2 Poly - GasOn TierOn MutOn","mutabilityDisabled":false}')
+            revPathMetadata: JSON.parse('{"walletList":[["0x5e5E38626d419Df414e5AFd06121DFb041AEe2B2","0x0807c5C8Fa8a8229870CFecb6E2E71Dcb6a78261"],["0x0807c5C8Fa8a8229870CFecb6E2E71Dcb6a78261","0x5e5E38626d419Df414e5AFd06121DFb041AEe2B2"]],"distribution":[["90",10],["90",10]],"tiers":[{"eth":"0.001"}],"name":"BetaOpV2AldoTest","mutabilityDisabled":false}')
           })
 
-          const r = useBalances('0x3E3E2d2EF041B456eaEb53E543F92e3688bec41f')
+          const r = useBalances('0x0685bD9FaF7D16Ad2dC018715DFE16a6d42252A4', { walletAddress: "0x5e5E38626d419Df414e5AFd06121DFb041AEe2B2" })
 
           console.log("BALANCES:::", r.data)
           return r.data

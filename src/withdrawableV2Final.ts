@@ -70,9 +70,7 @@ export async function withdrawableV2Final(this: R3vlClient, payload?: FnArgs) {
   for (let i = 0; i < totalTiers.toNumber(); i++) {
     const wallets: any = {}
     const walletList = revPathMetadata?.walletList[i] || []
-    const tierLimitPromise = revPathV2FinalRead.getTokenTierLimits(isERC20 ? tokenList[isERC20][_chainId] : AddressZeroMATIC, i)
-
-    const [tierLimit] = await Promise.all([tierLimitPromise])
+    const tierLimit = await revPathV2FinalRead.getTokenTierLimits(isERC20 ? tokenList[isERC20][_chainId] : AddressZeroMATIC, i)
 
     let walletsTierLimit = ethers.BigNumber.from(0)
     const walletTier = []
@@ -119,7 +117,6 @@ export async function withdrawableV2Final(this: R3vlClient, payload?: FnArgs) {
   }
 
   return tiers.reduce((prev, curr) => {
-    /// if (id === 1) throw new Error(JSON.stringify(curr))
     return prev + (
       walletAddress ?
         (curr?.[walletAddress] || 0) :
