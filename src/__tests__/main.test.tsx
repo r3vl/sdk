@@ -22,7 +22,7 @@ describe('Main', () => {
 
   const provider = communityProvider()
   const signer = communitySigner()
-  const chainId = 1
+  const chainId = 137
   const wrapper = ({ children }: { children: any }) => {
     return (
       <R3vlProvider client={client}>
@@ -58,32 +58,6 @@ describe('Main', () => {
     })
   })
 
-  test('Test useBalances', async () => {
-    await act(async () => {
-      const { result, waitForNextUpdate } = renderHook(
-        () => {
-          useR3vlClient({
-            chainId,
-            provider,
-            revPathAddress: '0x37b96f962b508C813aF545B767a6D1C0C9Eda472',
-            initV2: true,
-          })
-
-          const r = useBalances('0x37b96f962b508C813aF545B767a6D1C0C9Eda472', { walletAddress: "0x2f2581c49A79880561032094887F59bd6d777F75" })
-
-          console.log("META:::", r.data)
-          return r.data
-        },
-        { wrapper }
-      )
-
-      await waitForNextUpdate({ timeout: 50000 })
-      await waitForNextUpdate({ timeout: 50000 })
-
-      expect(result?.current?.withdrawn).toBeGreaterThanOrEqual(0)
-    })
-  })
-
   test('Test useRevenuePaths', async () => {
     await act(async () => {
       const { result, waitForNextUpdate } = renderHook(
@@ -92,61 +66,24 @@ describe('Main', () => {
             chainId,
             provider,
             signer,
-            initV0: true,
-            customDefaultKey: 'v0'
+            initV2Final: true
           })
 
-          const r = useRevenuePaths("0x538C138B73836b811c148B3E4c3683B7B923A0E7", { cacheTime: 0, staleTime: 0 }, { customDefaultKey: 'v0' })
+          const r = useRevenuePaths()
 
-          console.log("REVS", r.data?.map((aa: any) => aa?.eventPayload && aa.eventPayload.args._walletName))
+          console.log("REVS", r?.dataRaw && r.dataRaw?.[0].eventPayload)
           return r
         },
         { wrapper }
       )
-
-      await waitForNextUpdate()
-      await waitForNextUpdate()
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
-      await waitForNextUpdate({ timeout: 80000 })
+      await waitForNextUpdate({ timeout: 10000 })
+      await waitForNextUpdate({ timeout: 10000 })
+      await waitForNextUpdate({ timeout: 10000 })
+      await waitForNextUpdate({ timeout: 10000 })
+      await waitForNextUpdate({ timeout: 10000 })
+      await waitForNextUpdate({ timeout: 10000 })
+      await waitForNextUpdate({ timeout: 10000 })
+      await waitForNextUpdate({ timeout: 10000 })
 
       expect(result.current).toBeTruthy()
     })
@@ -203,12 +140,14 @@ describe('Main', () => {
           useR3vlClient({
             chainId,
             provider,
-            revPathAddress: '0xB593fDaa38010CCA96b32B432eEA8Ac35e41F2c1'
+            revPathAddress: '0xD41Fa1142E29742cbFe708C20cCcd690EC4A8E03',
+            initV2Final: true,
+            revPathMetadata: JSON.parse('{"walletList":[["0x0807c5C8Fa8a8229870CFecb6E2E71Dcb6a78261","0x5Ce5892FB75F63fB3c700ffe2Ac0Bb18F53dA80a"],["0x5Ce5892FB75F63fB3c700ffe2Ac0Bb18F53dA80a"]],"distribution":[["5","95"],[100]],"tiers":[{"matic":"0.5"}],"name":"Leo Polygon test path (1 tier) ","mutabilityDisabled":false}')
           })
 
-          const r = useTransactionEvents('0xB593fDaa38010CCA96b32B432eEA8Ac35e41F2c1')
+          const r = useTransactionEvents('0xD41Fa1142E29742cbFe708C20cCcd690EC4A8E03')
 
-          console.log("META:::", r.data)
+          console.log("TXS:::", r.data)
           return r
         },
         { wrapper }
@@ -217,8 +156,41 @@ describe('Main', () => {
       await waitForNextUpdate({ timeout: 50000 })
       await waitForNextUpdate({ timeout: 50000 })
       await waitForNextUpdate({ timeout: 50000 })
+      await waitForNextUpdate({ timeout: 50000 })
+      await waitForNextUpdate({ timeout: 50000 })
+      await waitForNextUpdate({ timeout: 50000 })
+      await waitForNextUpdate({ timeout: 50000 })
 
       expect(result?.current.data).toBeTruthy()
+    })
+  })
+
+  test('Test useBalances', async () => {
+    await act(async () => {
+      const { result, waitForNextUpdate } = renderHook(
+        () => {
+          useR3vlClient({
+            chainId,
+            provider,
+            revPathAddress: '0x3E3E2d2EF041B456eaEb53E543F92e3688bec41f',
+            initV2Final: true,
+            revPathMetadata: JSON.parse('{"walletList":[["0x7001eD45D8C789417deBC101b6B0a7894Bee2337"],["0x7001eD45D8C789417deBC101b6B0a7894Bee2337","0xD6d0c9fC8F1f6cbCa3472052df3678E5b29b2DcA"]],"distribution":[[100],[50,50]],"tiers":[{"matic":"1"}],"name":"V2 Poly - GasOn TierOn MutOn","mutabilityDisabled":false}')
+          })
+
+          const r = useBalances('0x3E3E2d2EF041B456eaEb53E543F92e3688bec41f')
+
+          console.log("BALANCES:::", r.data)
+          return r.data
+        },
+        { wrapper }
+      )
+
+      await waitForNextUpdate({ timeout: 50000 })
+      await waitForNextUpdate({ timeout: 50000 })
+      await waitForNextUpdate({ timeout: 50000 })
+      await waitForNextUpdate({ timeout: 50000 })
+
+      expect(result?.current?.withdrawn).toBeGreaterThanOrEqual(0)
     })
   })
 
@@ -230,12 +202,14 @@ describe('Main', () => {
             chainId,
             provider,
             signer,
-            revPathAddress: '0xB257603b35C370a9b429C1c81ADE366006ad5232'
+            revPathAddress: '0xD41Fa1142E29742cbFe708C20cCcd690EC4A8E03',
+            initV2Final: true,
+            revPathMetadata: JSON.parse('{"walletList":[["0x0807c5C8Fa8a8229870CFecb6E2E71Dcb6a78261","0x5Ce5892FB75F63fB3c700ffe2Ac0Bb18F53dA80a"],["0x5Ce5892FB75F63fB3c700ffe2Ac0Bb18F53dA80a"]],"distribution":[["5","95"],[100]],"tiers":[{"matic":"0.5"}],"name":"Leo Polygon test path (1 tier) ","mutabilityDisabled":false}')
           })
 
-          const r = useRevenuePathTiers('0xB257603b35C370a9b429C1c81ADE366006ad5232')
+          const r = useRevenuePathTiers('0xD41Fa1142E29742cbFe708C20cCcd690EC4A8E03')
 
-          console.log("MMMMM", r.data?.[0]?.available)
+          console.log("Tiers:", r.data?.[0], r.data?.[1])
           return r
         },
         { wrapper }
@@ -243,9 +217,44 @@ describe('Main', () => {
 
       await waitForNextUpdate({ timeout: 20000 })
       await waitForNextUpdate({ timeout: 20000 })
-      await waitForNextUpdate({ timeout: 20000 })
 
       expect(result?.current.isFetched).toBeTruthy()
+    })
+  })
+
+  test('Test transferOwnership', async () => {
+    await act(async () => {
+      const { result, waitForNextUpdate } = renderHook(
+        () => {
+          const r = useR3vlClient({
+            chainId,
+            provider,
+            signer,
+            revPathAddress: '0x05e22f1706310A23C79e94798f3cc82D4B05981E',
+            initV2: true,
+          })
+
+          return r as any
+        },
+        { wrapper }
+      )
+
+      await waitForNextUpdate({ timeout: 20000 })
+
+
+      const response = result?.current &&
+        result.current["0x05e22f1706310A23C79e94798f3cc82D4B05981E"] &&
+        result.current["0x05e22f1706310A23C79e94798f3cc82D4B05981E"]?.transferOwnerhip &&
+        await result.current["0x05e22f1706310A23C79e94798f3cc82D4B05981E"]?.transferOwnerhip(
+          "0x538C138B73836b811c148B3E4c3683B7B923A0E7",
+          { isGasLess: true, gasLessKey: "td_LNEKbeMG7OK0OS159IAS3rJTQK8i0kr19NehIxcQ_" }
+        )
+
+      console.log(
+        "META::", response
+      )
+
+      expect(result).toBeTruthy()
     })
   })
 

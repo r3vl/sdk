@@ -1,5 +1,5 @@
 import { ethers } from 'ethers'
-import { R3vlClient } from './client'
+import { GeneralOpts, R3vlClient } from './client'
 
 export type FnArgs = {
   walletList: string[][],
@@ -21,9 +21,7 @@ export async function createRevenuePathV1 (
     name, 
     mutabilityEnabled 
   } : FnArgs,
-  opts?: {
-    customGasLimit?: number
-  }
+  opts?: GeneralOpts
 ) {
   const { sdk } = this
 

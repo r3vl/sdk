@@ -5,20 +5,21 @@ import { tokenList } from "../../constants/tokens"
 import { ContractTransaction } from 'ethers'
 
 
-export const useWithdraw = (revPathAddress: AddressInput) => {
+export const useWithdraw = (revPathAddress: AddressInput, opts?: { isGasLess?: boolean }) => {
   const [isFetched, setIsFetched] = useState(false)
   const [error, setError] = useState<unknown>()
   const [isLoading, setIsLoading] = useState(false)
 
   const ctx = useContext(R3vlContext)
   const client = ctx?.[revPathAddress]
+  const gasLessKey = ctx?.gasLessKey
 
   const mutate = useCallback(async ({
     walletAddress,
     isERC20,
     onTxCreated,
   }: {
-    walletAddress: string,
+    walletAddress: any,
     isERC20?: keyof typeof tokenList
     onTxCreated?: (tx: ContractTransaction) => void
   }) => {
@@ -30,7 +31,7 @@ export const useWithdraw = (revPathAddress: AddressInput) => {
       const payloadV1 = isERC20 ? { walletAddress, isERC20 } : { walletAddress }
       const payloadV2 = onTxCreated ? { ...payloadV1, onTxCreated } : payloadV1 
       
-      await client?.withdraw(payloadV2)
+      await client?.withdraw(payloadV2, { ...opts, gasLessKey })
     } catch (_error) {
       setError(_error)
     } finally {
@@ -57,7 +58,7 @@ export const useWithdraw = (revPathAddress: AddressInput) => {
       const payloadV1 = isERC20 ? { walletAddress, isERC20 } : { walletAddress }
       const payloadV2 = onTxCreated ? { ...payloadV1, onTxCreated } : payloadV1 
       
-      await client?.withdraw(payloadV2)
+      await client?.withdraw(payloadV2, { ...opts, gasLessKey })
     } catch (_error) {
       setError(_error)
     } finally {
