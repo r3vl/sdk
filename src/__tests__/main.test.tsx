@@ -172,12 +172,12 @@ describe('Main', () => {
           useR3vlClient({
             chainId,
             provider,
-            revPathAddress: '0x0685bD9FaF7D16Ad2dC018715DFE16a6d42252A4',
+            revPathAddress: '0x132d6ED403500E62712f023A0277Ee112a2C73BB',
             initV2Final: true,
-            revPathMetadata: JSON.parse('{"walletList":[["0x5e5E38626d419Df414e5AFd06121DFb041AEe2B2","0x0807c5C8Fa8a8229870CFecb6E2E71Dcb6a78261"],["0x0807c5C8Fa8a8229870CFecb6E2E71Dcb6a78261","0x5e5E38626d419Df414e5AFd06121DFb041AEe2B2"]],"distribution":[["90",10],["90",10]],"tiers":[{"eth":"0.001"}],"name":"BetaOpV2AldoTest","mutabilityDisabled":false}')
+            revPathMetadata: JSON.parse('{"walletList":[["0x0807c5C8Fa8a8229870CFecb6E2E71Dcb6a78261","0x5e5E38626d419Df414e5AFd06121DFb041AEe2B2"],["0x0807c5C8Fa8a8229870CFecb6E2E71Dcb6a78261","0x5e5E38626d419Df414e5AFd06121DFb041AEe2B2"]],"distribution":[["90",10],["90",10]],"tiers":[{"eth":"0.0001"}],"name":"aldo beta v2 OP test 3","mutabilityDisabled":false}')
           })
 
-          const r = useBalances('0x0685bD9FaF7D16Ad2dC018715DFE16a6d42252A4', { walletAddress: "0x5e5E38626d419Df414e5AFd06121DFb041AEe2B2" })
+          const r = useBalances('0x132d6ED403500E62712f023A0277Ee112a2C73BB', { walletAddress: "0x5e5E38626d419Df414e5AFd06121DFb041AEe2B2" })
 
           console.log("BALANCES:::", r.data)
           return r.data
