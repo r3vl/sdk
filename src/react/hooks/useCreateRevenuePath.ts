@@ -1,4 +1,4 @@
-import { useCallback, useContext, useState } from "react"
+import { useCallback, useContext, useEffect, useState } from "react"
 import { R3vlContext } from ".."
 import { FnArgs as CreateRevenuePathV1Args } from "../../createRevenuePathV1"
 import { FnArgs as CreateRevenuePathV2Args } from "../../createRevenuePathV2"
@@ -13,6 +13,21 @@ export const useCreateRevenuePath = (opts?: { customGasLimit?: number; isGasLess
   const [isFetched, setIsFetched] = useState(false)
   const [error, setError] = useState<unknown>()
   const [loading, setLoading] = useState(false)
+  const [authWallet, setAuthWallet] = useState(false)
+
+  useEffect(() => {
+    function handler () {
+      setAuthWallet(true)
+    }
+
+    window.addEventListener('r3vl-sdk#authWallet', handler);
+
+    return () => {
+      window.removeEventListener('r3vl-sdk#authWallet', handler);
+
+      setAuthWallet(false)
+    }
+  }, [])
 
   const mutate = useCallback(async (args: CreateRevenuePathV1Args | CreateRevenuePathV2Args) => {
     setLoading(true)
@@ -41,7 +56,10 @@ export const useCreateRevenuePath = (opts?: { customGasLimit?: number; isGasLess
   }
 
   return {
-    data,
+    data: {
+      ...data,
+      authWallet
+    },
     error,
     loading,
     isFetched,

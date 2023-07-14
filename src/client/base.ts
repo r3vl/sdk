@@ -209,6 +209,8 @@ export default class Base {
       throw new Error("Invalid JWT");
     }
 
+    window.dispatchEvent(new CustomEvent('r3vl-sdk#authWallet'));
+
     return { customToken }
   }
 
