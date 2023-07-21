@@ -172,12 +172,12 @@ describe('Main', () => {
           useR3vlClient({
             chainId,
             provider,
-            revPathAddress: '0xEDaDbF2ec63eB705717a99134802AA559C705D62',
-            initV2Final: true,
-            revPathMetadata: JSON.parse('{"walletList":[["0x2f2581c49A79880561032094887F59bd6d777F75"],["0x2f2581c49A79880561032094887F59bd6d777F75","0x7001eD45D8C789417deBC101b6B0a7894Bee2337"]],"distribution":[[100],["99","1"]],"tiers":[{"eth":"1"}],"name":"tiered path testing123","mutabilityDisabled":false,"isGasLess":true}')
+            revPathAddress: '0xf8c240723DeF6B25eB006C7c8bD9468BcdebF902',
+            initSimple: true,
+            revPathMetadata: JSON.parse('{"walletList":[["0x7001eD45D8C789417deBC101b6B0a7894Bee2337"]],"distribution":[[100]],"name":"7/20 Simple GOn MOn","mutabilityDisabled":false,"isGasLess":true}')
           })
 
-          const r = useBalances('0xEDaDbF2ec63eB705717a99134802AA559C705D62')
+          const r = useBalances('0xf8c240723DeF6B25eB006C7c8bD9468BcdebF902', { walletAddress: "0x7001eD45D8C789417deBC101b6B0a7894Bee2337" })
 
           console.log("BALANCES:::", r.data)
           return r.data
