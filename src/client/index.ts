@@ -320,7 +320,7 @@ export class R3vlClient extends Base {
       },
       withdrawable: (args?: WithdrawableSimpleArgs) => withdrawableSimple.call(this, args),
       withdrawn: (args?: WithdrawnV2Args) => withdrawnFundsSimple.call(this, args),
-      withdraw: (args: WithdrawV2FinalArgs) => withdrawFundsSimple.call(this, args),
+      withdraw: (args: WithdrawV2FinalArgs, opts?: GaslessOpts) => withdrawFundsSimple.call(this, args, opts),
       transactionEvents: (revPath: string) => getRevPathTransactionEventsSimple.call(this, revPath),
       createRevenuePath: (args: CreateRevenuePathV2Args, opts?: GeneralOpts & GaslessOpts) => createRevenuePathSimple.call(this, args, opts),
       updateRevenueTiers: (args: UpdateRevenueTiersV2Args) => updateRevenueTiersSimple.call(this, args),

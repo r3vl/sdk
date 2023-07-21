@@ -172,12 +172,12 @@ describe('Main', () => {
           useR3vlClient({
             chainId,
             provider,
-            revPathAddress: '0x132d6ED403500E62712f023A0277Ee112a2C73BB',
+            revPathAddress: '0xEDaDbF2ec63eB705717a99134802AA559C705D62',
             initV2Final: true,
-            revPathMetadata: JSON.parse('{"walletList":[["0x0807c5C8Fa8a8229870CFecb6E2E71Dcb6a78261","0x5e5E38626d419Df414e5AFd06121DFb041AEe2B2"],["0x0807c5C8Fa8a8229870CFecb6E2E71Dcb6a78261","0x5e5E38626d419Df414e5AFd06121DFb041AEe2B2"]],"distribution":[["90",10],["90",10]],"tiers":[{"eth":"0.0001"}],"name":"aldo beta v2 OP test 3","mutabilityDisabled":false}')
+            revPathMetadata: JSON.parse('{"walletList":[["0x2f2581c49A79880561032094887F59bd6d777F75"],["0x2f2581c49A79880561032094887F59bd6d777F75","0x7001eD45D8C789417deBC101b6B0a7894Bee2337"]],"distribution":[[100],["99","1"]],"tiers":[{"eth":"1"}],"name":"tiered path testing123","mutabilityDisabled":false,"isGasLess":true}')
           })
 
-          const r = useBalances('0x132d6ED403500E62712f023A0277Ee112a2C73BB', { walletAddress: "0x5e5E38626d419Df414e5AFd06121DFb041AEe2B2" })
+          const r = useBalances('0xEDaDbF2ec63eB705717a99134802AA559C705D62')
 
           console.log("BALANCES:::", r.data)
           return r.data

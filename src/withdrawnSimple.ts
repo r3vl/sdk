@@ -21,22 +21,23 @@ export async function withdrawnFundsSimple(this: R3vlClient, payload?: FnArgs) {
 
   const { walletAddress, isERC20 } = payload || { walletAddress: undefined, isERC20: undefined }
 
-  try {
-    let released = walletAddress ? await revPathSimpleRead.getTokenWithdrawn(
-      isERC20 ? tokenList[isERC20][_chainId] : AddressZero,
-      walletAddress
-    ) : await revPathSimpleRead.getTotalTokenReleased(isERC20 ? tokenList[isERC20][_chainId] : AddressZero)
+  let released = walletAddress ? await revPathSimpleRead.getTokenWithdrawn(
+    isERC20 ? tokenList[isERC20][_chainId] : AddressZero,
+    walletAddress
+  ) : await revPathSimpleRead.getTotalTokenReleased(isERC20 ? tokenList[isERC20][_chainId] : AddressZero)
 
-    if (isERC20) {
-      const decimals = await (sdk as any)[isERC20].decimals()
-  
-      released = ethers.utils.parseEther(ethers.utils.formatUnits(released.toString(), decimals))
-    }
+  if (isERC20) {
+    const decimals = await (sdk as any)[isERC20].decimals()
 
-    const result = parseFloat(ethers.utils.formatEther(released))
-
-    return result
-  } catch (error) {
-    console.error(error)
+    released = ethers.utils.parseEther(ethers.utils.formatUnits(released.toString(), decimals))
   }
+
+  const isFeeRequired = await revPathSimpleRead.getFeeRequirementStatus()
+
+  const pF = await revPathSimpleRead.
+  const fee = (pF.toNumber() / 10000000) + 0.0002
+
+  const result = isFeeRequired ? parseFloat(ethers.utils.formatEther(released)) + parseFloat(ethers.utils.formatEther(released)) * fee : parseFloat(ethers.utils.formatEther(released))
+
+  return result
 }

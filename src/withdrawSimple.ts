@@ -34,16 +34,16 @@ export async function withdrawFundsSimple(this: R3vlClient, { walletAddress, sho
 
       if (walletAddress) {
         if (isERC20) {
-          console.log("WITHDRAW/RELEASE_PAYLOAD_GASLESS:::", AddressZero, walletAddress, revPathMetadata.walletList, revPathMetadata.distribution, shouldDistribute)
+          console.log("WITHDRAW/RELEASE_PAYLOAD_GASLESS:::", AddressZero, walletAddress, revPathMetadata.walletList[0], revPathMetadata.distribution[0], shouldDistribute)
   
-          r = await revPathSimpleWrite.populateTransaction.release(tokenList[isERC20][_chainId], walletAddress, revPathMetadata.walletList, revPathMetadata.distribution, shouldDistribute)
+          r = await revPathSimpleWrite.populateTransaction.release(tokenList[isERC20][_chainId], walletAddress, revPathMetadata.walletList[0], revPathMetadata.distribution[0], shouldDistribute)
         } else {
-          console.log("WITHDRAW/RELEASE_PAYLOAD_GASLESS:::", AddressZero, walletAddress, revPathMetadata.walletList, revPathMetadata.distribution, shouldDistribute)
+          console.log("WITHDRAW/RELEASE_PAYLOAD_GASLESS:::", AddressZero, walletAddress, revPathMetadata.walletList[0], revPathMetadata.distribution[0], shouldDistribute)
   
-          r = await revPathSimpleWrite.populateTransaction.release(AddressZero, walletAddress, revPathMetadata.walletList, revPathMetadata.distribution, shouldDistribute)
+          r = await revPathSimpleWrite.populateTransaction.release(AddressZero, walletAddress, revPathMetadata.walletList[0], revPathMetadata.distribution[0], shouldDistribute)
         }
       } else {
-        r = await revPathSimpleWrite.distributePendingTokens(isERC20 ? tokenList[isERC20][_chainId] : AddressZero, revPathMetadata.walletList, revPathMetadata.distribution)
+        r = await revPathSimpleWrite.distributePendingTokens(isERC20 ? tokenList[isERC20][_chainId] : AddressZero, revPathMetadata.walletList[0], revPathMetadata.distribution)
       }
 
       const request = {
@@ -64,16 +64,16 @@ export async function withdrawFundsSimple(this: R3vlClient, { walletAddress, sho
 
     if (walletAddress) {
       if (isERC20) {
-        const gasLimit = increaseGasLimit(await revPathSimpleWrite.estimateGas.release(tokenList[isERC20][_chainId], walletAddress, revPathMetadata.walletList, revPathMetadata.distribution, shouldDistribute))
+        const gasLimit = increaseGasLimit(await revPathSimpleWrite.estimateGas.release(tokenList[isERC20][_chainId], walletAddress, revPathMetadata.walletList[0], revPathMetadata.distribution[0], shouldDistribute))
 
-        tx = await revPathSimpleWrite.release(tokenList[isERC20][_chainId], walletAddress, revPathMetadata.walletList, revPathMetadata.distribution, shouldDistribute, { gasLimit })
+        tx = await revPathSimpleWrite.release(tokenList[isERC20][_chainId], walletAddress, revPathMetadata.walletList[0], revPathMetadata.distribution[0], shouldDistribute, { gasLimit })
       } else {
-        const gasLimit = increaseGasLimit(await revPathSimpleWrite.estimateGas.release(AddressZero, walletAddress, revPathMetadata.walletList, revPathMetadata.distribution, shouldDistribute))
+        const gasLimit = increaseGasLimit(await revPathSimpleWrite.estimateGas.release(AddressZero, walletAddress, revPathMetadata.walletList[0], revPathMetadata.distribution[0], shouldDistribute))
 
-        tx = await revPathSimpleWrite.release(AddressZero, walletAddress, revPathMetadata.walletList, revPathMetadata.distribution, shouldDistribute, { gasLimit })
+        tx = await revPathSimpleWrite.release(AddressZero, walletAddress, revPathMetadata.walletList[0], revPathMetadata.distribution[0], shouldDistribute, { gasLimit })
       }
     } else {
-      tx = await revPathSimpleWrite.distributePendingTokens(isERC20 ? tokenList[isERC20][_chainId] : AddressZero, revPathMetadata.walletList, revPathMetadata.distribution)
+      tx = await revPathSimpleWrite.distributePendingTokens(isERC20 ? tokenList[isERC20][_chainId] : AddressZero, revPathMetadata.walletList[0], revPathMetadata.distribution)
     }
 
     onTxCreated && tx && onTxCreated(tx)
