@@ -35,7 +35,7 @@ export async function withdrawnFundsV2Final(this: R3vlClient, payload?: FnArgs) 
   const isFeeRequired = await revPathV2FinalRead.getFeeRequirementStatus()
 
   const pF = await revPathV2FinalRead.getPlatformFee()
-  const fee = (pF.toNumber() / 10000000) + 0.0002
+  const fee = (pF.toNumber() / 10000000)
 
   const result = isFeeRequired || pF.toNumber() > 0 ? parseFloat(ethers.utils.formatEther(released)) + parseFloat(ethers.utils.formatEther(released)) * fee : parseFloat(ethers.utils.formatEther(released))
 
