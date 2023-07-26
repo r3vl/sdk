@@ -2,6 +2,7 @@ import { ethers } from 'ethers'
 
 import { chainIds, tokenList } from "./constants/tokens"
 import { R3vlClient } from './client'
+import { withdrawFundsSimple } from './withdrawSimple'
 
 export type FnArgs = {
   walletAddress?: string
@@ -20,6 +21,10 @@ export async function withdrawnFundsSimple(this: R3vlClient, payload?: FnArgs) {
   const AddressZero = /* _chainId === chainIds.polygonMumbai || _chainId === chainIds.polygon ? '0x0000000000000000000000000000000000001010' : */ ethers.constants.AddressZero
 
   const { walletAddress, isERC20 } = payload || { walletAddress: undefined, isERC20: undefined }
+
+  const isTxValid = await withdrawFundsSimple.call(this, { walletAddress: [walletAddress as string], shouldDistribute: true, isERC20, estimateOnly: true })
+
+  if (isTxValid === -1) return isTxValid
 
   let released = walletAddress ? await revPathSimpleRead.getTokenWithdrawn(
     isERC20 ? tokenList[isERC20][_chainId] : AddressZero,

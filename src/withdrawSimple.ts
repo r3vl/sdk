@@ -9,12 +9,13 @@ export type FnArgs = {
   shouldDistribute?: boolean
   isERC20?: keyof typeof tokenList
   onTxCreated?: (tx: ContractTransaction) => void
+  estimateOnly?: boolean
 }
 
 /**
  *  V2
  */
-export async function withdrawFundsSimple(this: R3vlClient, { walletAddress, shouldDistribute = true, isERC20, onTxCreated }: FnArgs, opts?: GaslessOpts) {
+export async function withdrawFundsSimple(this: R3vlClient, { walletAddress, shouldDistribute = true, isERC20, onTxCreated, estimateOnly = false }: FnArgs, opts?: GaslessOpts) {
   const { revPathSimpleWrite, _chainId, _revPathAddress, relay } = this
   const revPathMetadata = JSON.parse(localStorage.getItem(`r3vl-metadata-${_revPathAddress}`) || "")
 
@@ -43,8 +44,10 @@ export async function withdrawFundsSimple(this: R3vlClient, { walletAddress, sho
           r = await revPathSimpleWrite.populateTransaction.release(AddressZero, walletAddress, revPathMetadata.walletList[0], revPathMetadata.distribution[0], shouldDistribute)
         }
       } else {
-        r = await revPathSimpleWrite.distributePendingTokens(isERC20 ? tokenList[isERC20][_chainId] : AddressZero, revPathMetadata.walletList[0], revPathMetadata.distribution)
+        r = await revPathSimpleWrite.populateTransaction.distributePendingTokens(isERC20 ? tokenList[isERC20][_chainId] : AddressZero, revPathMetadata.walletList[0], revPathMetadata.distribution)
       }
+
+      if (estimateOnly) return
 
       const request = {
         chainId: _chainId,
@@ -66,14 +69,22 @@ export async function withdrawFundsSimple(this: R3vlClient, { walletAddress, sho
       if (isERC20) {
         const gasLimit = increaseGasLimit(await revPathSimpleWrite.estimateGas.release(tokenList[isERC20][_chainId], walletAddress, revPathMetadata.walletList[0], revPathMetadata.distribution[0], shouldDistribute))
 
+        if (estimateOnly) return
+
         tx = await revPathSimpleWrite.release(tokenList[isERC20][_chainId], walletAddress, revPathMetadata.walletList[0], revPathMetadata.distribution[0], shouldDistribute, { gasLimit })
       } else {
         const gasLimit = increaseGasLimit(await revPathSimpleWrite.estimateGas.release(AddressZero, walletAddress, revPathMetadata.walletList[0], revPathMetadata.distribution[0], shouldDistribute))
 
+        if (estimateOnly) return
+
         tx = await revPathSimpleWrite.release(AddressZero, walletAddress, revPathMetadata.walletList[0], revPathMetadata.distribution[0], shouldDistribute, { gasLimit })
       }
     } else {
-      tx = await revPathSimpleWrite.distributePendingTokens(isERC20 ? tokenList[isERC20][_chainId] : AddressZero, revPathMetadata.walletList[0], revPathMetadata.distribution)
+      const gasLimit = increaseGasLimit(await revPathSimpleWrite.estimateGas.distributePendingTokens(isERC20 ? tokenList[isERC20][_chainId] : AddressZero, revPathMetadata.walletList[0], revPathMetadata.distribution))
+
+      if (estimateOnly) return
+
+      tx = await revPathSimpleWrite.distributePendingTokens(isERC20 ? tokenList[isERC20][_chainId] : AddressZero, revPathMetadata.walletList[0], revPathMetadata.distribution, { gasLimit })
     }
 
     onTxCreated && tx && onTxCreated(tx)
@@ -83,7 +94,7 @@ export async function withdrawFundsSimple(this: R3vlClient, { walletAddress, sho
 
     return event?.args && ethers.utils.formatEther(event?.args[1])
   } catch (error) {
-    console.error(error)
+    return -1
   }
 }
 

@@ -22,7 +22,7 @@ describe('Main', () => {
 
   const provider = communityProvider()
   const signer = communitySigner()
-  const chainId = 10
+  const chainId = 137
   const wrapper = ({ children }: { children: any }) => {
     return (
       <R3vlProvider client={client}>
@@ -172,12 +172,13 @@ describe('Main', () => {
           useR3vlClient({
             chainId,
             provider,
-            revPathAddress: '0xf8c240723DeF6B25eB006C7c8bD9468BcdebF902',
-            initSimple: true,
-            revPathMetadata: JSON.parse('{"walletList":[["0x7001eD45D8C789417deBC101b6B0a7894Bee2337"]],"distribution":[[100]],"name":"7/20 Simple GOn MOn","mutabilityDisabled":false,"isGasLess":true}')
+            signer,
+            revPathAddress: '0x55251F6D3DE71fa2435dBE35cBBE53d1e9d306D6',
+            initV2Final: true,
+            revPathMetadata: JSON.parse('{"walletList":[["0x7001eD45D8C789417deBC101b6B0a7894Bee2337"],["0x7001eD45D8C789417deBC101b6B0a7894Bee2337"]],"distribution":[[100],[100]],"tiers":[{"matic":"1"}],"name":"V2 Path GasOff TierOn MutOff","mutabilityDisabled":true}')
           })
 
-          const r = useBalances('0xf8c240723DeF6B25eB006C7c8bD9468BcdebF902', { walletAddress: "0x7001eD45D8C789417deBC101b6B0a7894Bee2337" })
+          const r = useBalances('0x55251F6D3DE71fa2435dBE35cBBE53d1e9d306D6', { walletAddress: "0x7001eD45D8C789417deBC101b6B0a7894Bee2337" })
 
           console.log("BALANCES:::", r.data)
           return r.data
