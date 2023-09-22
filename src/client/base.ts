@@ -22,7 +22,8 @@ import {
   getOptimismSdk,
   getOptimismGoerliSdk,
   getAuroraSdk,
-  getAuroraTestnetSdk
+  getAuroraTestnetSdk,
+  getBaseSdk
 } from '@dethcrypto/eth-sdk-client'
 import { ethers } from 'ethers'
 import axios from 'axios';
@@ -42,7 +43,8 @@ const sdks = {
   [chainIds.optimism]: getOptimismSdk,
   [chainIds.optimismGoerli]: getOptimismGoerliSdk,
   [chainIds.aurora]: getAuroraSdk,
-  [chainIds.auroraTestnet]: getAuroraTestnetSdk
+  [chainIds.auroraTestnet]: getAuroraTestnetSdk,
+  [chainIds.base]: getBaseSdk
 }
 
 // const db = new Polybase({
