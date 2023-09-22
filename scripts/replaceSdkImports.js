@@ -7,7 +7,7 @@ const replaceSdkClientPath = async () => {
     from: /@dethcrypto\/eth-sdk-client/g,
     to: './sdk-client'
   }
-  
+
   try {
     const results = await replace(options)
 

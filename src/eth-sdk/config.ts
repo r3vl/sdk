@@ -136,10 +136,27 @@ export default defineConfig({
       weth: '0x0000000000000000000000000000000000000000',
       usdc: '0x0000000000000000000000000000000000000000',
       dai: '0x0000000000000000000000000000000000000000'
+    },
+    base: {
+      reveelMainV1: '0x0000000000000000000000000000000000000000',
+      reveelMainV2: '0x0000000000000000000000000000000000000000',
+      reveelMainV2Final: '0xea4dA7b550220534321C92197629b0BCa9bD451c',
+      reveelMainSimple: '0x2cA5bcc99a4eB479F97B897BedCE46BC899fb310',
+      pathLibraryV1: '0x0000000000000000000000000000000000000000',
+      pathLibraryV2: '0x0000000000000000000000000000000000000000',
+      pathLibraryV2Final: '0x698A4Ccd56Cf95d489Ba5d5DC00C5A2BEA9837C4',
+      pathLibrarySimple: '0x9f5808662520633DaeB0f30ef6659e64189Cb193',
+      weth: '0x0000000000000000000000000000000000000000',
+      usdc: '0x0000000000000000000000000000000000000000',
+      dai: '0x0000000000000000000000000000000000000000'
     }
+  },
+  networkIds: {
+    base: 8453
   },
   rpc: {
     arbitrumTestnet: 'https://arb-goerli.g.alchemy.com/v2/Ila4k42v7NUxN-gJnfnyzjBS-aj07z8I',
-    arbitrumOne: 'https://arb-mainnet.g.alchemy.com/v2/IzeL7B7NiRF0FAkq-LQn3aTmfKYv2QLm'
+    arbitrumOne: 'https://arb-mainnet.g.alchemy.com/v2/IzeL7B7NiRF0FAkq-LQn3aTmfKYv2QLm',
+    base: 'https://base-mainnet.g.alchemy.com/v2/PAyrpX8_xncqUvxj2UzpoddTgplTfb-j'
   },
 })
