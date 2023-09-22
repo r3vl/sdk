@@ -32,7 +32,7 @@
   },
   {
     "inputs": [],
-    "name": "PlatformFeeNotAppropriate",
+    "name": "FeeNotAppropriate",
     "type": "error"
   },
   {
@@ -90,7 +90,7 @@
       {
         "indexed": true,
         "internalType": "bool",
-        "name": "enabledGassless",
+        "name": "enabledGasless",
         "type": "bool"
       },
       {
@@ -127,6 +127,19 @@
     "inputs": [
       {
         "indexed": false,
+        "internalType": "uint32",
+        "name": "newFeePercentage",
+        "type": "uint32"
+      }
+    ],
+    "name": "UpdatedGasFee",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
         "internalType": "address",
         "name": "newLibrary",
         "type": "address"
@@ -152,7 +165,7 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "newWallet",
         "type": "address"
@@ -203,7 +216,7 @@
       },
       {
         "internalType": "bool",
-        "name": "enableGassless",
+        "name": "enableGasless",
         "type": "bool"
       },
       {
@@ -221,6 +234,19 @@
       }
     ],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getGasFee",
+    "outputs": [
+      {
+        "internalType": "uint32",
+        "name": "",
+        "type": "uint32"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -323,6 +349,19 @@
   {
     "inputs": [],
     "name": "renounceOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint32",
+        "name": "newGasPercentage",
+        "type": "uint32"
+      }
+    ],
+    "name": "setGasFee",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
