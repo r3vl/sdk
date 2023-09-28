@@ -1,4 +1,4 @@
-[
+ [
   {
     "inputs": [
       {
@@ -108,6 +108,19 @@
     "anonymous": false,
     "inputs": [
       {
+        "indexed": true,
+        "internalType": "address",
+        "name": "forwarder",
+        "type": "address"
+      }
+    ],
+    "name": "TrustedForwarderUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
         "indexed": false,
         "internalType": "address",
         "name": "account",
@@ -134,7 +147,7 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "newLibrary",
         "type": "address"
@@ -147,7 +160,7 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
+        "indexed": true,
         "internalType": "address",
         "name": "newWallet",
         "type": "address"
@@ -188,7 +201,7 @@
       },
       {
         "internalType": "bool",
-        "name": "enableGassless",
+        "name": "enableGasless",
         "type": "bool"
       },
       {
