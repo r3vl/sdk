@@ -1,5 +1,5 @@
 import { ethers } from "ethers"
-import { MainnetSdk, GoerliSdk, PolygonSdk, PolygonMumbaiSdk, ArbitrumOneSdk, ArbitrumTestnetSdk } from "@dethcrypto/eth-sdk-client"
+import { MainnetSdk, GoerliSdk, PolygonSdk, PolygonMumbaiSdk, ArbitrumOneSdk, ArbitrumTestnetSdk, BaseSdk } from "@dethcrypto/eth-sdk-client"
 import { RelayResponse } from "@gelatonetwork/relay-sdk"
 import axios from "axios"
 
@@ -114,7 +114,7 @@ export class R3vlClient extends Base {
   revPathV2FinalWrite?: PathLibraryV2Final
   revPathSimpleRead?: PathLibrarySimple
   revPathSimpleWrite?: PathLibrarySimple
-  sdk?: MainnetSdk | GoerliSdk | PolygonSdk | PolygonMumbaiSdk | ArbitrumOneSdk | ArbitrumTestnetSdk
+  sdk?: MainnetSdk | GoerliSdk | PolygonSdk | PolygonMumbaiSdk | ArbitrumOneSdk | ArbitrumTestnetSdk | BaseSdk
   relay?: { signatureCall: any }
   apiSigner?: { signCreateRevenuePath: any, signUpdateRevenuePath: any, authWallet: () => Promise<{ customToken: string }> }
   revPathMetadata?: { walletList: [[string]]; distribution: [[number]], tiers: {[t: string]: number}[] }

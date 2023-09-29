@@ -51,16 +51,21 @@ export async function tiersV2Final(this: R3vlClient, opts?: GeneralOpts): Promis
   const walletsDistributedDAIPromise = withdrawableTiersV2Final.call(_context, { isERC20: 'dai' })
 
   const [
-    walletsDistributedETH,
-    walletsDistributedWETH,
-    walletsDistributedUSDC,
-    walletsDistributedDAI,
-  ] = await Promise.all([
+    _walletsDistributedETH,
+    _walletsDistributedWETH,
+    _walletsDistributedUSDC,
+    _walletsDistributedDAI,
+  ] = (await Promise.allSettled([
     walletsDistributedETHPromise,
     walletsDistributedWETHPromise,
     walletsDistributedUSDCPromise,
     walletsDistributedDAIPromise,
-  ])
+  ])) as any
+
+  const walletsDistributedETH =_walletsDistributedETH.value || 0
+  const walletsDistributedWETH = _walletsDistributedWETH.value || 0
+  const walletsDistributedUSDC = _walletsDistributedUSDC.value || 0
+  const walletsDistributedDAI = _walletsDistributedDAI.value || 0
 
   for (let i = 0; i < tiersNumber?.toNumber(); i++) {
     const walletList = (revPathMetadata?.walletList[i] || []) as string[]
