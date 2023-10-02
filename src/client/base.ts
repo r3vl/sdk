@@ -1,6 +1,6 @@
 import { Provider } from '@ethersproject/abstract-provider'
 import { Signer } from '@ethersproject/abstract-signer'
-import { GelatoRelay, CallWithERC2771Request } from "@gelatonetwork/relay-sdk"
+import { GelatoRelay, CallWithERC2771Request, SignerOrProvider } from "@gelatonetwork/relay-sdk"
 import { Polybase } from "@polybase/client";
 
 import {
@@ -131,15 +131,15 @@ export default class Base {
   }
   
   async signatureCall(request: CallWithERC2771Request, gasLessKey: string) {
-    const { _provider } = this
-    const web3Provider = new ethers.providers.Web3Provider((web3 as any).currentProvider)
+    const { _provider, _signer } = this
+    // const web3Provider = new ethers.providers.Web3Provider((web3 as any).currentProvider)
     const user = await this._signer?.getAddress()
 
-    if (!user || !gasLessKey) throw new Error("Can't execute Gelato SDK.")
+    if (!user || !gasLessKey || !_signer) throw new Error("Can't execute Gelato SDK.")
 
     const { taskId } = await relay.sponsoredCallERC2771(
       { ...request, user },
-      web3Provider,
+      _signer as unknown as SignerOrProvider,
       gasLessKey
     )
 
