@@ -33,7 +33,7 @@ export async function withdrawnFundsV2(this: R3vlClient, payload?: FnArgs) {
 
     const totalTiers = await revPathV2Read.getTotalRevenueTiers()
 
-    const result = totalTiers.toNumber() > 1 ? parseFloat(ethers.formatEther(released)) + parseFloat(ethers.formatEther(released)) * 0.0102 : parseFloat(ethers.formatEther(released))
+    const result = totalTiers > 1 ? parseFloat(ethers.formatEther(released)) + parseFloat(ethers.formatEther(released)) * 0.0102 : parseFloat(ethers.formatEther(released))
 
     return result
   } catch (error) {

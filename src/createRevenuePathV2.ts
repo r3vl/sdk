@@ -133,7 +133,7 @@ export async function createRevenuePathV2(
       const errorData = error?.error?.data?.originalError?.data;
 
       if (errorData) {
-        throw pathLibraryContract.interface.parseError(errorData);
+        throw errorData;
       }
     }
     throw error

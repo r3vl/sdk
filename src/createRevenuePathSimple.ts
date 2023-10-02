@@ -140,7 +140,7 @@ export async function createRevenuePathSimple(
       const errorData = error?.error?.data?.originalError?.data;
 
       if (errorData) {
-        throw pathLibraryContract.interface.parseError(errorData);
+        throw errorData;
       }
     }
 

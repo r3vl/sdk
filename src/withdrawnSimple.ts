@@ -39,9 +39,9 @@ export async function withdrawnFundsSimple(this: R3vlClient, payload?: FnArgs) {
 
   const pF: any = await revPathSimpleRead.getGasFee()
 
-  const fee = (pF.toNumber() / 10000000)
+  const fee = (pF / 10000000)
 
-  const result = pF.toNumber() > 0 ? parseFloat(ethers.formatEther(released)) + parseFloat(ethers.formatEther(released)) * fee : parseFloat(ethers.formatEther(released))
+  const result = pF > 0 ? parseFloat(ethers.formatEther(released)) + parseFloat(ethers.formatEther(released)) * fee : parseFloat(ethers.formatEther(released))
 
   return result
 }

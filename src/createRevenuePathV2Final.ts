@@ -166,11 +166,11 @@ export async function createRevenuePathV2Final(
       }
     )
 
-    const result = await tx.wait()
+    // const result = await tx.wait()
 
-    await storeDB(result, customToken)
+    // await storeDB(result, customToken)
 
-    return result
+    return tx
   } catch (error: any) {
     console.error(error, 'createRevenuePathV2 Error')
 
@@ -180,7 +180,7 @@ export async function createRevenuePathV2Final(
       const errorData = error?.error?.data?.originalError?.data;
 
       if (errorData) {
-        throw pathLibraryContract.interface.parseError(errorData);
+        throw errorData
       }
     }
 

@@ -43,9 +43,9 @@ import { addRevenueTiersV2, FnArgs as AddRevenueTiersV2Args } from "../addRevenu
 import { createRevenuePathV1, FnArgs as CreateRevenuePathV1Args } from "../createRevenuePathV1"
 import { createRevenuePathV2, FnArgs as CreateRevenuePathV2Args } from "../createRevenuePathV2"
 import { createRevenuePathV2Final } from "../createRevenuePathV2Final"
-import { RevenuePathCreatedEventObject as RevenuePathCreatedEventV0 } from "../typechain/ReveelMainV0"
-import { RevenuePathCreatedEventObject as RevenuePathCreatedEventV1 } from "../typechain/ReveelMainV1"
-import { RevenuePathCreatedEventObject as RevenuePathCreatedEventV2 } from "../typechain/ReveelMainV2"
+import { RevenuePathCreatedEvent as RevenuePathCreatedEventV0 } from "../typechain/ReveelMainV0"
+import { RevenuePathCreatedEvent as RevenuePathCreatedEventV1 } from "../typechain/ReveelMainV1"
+import { RevenuePathCreatedEvent as RevenuePathCreatedEventV2 } from "../typechain/ReveelMainV2"
 import { transferOwnershipV2Final } from "../transferOwnershipV2Final"
 import { updateRevenueTiersV2Final } from "../updateRevenueTiersV2Final"
 import { updateLimitsV2Final } from "../updateLimitsV2Final"
@@ -65,9 +65,9 @@ export type RevenuePathsList = {
     MainnetSdk["pathLibraryV1"] |
     MainnetSdk["pathLibraryV2"],
   eventPayload:
-    RevenuePathCreatedEventV0 |
-    RevenuePathCreatedEventV1 |
-    RevenuePathCreatedEventV2
+    RevenuePathCreatedEventV0.Event |
+    RevenuePathCreatedEventV1.Event |
+    RevenuePathCreatedEventV2.Event
 }[]
 
 export type GeneralOpts = {
