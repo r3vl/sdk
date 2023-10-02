@@ -27,12 +27,12 @@ export async function withdrawFundsV2(this: R3vlClient, { walletAddress, isERC20
 
         tx = await revPathV2Write.release(tokenList[isERC20][_chainId], walletAddress, { gasLimit })
       } else {
-        const gasLimit = increaseGasLimit(await revPathV2Write.estimateGas.release(ethers.constants.AddressZero, walletAddress))
+        const gasLimit = increaseGasLimit(await revPathV2Write.estimateGas.release(ethers.ZeroAddress, walletAddress))
 
-        tx = await revPathV2Write.release(ethers.constants.AddressZero, walletAddress, { gasLimit })
+        tx = await revPathV2Write.release(ethers.ZeroAddress, walletAddress, { gasLimit })
       }
     } else {
-      tx = await revPathV2Write.distributePendingTokens(isERC20 ? tokenList[isERC20][_chainId] : ethers.constants.AddressZero)
+      tx = await revPathV2Write.distributePendingTokens(isERC20 ? tokenList[isERC20][_chainId] : ethers.ZeroAddress)
     }
 
     onTxCreated && tx && onTxCreated(tx)
@@ -40,7 +40,7 @@ export async function withdrawFundsV2(this: R3vlClient, { walletAddress, isERC20
     const result = await tx?.wait()
     const [event] = result?.events || [{ args: [] }]
 
-    return event?.args && ethers.utils.formatEther(event?.args[1])
+    return event?.args && ethers.formatEther(event?.args[1])
   } catch (error) {
     console.error(error)
   }
@@ -58,10 +58,10 @@ export async function withdrawFundsGasLessV2(this: R3vlClient, { walletAddress, 
       if (isERC20) {
         tx = await revPathV2Write.populateTransaction.release(tokenList[isERC20][_chainId], walletAddress)
       } else {
-        tx = await revPathV2Write.populateTransaction.release(ethers.constants.AddressZero, walletAddress)
+        tx = await revPathV2Write.populateTransaction.release(ethers.ZeroAddress, walletAddress)
       }
     } else {
-      tx = await revPathV2Write.populateTransaction.distributePendingTokens(isERC20 ? tokenList[isERC20][_chainId] : ethers.constants.AddressZero)
+      tx = await revPathV2Write.populateTransaction.distributePendingTokens(isERC20 ? tokenList[isERC20][_chainId] : ethers.ZeroAddress)
     }
 
     const request = {

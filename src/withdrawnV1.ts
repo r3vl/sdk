@@ -24,12 +24,12 @@ export async function withdrawnV1(this: R3vlClient, payload?: FnArgs) {
     if (isERC20) {
       const released = await revPathV1Read.getERC20Released(tokenList[isERC20][_chainId], walletAddress)
 
-      return parseFloat(ethers.utils.formatEther(released))
+      return parseFloat(ethers.formatEther(released))
     }
 
     const released = await revPathV1Read.getEthWithdrawn(walletAddress)
 
-    return parseFloat(ethers.utils.formatEther(released))
+    return parseFloat(ethers.formatEther(released))
   } catch (error) {
     console.error(error)
   }

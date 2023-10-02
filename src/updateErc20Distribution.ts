@@ -17,7 +17,7 @@ export async function updateErc20Distribution (
 
   if (!revPathV1Write || !sdk) return
 
-  const formatedDistribution = distribution.map(item => Number(ethers.utils.parseUnits(item.toString(), 5).toString()))
+  const formatedDistribution = distribution.map(item => Number(ethers.parseUnits(item.toString(), 5).toString()))
 
   try {
     const tx = await revPathV1Write.updateErc20Distribution(

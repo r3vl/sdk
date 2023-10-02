@@ -22,7 +22,7 @@ export async function tiersSimple(this: R3vlClient, opts?: GeneralOpts): Promise
 
   if (!revPathSimpleRead || !sdk) throw new Error("ERROR:.")
 
-  const AddressZero = _chainId === chainIds.polygonMumbai || _chainId === chainIds.polygon ? '0x0000000000000000000000000000000000001010' : ethers.constants.AddressZero
+  const AddressZero = _chainId === chainIds.polygonMumbai || _chainId === chainIds.polygon ? '0x0000000000000000000000000000000000001010' : ethers.ZeroAddress
 
   const tiersNumber = 1
   const tiers = []
@@ -59,13 +59,13 @@ export async function tiersSimple(this: R3vlClient, opts?: GeneralOpts): Promise
     for (const wallet of walletList) {
       const p = parseWalletTier(revPathMetadata, i, walletList.indexOf(wallet)).proportion
 
-      proportions[wallet] =  parseFloat(ethers.utils.formatEther(p))
+      proportions[wallet] =  parseFloat(ethers.formatEther(p))
 
       available[wallet] = {
         [AddressZero]: walletsDistributedETH[i][wallet],
-        [sdk.weth.address]: walletsDistributedWETH[i][wallet],
-        [sdk.usdc.address]: walletsDistributedUSDC[i][wallet],
-        [sdk.dai.address]: walletsDistributedDAI[i][wallet],
+        [sdk.weth.target]: walletsDistributedWETH[i][wallet],
+        [sdk.usdc.target]: walletsDistributedUSDC[i][wallet],
+        [sdk.dai.target]: walletsDistributedDAI[i][wallet],
       }
     }
 

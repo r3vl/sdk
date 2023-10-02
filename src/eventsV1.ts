@@ -21,7 +21,7 @@ export async function getRevenuePathsV1(this: R3vlClient, opts?: {
 
   if (!library) return null
 
-  const pathsEventPayload: { [address: string]: RevenuePathCreatedEvent } = {}
+  const pathsEventPayload: { [address: string]: any } = {}
 
   const allPaths = await contract.queryFilter(
     contract.filters.RevenuePathCreated(),

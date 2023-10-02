@@ -16,7 +16,7 @@
     "build": "yarn lint && yarn build:js && yarn get-abis && yarn sdk-client:imports",
     "build:js": "rollup -c rollup.config.mjs",
     "get-abis": "eth-sdk",
-    "typechain": "typechain --target ethers-v5 --out-dir src/typechain './src/eth-sdk/abis/mainnet/*.json'",
+    "typechain": "typechain --target ethers-v6 --out-dir src/typechain './src/eth-sdk/abis/mainnet/*.json'",
     "lint": "eslint . --fix --ext .ts"
   },
   "license": "MIT",
@@ -35,6 +35,7 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/react-hooks": "^8.0.1",
+    "@typechain/ethers-v6": "^0.5.0",
     "@types/jest": "^29.2.4",
     "@types/react": "^18.0.26",
     "@typescript-eslint/eslint-plugin": "^5.57.0",
@@ -62,7 +63,7 @@
     "rollup-plugin-typescript2": "^0.34.1",
     "ts-jest": "^29.0.3",
     "ts-node": "^10.9.1",
-    "typechain": "^8.1.1",
+    "typechain": "^8.3.1",
     "typescript": "*"
   },
   "dependencies": {
@@ -75,7 +76,7 @@
     "@tanstack/react-query-persist-client": "^4.24.6",
     "@types/lz-string": "^1.3.34",
     "axios": "^1.4.0",
-    "ethers": "^5.7.2",
+    "ethers": "^6.7.1",
     "lz-string": "^1.4.4"
   },
   "peerDependencies": {

@@ -113,12 +113,12 @@ describe('Main', () => {
       //   distribution: [[100]],
       //   tiers: [
       //     {
-      //       ETH: ethers.utils.parseEther("1"),
-      //       WETH: ethers.utils.parseEther("0.5")
+      //       ETH: ethers.parseEther("1"),
+      //       WETH: ethers.parseEther("0.5")
       //     },
       //     {
-      //       ETH: ethers.utils.parseEther("1"),
-      //       WETH: ethers.utils.parseEther("0.5")
+      //       ETH: ethers.parseEther("1"),
+      //       WETH: ethers.parseEther("0.5")
       //     }
       //   ],
       //   name: "Test utest",

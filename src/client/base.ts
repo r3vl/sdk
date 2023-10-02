@@ -132,14 +132,14 @@ export default class Base {
   
   async signatureCall(request: CallWithERC2771Request, gasLessKey: string) {
     const { _provider, _signer } = this
-    // const web3Provider = new ethers.providers.Web3Provider((web3 as any).currentProvider)
+    const web3Provider = new ethers.BrowserProvider((window as any).ethereum)
     const user = await this._signer?.getAddress()
 
     if (!user || !gasLessKey || !_signer) throw new Error("Can't execute Gelato SDK.")
 
     const { taskId } = await relay.sponsoredCallERC2771(
       { ...request, user },
-      _signer as unknown as SignerOrProvider,
+      web3Provider,
       gasLessKey
     )
 

@@ -44,9 +44,9 @@ export async function withdrawableV0(this: R3vlClient, payload?: FnArgs) {
 
       const released = await revPathV0Read['released(address,address)'](tokenAddress, walletAddress)
       const totalReceived = await tokenSdk.balanceOf(_revPathAddress)
-      const totalAccounted = parseFloat(ethers.utils.formatEther(totalReceived)) + parseFloat(ethers.utils.formatEther(released))
+      const totalAccounted = parseFloat(ethers.formatEther(totalReceived)) + parseFloat(ethers.formatEther(released))
 
-      return ['', (totalAccounted * walletShare.toNumber() / 10000) - parseFloat(ethers.utils.formatEther(released))]
+      return ['', (totalAccounted * walletShare.toNumber() / 10000) - parseFloat(ethers.formatEther(released))]
     }
 
     const released = await revPathV0Read['released(address)'](walletAddress)
@@ -59,9 +59,9 @@ export async function withdrawableV0(this: R3vlClient, payload?: FnArgs) {
 
         return wallet === walletAddress
       })
-      .reduce((prev, curr: { args: any[] }) => prev + parseFloat(ethers.utils.formatEther(curr?.args[1])), 0)
+      .reduce((prev, curr: { args: any[] }) => prev + parseFloat(ethers.formatEther(curr?.args[1])), 0)
 
-    return ['', (totalReceived * walletShare.toNumber() / 10000) - parseFloat(ethers.utils.formatEther(released))]
+    return ['', (totalReceived * walletShare.toNumber() / 10000) - parseFloat(ethers.formatEther(released))]
   } catch (error) {
     console.error(error)
   }

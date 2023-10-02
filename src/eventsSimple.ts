@@ -21,7 +21,7 @@ export async function getRevenuePathsSimple(this: R3vlClient, opts?: {
 
   const library = (sdk as typeof sdk & { pathLibrarySimple: any }).pathLibrarySimple;
 
-  const pathsEventPayload: { [address: string]: RevenuePathCreatedEvent } = {}
+  const pathsEventPayload: { [address: string]: RevenuePathCreatedEvent.Event } = {}
 
   if (!library) throw new Error("Contract not found")
 
@@ -45,7 +45,7 @@ export async function getRevenuePathsSimple(this: R3vlClient, opts?: {
   const revPaths: {
     contract: GoerliSdk["pathLibrarySimple"]
     address: string
-    eventPayload: RevenuePathCreatedEvent
+    eventPayload: RevenuePathCreatedEvent.Event
   }[] = uniquePathAddresses.map((revPathAddress) => {
     const contract: GoerliSdk["pathLibrarySimple"] = library.attach(revPathAddress)
 
@@ -98,9 +98,9 @@ export async function getRevPathTransactionEventsSimple(this: R3vlClient, _revPa
     usdcTransfers: [],
     daiTransfers: [],
     erc20s: {
-      [sdk?.weth.address]: await sdk?.weth.symbol(),
-      [sdk?.usdc.address]: await sdk?.usdc.symbol(),
-      [sdk?.dai.address]: await sdk?.dai.symbol()
+      [sdk?.weth.target]: await sdk?.weth.symbol(),
+      [sdk?.usdc.target]: await sdk?.usdc.symbol(),
+      [sdk?.dai.target]: await sdk?.dai.symbol()
     }
   }
 }

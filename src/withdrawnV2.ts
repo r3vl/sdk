@@ -21,19 +21,19 @@ export async function withdrawnFundsV2(this: R3vlClient, payload?: FnArgs) {
 
   try {
     let released = walletAddress ? await revPathV2Read.getTokenWithdrawn(
-      isERC20 ? tokenList[isERC20][_chainId] : ethers.constants.AddressZero,
+      isERC20 ? tokenList[isERC20][_chainId] : ethers.ZeroAddress,
       walletAddress
-    ) : await revPathV2Read.getTotalTokenReleased(isERC20 ? tokenList[isERC20][_chainId] : ethers.constants.AddressZero)
+    ) : await revPathV2Read.getTotalTokenReleased(isERC20 ? tokenList[isERC20][_chainId] : ethers.ZeroAddress)
 
     if (isERC20) {
       const decimals = await (sdk as any)[isERC20].decimals()
   
-      released = ethers.utils.parseEther(ethers.utils.formatUnits(released.toString(), decimals))
+      released = ethers.parseEther(ethers.formatUnits(released.toString(), decimals))
     }
 
     const totalTiers = await revPathV2Read.getTotalRevenueTiers()
 
-    const result = totalTiers.toNumber() > 1 ? parseFloat(ethers.utils.formatEther(released)) + parseFloat(ethers.utils.formatEther(released)) * 0.0102 : parseFloat(ethers.utils.formatEther(released))
+    const result = totalTiers.toNumber() > 1 ? parseFloat(ethers.formatEther(released)) + parseFloat(ethers.formatEther(released)) * 0.0102 : parseFloat(ethers.formatEther(released))
 
     return result
   } catch (error) {

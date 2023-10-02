@@ -23,7 +23,7 @@ export async function withdrawFundsV0(this: R3vlClient, { walletAddress, isERC20
     const result = await tx?.wait()
     const [event] = result?.events || [{ args: [] }]
 
-    return event?.args && ethers.utils.formatEther(event?.args[1])
+    return event?.args && ethers.formatEther(event?.args[1])
   } catch (error) {
     console.error(error)
   }

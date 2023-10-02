@@ -21,7 +21,7 @@ export async function getRevenuePathsV0(this: R3vlClient, opts?: {
 
   if (!library) return null
 
-  const pathsEventPayload: { [address: string]: RevenuePathCreatedEvent } = {}
+  const pathsEventPayload: { [address: string]: RevenuePathCreatedEvent.Event } = {}
 
   const allPaths = await contract.queryFilter(
     contract.filters.RevenuePathCreated(),
@@ -43,7 +43,7 @@ export async function getRevenuePathsV0(this: R3vlClient, opts?: {
   const revPaths: {
     contract: MainnetSdk["pathLibraryV0"],
     address: string
-    eventPayload: RevenuePathCreatedEvent
+    eventPayload: RevenuePathCreatedEvent.Event
   }[] = uniquePathAddresses.map((revPathAddress) => {
     const contract: MainnetSdk["pathLibraryV0"] = library.attach(revPathAddress)
 

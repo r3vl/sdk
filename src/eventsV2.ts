@@ -21,7 +21,7 @@ export async function getRevenuePathsV2(this: R3vlClient, opts?: {
   const contract = sdk.reveelMainV2;
   const library = (sdk as typeof sdk & { pathLibraryV2: any }).pathLibraryV2;
 
-  const pathsEventPayload: { [address: string]: RevenuePathCreatedEvent } = {}
+  const pathsEventPayload: { [address: string]: any } = {}
 
   if (!library) throw new Error("Contract not found")
 
@@ -45,7 +45,7 @@ export async function getRevenuePathsV2(this: R3vlClient, opts?: {
   const revPaths: {
     contract: MainnetSdk["pathLibraryV2"]
     address: string
-    eventPayload: RevenuePathCreatedEvent
+    eventPayload: any
   }[] = uniquePathAddresses.map((revPathAddress) => {
     const contract: MainnetSdk["pathLibraryV2"] = library.attach(revPathAddress)
 
@@ -128,9 +128,9 @@ export async function getRevPathTransactionEventsV2(this: R3vlClient, _revPathAd
     usdcTransfers,
     daiTransfers,
     erc20s: {
-      [sdk?.weth.address]: await sdk?.weth.symbol(),
-      [sdk?.usdc.address]: await sdk?.usdc.symbol(),
-      [sdk?.dai.address]: await sdk?.dai.symbol()
+      [sdk?.weth.target as string]: await sdk?.weth.symbol(),
+      [sdk?.usdc.target as string]: await sdk?.usdc.symbol(),
+      [sdk?.dai.target as string]: await sdk?.dai.symbol()
     }
   }
 }

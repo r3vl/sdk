@@ -31,7 +31,7 @@ export async function updateLimitsV2Final(
     switch (item) {
       case 'eth': {
         formatedLimits.push(utils.parseEther(newLimits[index].toString()))
-        formatedTokens.push(constants.AddressZero)
+        formatedTokens.push(constants.ZeroAddress)
         break
       }
       case 'weth': {

@@ -21,7 +21,7 @@ export async function withdrawFundsSimple(this: R3vlClient, { walletAddress, sho
 
   if (!revPathSimpleWrite) return false
 
-  const AddressZero = /* _chainId === chainIds.polygonMumbai || _chainId === chainIds.polygon ? '0x0000000000000000000000000000000000001010' : */ ethers.constants.AddressZero
+  const AddressZero = /* _chainId === chainIds.polygonMumbai || _chainId === chainIds.polygon ? '0x0000000000000000000000000000000000001010' : */ ethers.ZeroAddress
 
   try {
     let tx
@@ -62,7 +62,7 @@ export async function withdrawFundsSimple(this: R3vlClient, { walletAddress, sho
       const result = await tx?.wait()
       const [event] = result?.events || [{ args: [] }]
 
-      return event?.args && ethers.utils.formatEther(event?.args[1])
+      return event?.args && ethers.formatEther(event?.args[1])
     }
 
     if (walletAddress) {
@@ -92,7 +92,7 @@ export async function withdrawFundsSimple(this: R3vlClient, { walletAddress, sho
     const result = await tx?.wait()
     const [event] = result?.events || [{ args: [] }]
 
-    return event?.args && ethers.utils.formatEther(event?.args[1])
+    return event?.args && ethers.formatEther(event?.args[1])
   } catch (error) {
     return -1
   }

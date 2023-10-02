@@ -65,9 +65,9 @@ export type RevenuePathsList = {
     MainnetSdk["pathLibraryV1"] |
     MainnetSdk["pathLibraryV2"],
   eventPayload:
-    RevenuePathCreatedEventV0 |
-    RevenuePathCreatedEventV1 |
-    RevenuePathCreatedEventV2
+    RevenuePathCreatedEventV0.Event |
+    RevenuePathCreatedEventV1.Event |
+    RevenuePathCreatedEventV2.Event
 }[]
 
 export type GeneralOpts = {
@@ -90,14 +90,14 @@ export type RevenuePath = {
   withdraw?: (args: any, opts?: GaslessOpts) => any
   withdrawGasLess?: (args: WithdrawV1Args, opts: { gasLessKey: string }) => Promise<any>
   tiers?: (opts?: GeneralOpts) => ReturnType<typeof tiersV1> | ReturnType<typeof tiersV2> | ReturnType<typeof tiersSimple>
-  createRevenuePath?: (args: CreateRevenuePathV1Args | CreateRevenuePathV2Args | any /* TODO: remove any */, opts?: GeneralOpts & GaslessOpts) => Promise<undefined | ethers.ContractReceipt | ethers.ContractTransaction | RelayResponse>
-  updateRevenueTier?: (args: UpdateRevenueTierV1Args) => Promise<ethers.ContractReceipt | undefined>
-  updateErc20Distribution?: (args: UpdateErc20DistributionArgs) => Promise<ethers.ContractReceipt | undefined>
+  createRevenuePath?: (args: CreateRevenuePathV1Args | CreateRevenuePathV2Args | any /* TODO: remove any */, opts?: GeneralOpts & GaslessOpts) => Promise<undefined | ethers.ContractEvent | ethers.ContractTransaction | RelayResponse>
+  updateRevenueTier?: (args: UpdateRevenueTierV1Args) => Promise<ethers.ContractEvent | undefined>
+  updateErc20Distribution?: (args: UpdateErc20DistributionArgs) => Promise<ethers.ContractEvent | undefined>
   updateFinalFund?: (args: UpdateFinalFundArgs) => Promise<void>
-  addRevenueTiers?: (args: AddRevenueTiersV2Args) => Promise<ethers.ContractReceipt | undefined>
-  updateLimits?: (args: UpdateLimitsV2Args) => Promise<ethers.ContractReceipt | undefined>
-  addRevenueTier?: (args: AddRevenueTierV1Args) => Promise<ethers.ContractReceipt | undefined>
-  updateRevenueTiers?: (args: UpdateRevenueTiersV2Args) => Promise<ethers.ContractReceipt | ethers.ContractTransaction | undefined>
+  addRevenueTiers?: (args: AddRevenueTiersV2Args) => Promise<ethers.ContractEvent | undefined>
+  updateLimits?: (args: UpdateLimitsV2Args) => Promise<ethers.ContractEvent | undefined>
+  addRevenueTier?: (args: AddRevenueTierV1Args) => Promise<ethers.ContractEvent | undefined>
+  updateRevenueTiers?: (args: UpdateRevenueTiersV2Args) => Promise<ethers.ContractEvent | ethers.ContractTransaction | undefined>
   transferOwnerhip?: (args: any, opts?: GaslessOpts) => Promise<any>
 }
 

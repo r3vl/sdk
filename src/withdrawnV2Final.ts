@@ -18,7 +18,7 @@ export async function withdrawnFundsV2Final(this: R3vlClient, payload?: FnArgs) 
 
   if (!revPathV2FinalRead || !sdk) throw new Error("ERROR:")
 
-  const AddressZero = /* _chainId === chainIds.polygonMumbai || _chainId === chainIds.polygon ? '0x0000000000000000000000000000000000001010' : */ ethers.constants.AddressZero
+  const AddressZero = /* _chainId === chainIds.polygonMumbai || _chainId === chainIds.polygon ? '0x0000000000000000000000000000000000001010' : */ ethers.ZeroAddress
 
   const { walletAddress, isERC20 } = payload || { walletAddress: undefined, isERC20: undefined }
 
@@ -34,7 +34,7 @@ export async function withdrawnFundsV2Final(this: R3vlClient, payload?: FnArgs) 
   if (isERC20) {
     const decimals = await (sdk as any)[isERC20].decimals()
 
-    released = ethers.utils.parseEther(ethers.utils.formatUnits(released.toString(), decimals))
+    released = ethers.parseEther(ethers.formatUnits(released.toString(), decimals))
   }
 
   const isFeeRequired = await revPathV2FinalRead.getFeeRequirementStatus()
@@ -42,7 +42,7 @@ export async function withdrawnFundsV2Final(this: R3vlClient, payload?: FnArgs) 
   const pF = await revPathV2FinalRead.getPlatformFee()
   const fee = (pF.toNumber() / 10000000)
 
-  const result = isFeeRequired || pF.toNumber() > 0 ? parseFloat(ethers.utils.formatEther(released)) + parseFloat(ethers.utils.formatEther(released)) * fee : parseFloat(ethers.utils.formatEther(released))
+  const result = isFeeRequired || pF.toNumber() > 0 ? parseFloat(ethers.formatEther(released)) + parseFloat(ethers.formatEther(released)) * fee : parseFloat(ethers.formatEther(released))
 
   return result
 }

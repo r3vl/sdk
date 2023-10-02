@@ -24,7 +24,7 @@ export async function updateRevenueTiersV2 (
 
   const formatedDistribution = distribution.map(item => {
      return item.map(el => {
-      return Number(ethers.utils.parseUnits(el.toString(), 5).toString())
+      return Number(ethers.parseUnits(el.toString(), 5).toString())
      })
   }) 
 

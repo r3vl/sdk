@@ -24,13 +24,13 @@ export async function tiersV2Final(this: R3vlClient, opts?: GeneralOpts): Promis
 
   if (!revPathV2FinalRead || !sdk) throw new Error("ERROR:.")
 
-  const AddressZero = _chainId === chainIds.polygonMumbai || _chainId === chainIds.polygon ? '0x0000000000000000000000000000000000001010' : ethers.constants.AddressZero
+  const AddressZero = _chainId === chainIds.polygonMumbai || _chainId === chainIds.polygon ? '0x0000000000000000000000000000000000001010' : ethers.ZeroAddress
 
   const tiersNumber = await revPathV2FinalRead.getTotalRevenueTiers()
   const currentTierETHPromise = revPathV2FinalRead.getCurrentTier(AddressZero)
-  const currentTierWETHPromise = revPathV2FinalRead.getCurrentTier(sdk.weth.address)
-  const currentTierUSDCPromise = revPathV2FinalRead.getCurrentTier(sdk.usdc.address)
-  const currentTierDAIPromise = revPathV2FinalRead.getCurrentTier(sdk.dai.address)
+  const currentTierWETHPromise = revPathV2FinalRead.getCurrentTier(sdk.weth.target as string)
+  const currentTierUSDCPromise = revPathV2FinalRead.getCurrentTier(sdk.usdc.target as string)
+  const currentTierDAIPromise = revPathV2FinalRead.getCurrentTier(sdk.dai.target as string)
   const tiers = []
 
   const [
@@ -67,18 +67,18 @@ export async function tiersV2Final(this: R3vlClient, opts?: GeneralOpts): Promis
   const walletsDistributedUSDC = _walletsDistributedUSDC.value || 0
   const walletsDistributedDAI = _walletsDistributedDAI.value || 0
 
-  for (let i = 0; i < tiersNumber?.toNumber(); i++) {
+  for (let i = 0; i < tiersNumber; i++) {
     const walletList = (revPathMetadata?.walletList[i] || []) as string[]
 
     // const availableETH = await revPathV2FinalRead.getTierDistributedAmount(AddressZero, i)
-    // const availableWETH = await revPathV2FinalRead.getTierDistributedAmount(sdk.weth.address, i)
-    // const availableUSDC = await revPathV2FinalRead.getTierDistributedAmount(sdk.usdc.address, i)
-    // const availableDAI = await revPathV2FinalRead.getTierDistributedAmount(sdk.dai.address, i)
+    // const availableWETH = await revPathV2FinalRead.getTierDistributedAmount(sdk.weth.target as string, i)
+    // const availableUSDC = await revPathV2FinalRead.getTierDistributedAmount(sdk.usdc.target as string, i)
+    // const availableDAI = await revPathV2FinalRead.getTierDistributedAmount(sdk.dai.target as string, i)
 
     const tierLimitsETHPromise = revPathV2FinalRead.getTokenTierLimits(AddressZero, i)
-    const tierLimitsWETHPromise = revPathV2FinalRead.getTokenTierLimits(sdk.weth.address, i)
-    const tierLimitsUSDCPromise = revPathV2FinalRead.getTokenTierLimits(sdk.usdc.address, i)
-    const tierLimitsDAIPromise = revPathV2FinalRead.getTokenTierLimits(sdk.dai.address, i)
+    const tierLimitsWETHPromise = revPathV2FinalRead.getTokenTierLimits(sdk.weth.target as string, i)
+    const tierLimitsUSDCPromise = revPathV2FinalRead.getTokenTierLimits(sdk.usdc.target as string, i)
+    const tierLimitsDAIPromise = revPathV2FinalRead.getTokenTierLimits(sdk.dai.target as string, i)
 
     const [
       tierLimitsETH,
@@ -99,11 +99,11 @@ export async function tiersV2Final(this: R3vlClient, opts?: GeneralOpts): Promis
     for (const wallet of walletList) {
       const p = parseWalletTier(revPathMetadata, i, walletList.indexOf(wallet)).proportion
 
-      proportions[wallet] =  parseFloat(ethers.utils.formatEther(p))
+      proportions[wallet] =  parseFloat(ethers.formatEther(p))
 
       // const {
       //   [AddressZero]: ethKey,
-      //   [sdk.weth.address]: wethKey
+      //   [sdk.weth.target as string]: wethKey
       // } = getTokenListByAddress(_chainId) as any
 
       // const availableWETH = await withdrawableTiersV2.call(this, { isERC20: 'weth', walletAddress: wallet })
@@ -112,25 +112,25 @@ export async function tiersV2Final(this: R3vlClient, opts?: GeneralOpts): Promis
 
       available[wallet] = {
         [AddressZero]: walletsDistributedETH[i][wallet],
-        [sdk.weth.address]: walletsDistributedWETH[i][wallet],
-        [sdk.usdc.address]: walletsDistributedUSDC[i][wallet],
-        [sdk.dai.address]: walletsDistributedDAI[i][wallet],
+        [sdk.weth.target as string]: walletsDistributedWETH[i][wallet],
+        [sdk.usdc.target as string]: walletsDistributedUSDC[i][wallet],
+        [sdk.dai.target as string]: walletsDistributedDAI[i][wallet],
       }
     }
 
     tiers.push({
       walletList,
       isCurrentTier: {
-        [AddressZero]: i === currentTierETH?.toNumber(),
-        [sdk.weth.address]: i === currentTierWETH?.toNumber(),
-        [sdk.usdc.address]: i === currentTierUSDC?.toNumber(),
-        [sdk.dai.address]: i === currentTierDAI?.toNumber(),
+        [AddressZero]: BigInt(i) === currentTierETH,
+        [sdk.weth.target as string]: BigInt(i) === currentTierWETH,
+        [sdk.usdc.target as string]: BigInt(i) === currentTierUSDC,
+        [sdk.dai.target as string]: BigInt(i) === currentTierDAI,
       },
       limits: {
-        [AddressZero]: parseFloat(ethers.utils.formatEther(tierLimitsETH)),
-        [sdk.weth.address]: parseFloat(ethers.utils.formatEther(tierLimitsWETH)),
-        [sdk.usdc.address]: parseFloat(ethers.utils.formatEther(tierLimitsUSDC)),
-        [sdk.dai.address]: parseFloat(ethers.utils.formatEther(tierLimitsDAI)),
+        [AddressZero]: parseFloat(ethers.formatEther(tierLimitsETH)),
+        [sdk.weth.target as string]: parseFloat(ethers.formatEther(tierLimitsWETH)),
+        [sdk.usdc.target as string]: parseFloat(ethers.formatEther(tierLimitsUSDC)),
+        [sdk.dai.target as string]: parseFloat(ethers.formatEther(tierLimitsDAI)),
       },
       proportions,
       available

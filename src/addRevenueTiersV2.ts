@@ -1,4 +1,4 @@
-import { ContractReceipt, ethers } from 'ethers' 
+import { ethers } from 'ethers' 
 import { updateLimitsV2, FnArgs as UpdateLimitsV2Args } from './updateLimitsV2';
 import { updateRevenueTiersV2 } from './updateRevenueTiersV2';
 import { R3vlClient } from './client'
@@ -35,7 +35,7 @@ export async function addRevenueTiersV2 (
 
   // new added distribution slice(1) & final fund distribution
   const addedDistribution = [...distribution.slice(1), finalFundDistribution].map(item => {
-    return item.map(el => Number(ethers.utils.parseUnits(el.toString(), 5).toString()))
+    return item.map(el => Number(ethers.parseUnits(el.toString(), 5).toString()))
   })
 
   // Transformations for limits update after adding tiers
@@ -66,7 +66,7 @@ export async function addRevenueTiersV2 (
 
     let updateResult;
 
-    if(addedResult.status === 1) {
+    if(addedResult?.status === 1) {
       updateResult = await updateRevenueTiersV2.call(
         this,
         {

@@ -1,4 +1,4 @@
-import { BigNumberish, ethers, utils } from 'ethers'
+import { BigNumberish, ethers } from 'ethers'
 import { chainIds, tokenList } from './constants/tokens'
 import { GaslessOpts, GeneralOpts, R3vlClient } from './client'
 import { createRevenuePathSimple, FnArgs as SimpleArgs } from './createRevenuePathSimple'
@@ -12,10 +12,10 @@ export type FnArgs = {
 }
 
 export const increaseGasLimit = (
-  estimatedGasLimit: ethers.BigNumber,
+  estimatedGasLimit: ethers.BigNumberish,
   chainId?: number
 ) => {
-  return estimatedGasLimit.mul(chainId === chainIds.mainnet ? 100 : 130).div(100)
+  return BigInt(estimatedGasLimit) * BigInt(chainId === chainIds.mainnet ? 100 : 130) / BigInt(100)
 }
 
 /**
@@ -49,10 +49,10 @@ export async function createRevenuePathV2Final(
     acc.push(
       tiers.map((item) => {
         return key === "eth" || key === "matic"
-          ? utils.parseEther(item[key])
+          ? ethers.parseEther(item[key])
           : key === "dai"
-          ? utils.parseUnits(item[key], 18)
-          : utils.parseUnits(item[key])
+          ? ethers.parseUnits(item[key], 18)
+          : ethers.parseUnits(item[key])
       }),
     )
     return acc
@@ -70,7 +70,7 @@ export async function createRevenuePathV2Final(
 
   const formatedDistribution = distribution.map(item => {
      return item.map(el => {
-      return Number(ethers.utils.parseUnits(el.toString(), 5).toString())
+      return Number(ethers.parseUnits(el.toString(), 5).toString())
      })
   })
 
@@ -125,7 +125,7 @@ export async function createRevenuePathV2Final(
 
       const request = {
         chainId: _chainId,
-        target: contract.address,
+        target: contract.target,
         data: data as any
       };
 

@@ -24,12 +24,12 @@ export async function withdrawableV1(this: R3vlClient, payload?: FnArgs) {
     if (isERC20) {
       const pendingBalance = await revPathV1Read.erc20Withdrawable(tokenList[isERC20][_chainId], walletAddress)
 
-      return [0, parseFloat(ethers.utils.formatEther(pendingBalance))]
+      return [0, parseFloat(ethers.formatEther(pendingBalance))]
     }
 
     const pendingBalance = await revPathV1Read.getPendingEthBalance(walletAddress)
 
-    return [0, parseFloat(ethers.utils.formatEther(pendingBalance))]
+    return [0, parseFloat(ethers.formatEther(pendingBalance))]
   } catch (error) {
     console.error(error)
   }

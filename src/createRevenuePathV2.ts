@@ -1,4 +1,4 @@
-import { BigNumberish, ethers, utils } from 'ethers'
+import { BigNumberish, ethers } from 'ethers'
 import { chainIds, tokenList } from './constants/tokens'
 import { GaslessOpts, GeneralOpts, R3vlClient } from './client'
 
@@ -11,10 +11,10 @@ export type FnArgs = {
 }
 
 export const increaseGasLimit = (
-  estimatedGasLimit: ethers.BigNumber,
+  estimatedGasLimit: ethers.BigNumberish,
   chainId?: number
 ) => {
-  return estimatedGasLimit.mul(chainId === chainIds.mainnet ? 100 : 130).div(100)
+  return BigInt(estimatedGasLimit) * BigInt(chainId === chainIds.mainnet ? 100 : 130) / BigInt(100)
 }
 
 /**
@@ -62,7 +62,7 @@ export async function createRevenuePathV2(
 
   const formatedDistribution = distribution.map(item => {
      return item.map(el => {
-      return Number(ethers.utils.parseUnits(el.toString(), 5).toString())
+      return Number(ethers.parseUnits(el.toString(), 5).toString())
      })
   })
 
@@ -88,7 +88,7 @@ export async function createRevenuePathV2(
         
         const request = {
           chainId: _chainId,
-          target: contract.address,
+          target: contract.target,
           data: data as any
         };
         

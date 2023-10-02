@@ -26,15 +26,15 @@ export async function tiersV1(this: R3vlClient): Promise<TierType[] | undefined>
     const currentTier = await revPathV1Read.getCurrentTier()
     const tiers = []
 
-    for (let i = 0; i < tiersNumber?.toNumber(); i++) {
+    for (let i = 0; i < tiersNumber; i++) {
       const [limitAmount, walletList] = await revPathV1Read.getRevenueTier(i)
       const distributedAmount = await revPathV1Read.getTierDistributedAmount(i)
 
       tiers.push({
-        limitAmount: parseFloat(ethers.utils.formatEther(limitAmount)),
+        limitAmount: parseFloat(ethers.formatEther(limitAmount)),
         walletList,
-        isCurrentTier: i === currentTier?.toNumber(),
-        distributedAmount: parseFloat(ethers.utils.formatEther(distributedAmount))
+        isCurrentTier: i === currentTier,
+        distributedAmount: parseFloat(ethers.formatEther(distributedAmount))
       })
     }
 

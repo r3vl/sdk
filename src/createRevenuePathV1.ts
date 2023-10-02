@@ -29,11 +29,11 @@ export async function createRevenuePathV1 (
 
   const contract = sdk.reveelMainV1;
 
-  const formatedTierLimits = tierLimits.map(limit => ethers.utils.parseEther(limit.toString()).toString())
+  const formatedTierLimits = tierLimits.map(limit => ethers.parseEther(limit.toString()).toString())
 
   const formatedDistribution = distribution.map(item => {
      return item.map(el => {
-      return Number(ethers.utils.parseUnits(el.toString(), 5).toString())
+      return Number(ethers.parseUnits(el.toString(), 5).toString())
      })
   }) 
 
