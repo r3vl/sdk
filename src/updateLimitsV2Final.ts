@@ -1,4 +1,4 @@
-import { BigNumberish, constants, utils } from 'ethers'
+import { BigNumberish, ethers } from 'ethers'
 import { tokenList } from './constants/tokens';
 import { R3vlClient } from './client'
 
@@ -30,22 +30,22 @@ export async function updateLimitsV2Final(
   tokens.forEach((item, index) => {
     switch (item) {
       case 'eth': {
-        formatedLimits.push(utils.parseEther(newLimits[index].toString()))
-        formatedTokens.push(constants.ZeroAddress)
+        formatedLimits.push(ethers.parseEther(newLimits[index].toString()))
+        formatedTokens.push(ethers.ZeroAddress)
         break
       }
       case 'weth': {
-        formatedLimits.push(utils.parseUnits(newLimits[index].toString()))
+        formatedLimits.push(ethers.parseUnits(newLimits[index].toString()))
         formatedTokens.push(tokenList.weth[_chainId])
         break
       }
       case 'usdc': {
-        formatedLimits.push(utils.parseUnits(newLimits[index].toString()))
+        formatedLimits.push(ethers.parseUnits(newLimits[index].toString()))
         formatedTokens.push(tokenList.usdc[_chainId])
         break
       }
       case 'dai': {
-        formatedLimits.push(utils.parseUnits(newLimits[index].toString(), 18))
+        formatedLimits.push(ethers.parseUnits(newLimits[index].toString(), 18))
         formatedTokens.push(tokenList.dai[_chainId])
         break
       }

@@ -1,6 +1,6 @@
 import { MainnetSdk } from '@dethcrypto/eth-sdk-client';
 import { R3vlClient } from './client';
-import { RevenuePathCreatedEvent } from './typechain/ReveelMainV0';
+import { RevenuePathCreatedEventObject } from './typechain/ReveelMainV0';
 
 /**
  * TODO(appleseed): build classes for RevenuePath & ReveelMain
@@ -21,7 +21,7 @@ export async function getRevenuePathsV0(this: R3vlClient, opts?: {
 
   if (!library) return null
 
-  const pathsEventPayload: { [address: string]: RevenuePathCreatedEvent.Event } = {}
+  const pathsEventPayload: { [address: string]: RevenuePathCreatedEventObject } = {}
 
   const allPaths = await contract.queryFilter(
     contract.filters.RevenuePathCreated(),
@@ -43,7 +43,7 @@ export async function getRevenuePathsV0(this: R3vlClient, opts?: {
   const revPaths: {
     contract: MainnetSdk["pathLibraryV0"],
     address: string
-    eventPayload: RevenuePathCreatedEvent.Event
+    eventPayload: RevenuePathCreatedEventObject
   }[] = uniquePathAddresses.map((revPathAddress) => {
     const contract: MainnetSdk["pathLibraryV0"] = library.attach(revPathAddress)
 

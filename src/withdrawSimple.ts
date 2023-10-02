@@ -51,7 +51,7 @@ export async function withdrawFundsSimple(this: R3vlClient, { walletAddress, sho
 
       const request = {
         chainId: _chainId,
-        target: revPathSimpleWrite.address,
+        target: revPathSimpleWrite.target,
         data: r.data as any
       };
 

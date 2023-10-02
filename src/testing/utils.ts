@@ -7,7 +7,7 @@ export const communityProvider = () => {
   if (!process.env.RPC_URL) {
     throw new Error("you need an `RPC_URL` in your `.env`");
   }
-  return new ethers.providers.JsonRpcProvider(process.env.RPC_URL);
+  return new ethers.JsonRpcProvider(process.env.RPC_URL);
 }
 
 export const communitySigner = () => {
@@ -23,16 +23,17 @@ export const communitySigner = () => {
 export const getChainId = async () => {
   const { chainId } = await communityProvider().getNetwork()
 
-  return chainId as ChainIds
+  return parseInt(chainId.toString()) as ChainIds
 }
 
 export const getGasPaid = async(txHash: string) => {
   const provider = communityProvider();
   const response = await provider.getTransaction(txHash);
   const receipt = await provider.getTransactionReceipt(txHash);
-  const gasPrice = response.gasPrice;
-  const gasUsed = receipt.gasUsed;
-  const gasPaid = gasPrice?.mul(gasUsed);
+  const gasPrice = response?.gasPrice;
+  const gasUsed = receipt?.gasUsed;
+  const gasPaid = BigInt(gasPrice || 0) * BigInt(gasUsed || 0);
+
   return gasPaid
 };
 

@@ -41,10 +41,10 @@ export async function createRevenuePathV2(
     acc.push(
       tiers.map((item) => {
         return key === "eth" || key === "matic"
-          ? utils.parseEther(item[key])
+          ? ethers.parseEther(item[key])
           : key === "dai"
-          ? utils.parseUnits(item[key], 18)
-          : utils.parseUnits(item[key])
+          ? ethers.parseUnits(item[key], 18)
+          : ethers.parseUnits(item[key])
       }),
     )
     return acc

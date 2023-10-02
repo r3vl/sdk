@@ -1,4 +1,4 @@
-import { ContractTransaction, ethers } from 'ethers'
+import { ContractTransaction, ContractTransactionResponse, ethers } from 'ethers'
 
 import { chainIds, tokenList } from "./constants/tokens"
 import { GaslessOpts, GeneralOpts, R3vlClient } from './client'
@@ -8,7 +8,7 @@ export type FnArgs = {
   walletAddress: string[]
   shouldDistribute?: boolean
   isERC20?: keyof typeof tokenList
-  onTxCreated?: (tx: ContractTransaction) => void
+  onTxCreated?: (tx: ContractTransactionResponse) => void
   estimateOnly?: boolean
 }
 
@@ -37,21 +37,21 @@ export async function withdrawFundsV2Final(this: R3vlClient, { walletAddress, sh
         if (isERC20) {
           console.log("WITHDRAW/RELEASE_PAYLOAD_GASLESS:::", AddressZero, walletAddress, revPathMetadata.walletList, revPathMetadata.distribution, shouldDistribute)
   
-          r = await revPathV2FinalWrite.populateTransaction.release(tokenList[isERC20][_chainId], walletAddress, revPathMetadata.walletList, revPathMetadata.distribution, shouldDistribute)
+          r = await revPathV2FinalWrite.release.populateTransaction(tokenList[isERC20][_chainId], walletAddress, revPathMetadata.walletList, revPathMetadata.distribution, shouldDistribute)
         } else {
           console.log("WITHDRAW/RELEASE_PAYLOAD_GASLESS:::", AddressZero, walletAddress, revPathMetadata.walletList, revPathMetadata.distribution, shouldDistribute)
   
-          r = await revPathV2FinalWrite.populateTransaction.release(AddressZero, walletAddress, revPathMetadata.walletList, revPathMetadata.distribution, shouldDistribute)
+          r = await revPathV2FinalWrite.release.populateTransaction(AddressZero, walletAddress, revPathMetadata.walletList, revPathMetadata.distribution, shouldDistribute)
         }
       } else {
-        r = await revPathV2FinalWrite.populateTransaction.distributePendingTokens(isERC20 ? tokenList[isERC20][_chainId] : AddressZero, revPathMetadata.walletList, revPathMetadata.distribution)
+        r = await revPathV2FinalWrite.distributePendingTokens.populateTransaction(isERC20 ? tokenList[isERC20][_chainId] : AddressZero, revPathMetadata.walletList, revPathMetadata.distribution)
       }
 
       if (estimateOnly) return
 
       const request = {
         chainId: _chainId,
-        target: revPathV2FinalWrite.address,
+        target: revPathV2FinalWrite.target,
         data: r.data as any
       };
 
@@ -69,7 +69,7 @@ export async function withdrawFundsV2Final(this: R3vlClient, { walletAddress, sh
       if (isERC20) {
         console.log("WITHDRAW/RELEASE_PAYLOAD:::", AddressZero, walletAddress, revPathMetadata.walletList, revPathMetadata.distribution, shouldDistribute)
 
-        const gasLimit = increaseGasLimit(await revPathV2FinalWrite.estimateGas.release(tokenList[isERC20][_chainId], walletAddress, revPathMetadata.walletList, revPathMetadata.distribution, shouldDistribute))
+        const gasLimit = increaseGasLimit(await revPathV2FinalWrite.release.estimateGas(tokenList[isERC20][_chainId], walletAddress, revPathMetadata.walletList, revPathMetadata.distribution, shouldDistribute))
 
         if (estimateOnly) return
 
@@ -77,14 +77,14 @@ export async function withdrawFundsV2Final(this: R3vlClient, { walletAddress, sh
       } else {
         console.log("WITHDRAW/RELEASE_PAYLOAD:::", AddressZero, walletAddress, revPathMetadata.walletList, revPathMetadata.distribution, shouldDistribute)
 
-        const gasLimit = increaseGasLimit(await revPathV2FinalWrite.estimateGas.release(AddressZero, walletAddress, revPathMetadata.walletList, revPathMetadata.distribution, shouldDistribute))
+        const gasLimit = increaseGasLimit(await revPathV2FinalWrite.release.estimateGas(AddressZero, walletAddress, revPathMetadata.walletList, revPathMetadata.distribution, shouldDistribute))
 
         if (estimateOnly) return
 
         tx = await revPathV2FinalWrite.release(AddressZero, walletAddress, revPathMetadata.walletList, revPathMetadata.distribution, shouldDistribute, { gasLimit })
       }
     } else {
-      const gasLimit = increaseGasLimit(await revPathV2FinalWrite.estimateGas.distributePendingTokens(isERC20 ? tokenList[isERC20][_chainId] : AddressZero, revPathMetadata.walletList, revPathMetadata.distribution))
+      const gasLimit = increaseGasLimit(await revPathV2FinalWrite.distributePendingTokens.estimateGas(isERC20 ? tokenList[isERC20][_chainId] : AddressZero, revPathMetadata.walletList, revPathMetadata.distribution))
 
       if (estimateOnly) return
 

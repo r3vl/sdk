@@ -24,9 +24,9 @@ export async function tiersV2(this: R3vlClient): Promise<TierType[] | undefined>
 
   const tiersNumber = await revPathV2Read.getTotalRevenueTiers()
   const currentTierETHPromise = revPathV2Read.getCurrentTier(ethers.ZeroAddress)
-  const currentTierWETHPromise = revPathV2Read.getCurrentTier(sdk.weth.target)
-  const currentTierUSDCPromise = revPathV2Read.getCurrentTier(sdk.usdc.target)
-  const currentTierDAIPromise = revPathV2Read.getCurrentTier(sdk.dai.target)
+  const currentTierWETHPromise = revPathV2Read.getCurrentTier(sdk.weth.target as string)
+  const currentTierUSDCPromise = revPathV2Read.getCurrentTier(sdk.usdc.target as string)
+  const currentTierDAIPromise = revPathV2Read.getCurrentTier(sdk.dai.target as string)
   const tiers = []
 
   const [
@@ -67,9 +67,9 @@ export async function tiersV2(this: R3vlClient): Promise<TierType[] | undefined>
     // const availableDAI = await revPathV2Read.getTierDistributedAmount(sdk.dai.target, i)
 
     const tierLimitsETHPromise = revPathV2Read.getTokenTierLimits(ethers.ZeroAddress, i)
-    const tierLimitsWETHPromise = revPathV2Read.getTokenTierLimits(sdk.weth.target, i)
-    const tierLimitsUSDCPromise = revPathV2Read.getTokenTierLimits(sdk.usdc.target, i)
-    const tierLimitsDAIPromise = revPathV2Read.getTokenTierLimits(sdk.dai.target, i)
+    const tierLimitsWETHPromise = revPathV2Read.getTokenTierLimits(sdk.weth.target as string, i)
+    const tierLimitsUSDCPromise = revPathV2Read.getTokenTierLimits(sdk.usdc.target as string, i)
+    const tierLimitsDAIPromise = revPathV2Read.getTokenTierLimits(sdk.dai.target as string, i)
 
     const [
       tierLimitsETH,

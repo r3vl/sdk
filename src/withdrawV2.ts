@@ -1,4 +1,4 @@
-import { ContractTransaction, ethers } from 'ethers'
+import { ContractTransaction, ContractTransactionResponse, ethers } from 'ethers'
 
 import { tokenList } from "./constants/tokens"
 import { R3vlClient } from './client'
@@ -7,7 +7,7 @@ import { increaseGasLimit } from './createRevenuePathV2'
 export type FnArgs = {
   walletAddress: string
   isERC20?: keyof typeof tokenList
-  onTxCreated?: (tx: ContractTransaction) => void
+  onTxCreated?: (tx: ContractTransactionResponse) => void
 }
 
 /**
@@ -23,11 +23,11 @@ export async function withdrawFundsV2(this: R3vlClient, { walletAddress, isERC20
 
     if (walletAddress) {
       if (isERC20) {
-        const gasLimit = increaseGasLimit(await revPathV2Write.estimateGas.release(tokenList[isERC20][_chainId], walletAddress))
+        const gasLimit = increaseGasLimit(await revPathV2Write.release.estimateGas(tokenList[isERC20][_chainId], walletAddress))
 
         tx = await revPathV2Write.release(tokenList[isERC20][_chainId], walletAddress, { gasLimit })
       } else {
-        const gasLimit = increaseGasLimit(await revPathV2Write.estimateGas.release(ethers.ZeroAddress, walletAddress))
+        const gasLimit = increaseGasLimit(await revPathV2Write.release.estimateGas(ethers.ZeroAddress, walletAddress))
 
         tx = await revPathV2Write.release(ethers.ZeroAddress, walletAddress, { gasLimit })
       }
@@ -56,17 +56,17 @@ export async function withdrawFundsGasLessV2(this: R3vlClient, { walletAddress, 
 
     if (walletAddress) {
       if (isERC20) {
-        tx = await revPathV2Write.populateTransaction.release(tokenList[isERC20][_chainId], walletAddress)
+        tx = await revPathV2Write.release.populateTransaction(tokenList[isERC20][_chainId], walletAddress)
       } else {
-        tx = await revPathV2Write.populateTransaction.release(ethers.ZeroAddress, walletAddress)
+        tx = await revPathV2Write.release.populateTransaction(ethers.ZeroAddress, walletAddress)
       }
     } else {
-      tx = await revPathV2Write.populateTransaction.distributePendingTokens(isERC20 ? tokenList[isERC20][_chainId] : ethers.ZeroAddress)
+      tx = await revPathV2Write.distributePendingTokens.populateTransaction(isERC20 ? tokenList[isERC20][_chainId] : ethers.ZeroAddress)
     }
 
     const request = {
       chainId: _chainId,
-      target: revPathV2Write.address,
+      target: revPathV2Write.target,
       data: tx
     };
 

@@ -63,9 +63,9 @@ export async function tiersSimple(this: R3vlClient, opts?: GeneralOpts): Promise
 
       available[wallet] = {
         [AddressZero]: walletsDistributedETH[i][wallet],
-        [sdk.weth.target]: walletsDistributedWETH[i][wallet],
-        [sdk.usdc.target]: walletsDistributedUSDC[i][wallet],
-        [sdk.dai.target]: walletsDistributedDAI[i][wallet],
+        [sdk.weth.target as string]: walletsDistributedWETH[i][wallet],
+        [sdk.usdc.target as string]: walletsDistributedUSDC[i][wallet],
+        [sdk.dai.target as string]: walletsDistributedDAI[i][wallet],
       }
     }
 

@@ -51,7 +51,7 @@ export async function withdrawableV2Final(this: R3vlClient, payload?: FnArgs) {
   const tiers = []
   const distributedPromises = []
 
-  for (let i = 0; i < totalTiers.toNumber(); i++) {
+  for (let i = 0; i < totalTiers; i++) {
     distributedPromises[i] = revPathV2FinalRead.getTierDistributedAmount(isERC20 ? tokenList[isERC20][_chainId] : AddressZero, i)
   }
 
@@ -64,15 +64,15 @@ export async function withdrawableV2Final(this: R3vlClient, payload?: FnArgs) {
       distributed = ethers.parseEther(ethers.formatUnits(distributed.toString(), decimals))
     }
 
-    pendingDistribution = pendingDistribution.add(distributed)
+    pendingDistribution = pendingDistribution + distributed
   }
 
-  for (let i = 0; i < totalTiers.toNumber(); i++) {
+  for (let i = 0; i < totalTiers; i++) {
     const wallets: any = {}
     const walletList = revPathMetadata?.walletList[i] || []
     const tierLimit = await revPathV2FinalRead.getTokenTierLimits(isERC20 ? tokenList[isERC20][_chainId] : AddressZeroMATIC, i)
 
-    let walletsTierLimit = ethers.BigNumberish.from(0)
+    let walletsTierLimit = BigInt(0)
     const walletTier = []
 
     for (let j = 0; j < walletList.length; j++) {
@@ -82,7 +82,7 @@ export async function withdrawableV2Final(this: R3vlClient, payload?: FnArgs) {
     for (const walletTierProportioId in walletTier) {
       const walletTierLimit = walletTier[walletTierProportioId].limit
 
-      walletsTierLimit = walletsTierLimit.add(walletTierLimit)
+      walletsTierLimit = walletsTierLimit + walletTierLimit
     }
 
     for (let j = 0; j < walletList.length; j++) {
@@ -90,26 +90,26 @@ export async function withdrawableV2Final(this: R3vlClient, payload?: FnArgs) {
       const walletTierLimit = walletTier[j].limit
 
       if (parseFloat(ethers.formatEther(tierLimit)) === 0) {
-        let received = parseFloat(ethers.formatEther(pendingDistribution.mul(walletTierProportion).div(1000000000000000).div(100000)))
+        let received = parseFloat(ethers.formatEther(pendingDistribution * walletTierProportion / BigInt(1000000000000000) / BigInt(100000)))
 
         wallets[walletList[j]] = received
 
         continue
       }
 
-      if (pendingDistribution.gte(walletsTierLimit)) {
+      if (pendingDistribution > walletsTierLimit) {
         wallets[walletList[j]] = parseFloat(ethers.formatEther(walletTierLimit))
 
-        pendingDistribution = pendingDistribution.sub(walletTierLimit)
-      } else if (pendingDistribution.lt(walletsTierLimit)) {
-        let received = pendingDistribution.mul(walletTierProportion).div(1000000000000000).div(100000)
+        pendingDistribution = pendingDistribution - walletTierLimit
+      } else if (pendingDistribution < walletsTierLimit) {
+        let received = pendingDistribution * walletTierProportion / BigInt(1000000000000000) / BigInt(100000)
 
-        if (received.gte(walletTierLimit) || pendingDistribution.gt(walletTierLimit)) received = walletTierLimit
-        if (j + 1 === walletList.length && walletTierLimit.gte(pendingDistribution)) received = pendingDistribution
+        if (received > walletTierLimit || pendingDistribution < walletTierLimit) received = walletTierLimit
+        if (j + 1 === walletList.length && walletTierLimit > pendingDistribution) received = pendingDistribution
 
         wallets[walletList[j]] = parseFloat(ethers.formatEther(received))
 
-        pendingDistribution = pendingDistribution.sub(received)
+        pendingDistribution = pendingDistribution - received
       }
     }
 
@@ -147,7 +147,7 @@ export async function withdrawableTiersV2Final(this: R3vlClient, payload?: FnArg
 
   const tiers = []
 
-  for (let i = 0; i < totalTiers.toNumber(); i++) {
+  for (let i = 0; i < totalTiers; i++) {
     let distributed = await revPathV2FinalRead.getTierDistributedAmount(isERC20 ? tokenList[isERC20][_chainId] : AddressZero, i)
 
     if (isERC20) {
@@ -156,20 +156,20 @@ export async function withdrawableTiersV2Final(this: R3vlClient, payload?: FnArg
       distributed = ethers.parseEther(ethers.formatUnits(distributed.toString(), decimals))
     }
 
-    pendingDistribution = pendingDistribution.add(distributed)
+    pendingDistribution = pendingDistribution + distributed
   }
 
-  for (let i = 0; i < totalTiers.toNumber(); i++) {
+  for (let i = 0; i < totalTiers; i++) {
     const wallets: any = {}
     const walletList = revPathMetadata?.walletList[i] || []
     const tierLimit = await revPathV2FinalRead.getTokenTierLimits(isERC20 ? tokenList[isERC20][_chainId] : AddressZeroMATIC, i)
 
-    let walletsTierLimit = ethers.BigNumberish.from(0)
+    let walletsTierLimit = BigInt(0)
 
     for (let j = 0; j < walletList.length; j ++) {
       const walletTierLimit = parseWalletTier(revPathMetadata, i, j, isERC20).limit
 
-      walletsTierLimit = walletsTierLimit.add(walletTierLimit)
+      walletsTierLimit = walletsTierLimit + walletTierLimit
     }
 
     for (let j = 0; j < walletList.length; j ++) {
@@ -177,26 +177,26 @@ export async function withdrawableTiersV2Final(this: R3vlClient, payload?: FnArg
       const walletTierLimit = parseWalletTier(revPathMetadata, i, j, isERC20).limit
       
       if (parseFloat(ethers.formatEther(tierLimit)) === 0) {
-        let received = parseFloat(ethers.formatEther(pendingDistribution.mul(walletTierProportion).div(1000000000000000).div(100000)))
+        let received = parseFloat(ethers.formatEther(pendingDistribution * walletTierProportion / BigInt(1000000000000000) / BigInt(100000)))
 
         wallets[walletList[j]] = received
 
         continue
       }
 
-      if (pendingDistribution.gte(walletsTierLimit)) {
+      if (pendingDistribution > walletsTierLimit) {
         wallets[walletList[j]] = parseFloat(ethers.formatEther(walletTierLimit))
 
-        pendingDistribution = pendingDistribution.sub(walletTierLimit)
-      } else if (pendingDistribution.lt(walletsTierLimit)) {
-        let received = pendingDistribution.mul(walletTierProportion).div(1000000000000000).div(100000)
+        pendingDistribution = pendingDistribution - walletTierLimit
+      } else if (pendingDistribution < walletsTierLimit) {
+        let received = pendingDistribution * walletTierProportion / BigInt(1000000000000000) / BigInt(100000)
 
-        if (received.gte(walletTierLimit) || pendingDistribution.gt(walletTierLimit)) received = walletTierLimit
-        if (j + 1 === walletList.length && walletTierLimit.gte(pendingDistribution)) received = pendingDistribution
+        if (received > walletTierLimit || pendingDistribution > walletTierLimit) received = walletTierLimit
+        if (j + 1 === walletList.length && walletTierLimit > pendingDistribution) received = pendingDistribution
 
         wallets[walletList[j]] = parseFloat(ethers.formatEther(received))
 
-        pendingDistribution = pendingDistribution.sub(received)
+        pendingDistribution = pendingDistribution - received
       }
     }
 

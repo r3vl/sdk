@@ -13,7 +13,7 @@ export async function transferOwnershipV2(this: R3vlClient, newOwner: AddressInp
   try {
     if (opts?.isGasLess && relay?.signatureCall) {
       // const { data } = await revPathV2Write.populateTransaction.setTrustedForwarder("0xb539068872230f20456CF38EC52EF2f91AF4AE49")
-      const { data } = await revPathV2Write.populateTransaction.transferOwnership(newOwner)
+      const { data } = await revPathV2Write.transferOwnership.populateTransaction(newOwner)
 
       const request = {
         chainId: _chainId,
