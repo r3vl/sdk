@@ -30,9 +30,9 @@ export async function createRevenuePathV2Final(
     name, 
     mutabilityDisabled 
   } : FnArgs,
-  opts?: GeneralOpts & GaslessOpts
+  opts?: GeneralOpts & GaslessOpts & { isSimple?: boolean }
 ) {
-  if (walletList.length === 1) return await createRevenuePathSimple.call(this, { 
+  if (opts?.isSimple) return await createRevenuePathSimple.call(this, { 
     walletList,
     distribution,
     name,
