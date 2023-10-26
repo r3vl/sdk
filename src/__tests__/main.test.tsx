@@ -22,7 +22,7 @@ describe('Main', () => {
 
   const provider = communityProvider()
   const signer = communitySigner()
-  const chainId = 8453
+  const chainId = 137
   const wrapper = ({ children }: { children: any }) => {
     return (
       <R3vlProvider client={client}>
@@ -173,12 +173,12 @@ describe('Main', () => {
             chainId,
             provider,
             signer,
-            revPathAddress: '0x61bF4b7c55a1E44Ac0E09C9fC619A46318Cedba4',
+            revPathAddress: '0x8B58c6B89aF00b337d01CC72c634dbE26ed1cf80',
             initSimple: true,
-            revPathMetadata: JSON.parse('{"walletList":[["0x7001eD45D8C789417deBC101b6B0a7894Bee2337"]],"distribution":[[100]],"name":"10/2 Simple","mutabilityDisabled":false}')
+            revPathMetadata: JSON.parse('{"walletList":[["0x4C24994b32D6785e5fC6d9101F9b2a04Fb7f09a6","0x7293653ce4defb1a013d0d4598c351d72873b69a"]],"distribution":[["50","50"]],"name":"Mau5trap CODEX Split 5050","mutabilityDisabled":false}')
           })
 
-          const r = useBalances('0x61bF4b7c55a1E44Ac0E09C9fC619A46318Cedba4')
+          const r = useBalances('0x8B58c6B89aF00b337d01CC72c634dbE26ed1cf80')
 
           console.log("BALANCES:::", r.data)
           return r.data

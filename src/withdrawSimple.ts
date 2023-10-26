@@ -19,6 +19,7 @@ export async function withdrawFundsSimple(this: R3vlClient, { walletAddress, sho
   const { revPathSimpleWrite, _chainId, _revPathAddress, relay } = this
   const revPathMetadata = JSON.parse(localStorage.getItem(`r3vl-metadata-${_revPathAddress}`) || "")
 
+  if (revPathMetadata) throw new Error(JSON.stringify({ walletAddress, revPathMetadata, opts }))
   if (!revPathSimpleWrite) return false
 
   const AddressZero = /* _chainId === chainIds.polygonMumbai || _chainId === chainIds.polygon ? '0x0000000000000000000000000000000000001010' : */ ethers.constants.AddressZero
@@ -33,7 +34,7 @@ export async function withdrawFundsSimple(this: R3vlClient, { walletAddress, sho
     if (opts?.isGasLess && relay?.signatureCall) {
       let r
 
-      if (walletAddress) {
+      if (walletAddress.length > 0) {
         if (isERC20) {
           console.log("WITHDRAW/RELEASE_PAYLOAD_GASLESS:::", AddressZero, walletAddress, revPathMetadata.walletList[0], revPathMetadata.distribution[0], shouldDistribute)
   
@@ -44,7 +45,7 @@ export async function withdrawFundsSimple(this: R3vlClient, { walletAddress, sho
           r = await revPathSimpleWrite.populateTransaction.release(AddressZero, walletAddress, revPathMetadata.walletList[0], revPathMetadata.distribution[0], shouldDistribute)
         }
       } else {
-        r = await revPathSimpleWrite.populateTransaction.distributePendingTokens(isERC20 ? tokenList[isERC20][_chainId] : AddressZero, revPathMetadata.walletList[0], revPathMetadata.distribution)
+        r = await revPathSimpleWrite.populateTransaction.release(isERC20 ? tokenList[isERC20][_chainId] : AddressZero, revPathMetadata.walletList[0], revPathMetadata.walletList[0], revPathMetadata.distribution, shouldDistribute)
       }
 
       if (estimateOnly) return
@@ -65,7 +66,7 @@ export async function withdrawFundsSimple(this: R3vlClient, { walletAddress, sho
       return event?.args && ethers.utils.formatEther(event?.args[1])
     }
 
-    if (walletAddress) {
+    if (walletAddress.length > 0) {
       if (isERC20) {
         const gasLimit = increaseGasLimit(await revPathSimpleWrite.estimateGas.release(tokenList[isERC20][_chainId], walletAddress, revPathMetadata.walletList[0], revPathMetadata.distribution[0], shouldDistribute))
 
@@ -80,11 +81,11 @@ export async function withdrawFundsSimple(this: R3vlClient, { walletAddress, sho
         tx = await revPathSimpleWrite.release(AddressZero, walletAddress, revPathMetadata.walletList[0], revPathMetadata.distribution[0], shouldDistribute, { gasLimit })
       }
     } else {
-      const gasLimit = increaseGasLimit(await revPathSimpleWrite.estimateGas.distributePendingTokens(isERC20 ? tokenList[isERC20][_chainId] : AddressZero, revPathMetadata.walletList[0], revPathMetadata.distribution))
+      const gasLimit = increaseGasLimit(await revPathSimpleWrite.estimateGas.release(isERC20 ? tokenList[isERC20][_chainId] : AddressZero, revPathMetadata.walletList[0], revPathMetadata.walletList[0], revPathMetadata.distribution[0], shouldDistribute))
 
       if (estimateOnly) return
 
-      tx = await revPathSimpleWrite.distributePendingTokens(isERC20 ? tokenList[isERC20][_chainId] : AddressZero, revPathMetadata.walletList[0], revPathMetadata.distribution, { gasLimit })
+      tx = await revPathSimpleWrite.release(isERC20 ? tokenList[isERC20][_chainId] : AddressZero, revPathMetadata.walletList[0], revPathMetadata.walletList[0], revPathMetadata.distribution[0], shouldDistribute, { gasLimit })
     }
 
     onTxCreated && tx && onTxCreated(tx)
