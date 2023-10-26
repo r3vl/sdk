@@ -1,7 +1,10 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Provider } from '@ethersproject/abstract-provider'
 import { Signer } from '@ethersproject/abstract-signer'
 import { GelatoRelay, CallWithERC2771Request, SignerOrProvider } from "@gelatonetwork/relay-sdk"
 import { Polybase } from "@polybase/client";
+// @ts-ignore
+import { getEthersV6Provider } from "@r3vl/utils"
 
 import {
   InvalidConfigError,
@@ -28,8 +31,6 @@ import {
 import { ethers } from 'ethers'
 import axios from 'axios';
 import { R3vlClient } from '.';
-
-declare const web3: any;
 
 const relay = new GelatoRelay()
 
@@ -131,15 +132,16 @@ export default class Base {
   }
   
   async signatureCall(request: CallWithERC2771Request, gasLessKey: string) {
-    const { _provider, _signer } = this
+    const { _provider, _chainId } = this
     // const web3Provider = new ethers.providers.Web3Provider((web3 as any).currentProvider)
+    const provider = getEthersV6Provider(_chainId)
     const user = await this._signer?.getAddress()
 
-    if (!user || !gasLessKey || !_signer) throw new Error("Can't execute Gelato SDK.")
+    if (!user || !gasLessKey) throw new Error("Can't execute Gelato SDK.")
 
     const { taskId } = await relay.sponsoredCallERC2771(
-      { ...request, user },
-      _signer as unknown as SignerOrProvider,
+      { ...request, user, chainId: BigInt(_chainId) },
+      provider,
       gasLessKey
     )
 

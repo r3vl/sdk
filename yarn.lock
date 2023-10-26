@@ -1799,6 +1799,13 @@
     tweetnacl "^1.0.3"
     tweetnacl-util "^0.15.1"
 
+"@r3vl/utils@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@r3vl/utils/-/utils-0.0.2.tgz#fe2ebceaafdcb71348a8c18f818ba4cefb98a254"
+  integrity sha512-OWGpdiein7M7h3i7n9uncI+HU+aRurWNZawxP8lxa9BkVGlbDT4e/voWd6NU4YOB27xrsBV/UX0iFKGu+3gg8Q==
+  dependencies:
+    ethers "^6.7.1"
+
 "@rollup/plugin-babel@^6.0.3":
   version "6.0.3"
   resolved "https://registry.yarnpkg.com/@rollup/plugin-babel/-/plugin-babel-6.0.3.tgz#07ccde15de278c581673034ad6accdb4a153dfeb"
@@ -3609,6 +3616,19 @@ ethers@^5.7.2:
     "@ethersproject/wallet" "5.7.0"
     "@ethersproject/web" "5.7.1"
     "@ethersproject/wordlists" "5.7.0"
+
+ethers@^6.7.1:
+  version "6.7.1"
+  resolved "https://registry.yarnpkg.com/ethers/-/ethers-6.7.1.tgz#9c65e8b5d8e9ad77b7e8cf1c46099892cfafad49"
+  integrity sha512-qX5kxIFMfg1i+epfgb0xF4WM7IqapIIu50pOJ17aebkxxa4BacW5jFrQRmCJpDEg2ZK2oNtR5QjrQ1WDBF29dA==
+  dependencies:
+    "@adraffy/ens-normalize" "1.9.2"
+    "@noble/hashes" "1.1.2"
+    "@noble/secp256k1" "1.7.1"
+    "@types/node" "18.15.13"
+    aes-js "4.0.0-beta.5"
+    tslib "2.4.0"
+    ws "8.5.0"
 
 execa@^5.0.0:
   version "5.1.1"

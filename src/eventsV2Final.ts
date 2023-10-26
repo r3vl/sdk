@@ -97,9 +97,9 @@ export async function getRevPathTransactionEventsV2Final(this: R3vlClient, _revP
     usdcTransfers,
     daiTransfers,
     erc20s: {
-      [sdk?.weth.address]: await sdk?.weth.symbol(),
-      [sdk?.usdc.address]: await sdk?.usdc.symbol(),
-      [sdk?.dai.address]: await sdk?.dai.symbol()
+      [sdk?.weth.address]: "WETH",
+      [sdk?.usdc.address]: "USDC",
+      [sdk?.dai.address]: "DAI"
     }
   }
 }
