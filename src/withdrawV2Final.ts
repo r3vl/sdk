@@ -27,7 +27,7 @@ export async function withdrawFundsV2Final(this: R3vlClient, { walletAddress, sh
     let tx
 
     revPathMetadata.distribution = revPathMetadata.distribution.map((d: number[]) => {
-      return d.map((_d: number) => _d * 100000)
+      return d.map((_d: number) => (_d * 100000).toFixed(0))
     })
 
     if (opts?.isGasLess && relay?.signatureCall) {

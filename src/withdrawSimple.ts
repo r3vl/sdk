@@ -19,16 +19,22 @@ export async function withdrawFundsSimple(this: R3vlClient, { walletAddress, sho
   const { revPathSimpleWrite, _chainId, _revPathAddress, relay } = this
   const revPathMetadata = JSON.parse(localStorage.getItem(`r3vl-metadata-${_revPathAddress}`) || "")
 
-  if (revPathMetadata) throw new Error(JSON.stringify({ walletAddress, revPathMetadata, opts }))
   if (!revPathSimpleWrite) return false
-
+  
   const AddressZero = /* _chainId === chainIds.polygonMumbai || _chainId === chainIds.polygon ? '0x0000000000000000000000000000000000001010' : */ ethers.constants.AddressZero
+  
+  // if (revPathMetadata) throw new Error(JSON.stringify({ walletAddress, revPathMetadata, opts }))
+  // revPathMetadata.distribution = revPathMetadata.distribution.map((d: number[]) => {
+  //   return d.map((_d: number) => _d * 100000)
+  // })
+
+  // if (AddressZero) throw new Error(JSON.stringify({ revPath: revPathSimpleWrite.address,token: isERC20 ? tokenList[isERC20][_chainId] : AddressZero, walletList: revPathMetadata.walletList[0], distribution: revPathMetadata.distribution[0], shouldDistribute }))
 
   try {
     let tx
 
     revPathMetadata.distribution = revPathMetadata.distribution.map((d: number[]) => {
-      return d.map((_d: number) => _d * 100000)
+      return d.map((_d: number) => (_d * 100000).toFixed(0))
     })
 
     if (opts?.isGasLess && relay?.signatureCall) {
@@ -94,7 +100,10 @@ export async function withdrawFundsSimple(this: R3vlClient, { walletAddress, sho
     const [event] = result?.events || [{ args: [] }]
 
     return event?.args && ethers.utils.formatEther(event?.args[1])
-  } catch (error) {
+  } catch (error: any) {
+    if (error) throw error
+    // if (error.message.includes("UNPREDICTABLE_GAS_LIMIT")) return -2
+
     return -1
   }
 }

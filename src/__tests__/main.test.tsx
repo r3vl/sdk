@@ -173,12 +173,12 @@ describe('Main', () => {
             chainId,
             provider,
             signer,
-            revPathAddress: '0x8B58c6B89aF00b337d01CC72c634dbE26ed1cf80',
+            revPathAddress: '0x861b1186CF08C4Cc60E9d3494097650B749beCDB',
             initSimple: true,
-            revPathMetadata: JSON.parse('{"walletList":[["0x4C24994b32D6785e5fC6d9101F9b2a04Fb7f09a6","0x7293653ce4defb1a013d0d4598c351d72873b69a"]],"distribution":[["50","50"]],"name":"Mau5trap CODEX Split 5050","mutabilityDisabled":false}')
+            revPathMetadata: JSON.parse('{"walletList":[["0x92d5cE61Efa49f88e680078Da85a3487809aaE45","0xb2d7647Ea42E8f4bB91d860FDF4A580ee062581f","0xAb889de6282031A70060Fd008D11CbD7fc3C561d"]],"distribution":[[33.33334,33.33333,33.33333]],"name":"Simpl e","mutabilityDisabled":false,"isSimple":true}')
           })
 
-          const r = useBalances('0x8B58c6B89aF00b337d01CC72c634dbE26ed1cf80')
+          const r = useBalances('0x861b1186CF08C4Cc60E9d3494097650B749beCDB', { walletAddress: "0x92d5cE61Efa49f88e680078Da85a3487809aaE45" })
 
           console.log("BALANCES:::", r.data)
           return r.data
