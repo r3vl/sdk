@@ -101,9 +101,6 @@ export async function withdrawFundsSimple(this: R3vlClient, { walletAddress, sho
 
     return event?.args && ethers.utils.formatEther(event?.args[1])
   } catch (error: any) {
-    if (error) throw error
-    // if (error.message.includes("UNPREDICTABLE_GAS_LIMIT")) return -2
-
     return -1
   }
 }

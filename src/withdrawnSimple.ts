@@ -22,9 +22,9 @@ export async function withdrawnFundsSimple(this: R3vlClient, payload?: FnArgs) {
 
   const { walletAddress, isERC20 } = payload || { walletAddress: undefined, isERC20: undefined }
 
-  // const isTxValid = await withdrawFundsSimple.call(this, { walletAddress: walletAddress ? [walletAddress as string] : [], shouldDistribute: true, isERC20, estimateOnly: true })
+  const isTxValid = await withdrawFundsSimple.call(this, { walletAddress: walletAddress ? [walletAddress as string] : [], shouldDistribute: true, isERC20, estimateOnly: true })
 
-  // if (isTxValid === -1) return isTxValid
+  if (isTxValid === -1) return isTxValid
 
   let released = walletAddress ? await revPathSimpleRead.getTokenWithdrawn(
     isERC20 ? tokenList[isERC20][_chainId] : AddressZero,
