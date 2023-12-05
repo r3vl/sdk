@@ -33,16 +33,21 @@ export async function tiersSimple(this: R3vlClient, opts?: GeneralOpts): Promise
   const walletsDistributedDAIPromise = withdrawableTiersSimple.call(_context, { isERC20: 'dai' })
 
   const [
-    walletsDistributedETH,
-    walletsDistributedWETH,
-    walletsDistributedUSDC,
-    walletsDistributedDAI,
-  ] = await Promise.all([
+    _walletsDistributedETH,
+    _walletsDistributedWETH,
+    _walletsDistributedUSDC,
+    _walletsDistributedDAI,
+  ] = (await Promise.allSettled([
     walletsDistributedETHPromise,
     walletsDistributedWETHPromise,
     walletsDistributedUSDCPromise,
     walletsDistributedDAIPromise,
-  ])
+  ])) as any
+
+  const walletsDistributedETH =_walletsDistributedETH.value || []
+  const walletsDistributedWETH = _walletsDistributedWETH.value || []
+  const walletsDistributedUSDC = _walletsDistributedUSDC.value || []
+  const walletsDistributedDAI = _walletsDistributedDAI.value || []
 
   for (let i = 0; i < tiersNumber; i++) {
     const walletList = (revPathMetadata?.walletList[i] || []) as string[]
@@ -57,10 +62,10 @@ export async function tiersSimple(this: R3vlClient, opts?: GeneralOpts): Promise
       proportions[wallet] =  parseFloat(ethers.utils.formatEther(p))
 
       available[wallet] = {
-        [AddressZero]: walletsDistributedETH[i][wallet],
-        [sdk.weth.address]: walletsDistributedWETH[i][wallet],
-        [sdk.usdc.address]: walletsDistributedUSDC[i][wallet],
-        [sdk.dai.address]: walletsDistributedDAI[i][wallet],
+        [AddressZero]: walletsDistributedETH[i] ? walletsDistributedETH[i][wallet] : 0,
+        [sdk.weth.address]: walletsDistributedWETH[i] ? walletsDistributedWETH[i][wallet] : 0,
+        [sdk.usdc.address]: walletsDistributedUSDC[i] ? walletsDistributedUSDC[i][wallet] : 0,
+        [sdk.dai.address]: walletsDistributedDAI[i] ? walletsDistributedDAI[i][wallet] : 0,
       }
     }
 

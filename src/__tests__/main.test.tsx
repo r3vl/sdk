@@ -22,7 +22,7 @@ describe('Main', () => {
 
   const provider = communityProvider()
   const signer = communitySigner()
-  const chainId = 137
+  const chainId = 10
   const wrapper = ({ children }: { children: any }) => {
     return (
       <R3vlProvider client={client}>
@@ -140,12 +140,12 @@ describe('Main', () => {
           useR3vlClient({
             chainId,
             provider,
-            revPathAddress: '0xD41Fa1142E29742cbFe708C20cCcd690EC4A8E03',
+            revPathAddress: '0x3f2A744e0134F5070171F7Ce9BBBb8f065B4c984',
             initV2Final: true,
-            revPathMetadata: JSON.parse('{"walletList":[["0x0807c5C8Fa8a8229870CFecb6E2E71Dcb6a78261","0x5Ce5892FB75F63fB3c700ffe2Ac0Bb18F53dA80a"],["0x5Ce5892FB75F63fB3c700ffe2Ac0Bb18F53dA80a"]],"distribution":[["5","95"],[100]],"tiers":[{"matic":"0.5"}],"name":"Leo Polygon test path (1 tier) ","mutabilityDisabled":false}')
+            revPathMetadata: JSON.parse('{"walletList":[["0x92d5cE61Efa49f88e680078Da85a3487809aaE45","0xb2d7647Ea42E8f4bB91d860FDF4A580ee062581f"],["0x92d5cE61Efa49f88e680078Da85a3487809aaE45","0xb2d7647Ea42E8f4bB91d860FDF4A580ee062581f"]],"distribution":[["90",10],["90","10"]],"tiers":[{"eth":"0.001"}],"name":"Gasless Path (With Tiers)","mutabilityDisabled":false,"isGasLess":true}')
           })
 
-          const r = useTransactionEvents('0xD41Fa1142E29742cbFe708C20cCcd690EC4A8E03')
+          const r = useTransactionEvents('0x3f2A744e0134F5070171F7Ce9BBBb8f065B4c984')
 
           console.log("TXS:::", r.data)
           return r
@@ -172,12 +172,13 @@ describe('Main', () => {
           useR3vlClient({
             chainId,
             provider,
-            revPathAddress: '0x3E3E2d2EF041B456eaEb53E543F92e3688bec41f',
-            initV2Final: true,
-            revPathMetadata: JSON.parse('{"walletList":[["0x7001eD45D8C789417deBC101b6B0a7894Bee2337"],["0x7001eD45D8C789417deBC101b6B0a7894Bee2337","0xD6d0c9fC8F1f6cbCa3472052df3678E5b29b2DcA"]],"distribution":[[100],[50,50]],"tiers":[{"matic":"1"}],"name":"V2 Poly - GasOn TierOn MutOn","mutabilityDisabled":false}')
+            signer,
+            revPathAddress: '0x6688ff29d36C2E12eD1F3a9bA504E4Eb5013E25C',
+            initSimple: true,
+            revPathMetadata: JSON.parse('{"walletList":[["0x92d5cE61Efa49f88e680078Da85a3487809aaE45","0xb2d7647Ea42E8f4bB91d860FDF4A580ee062581f"]],"distribution":[[50,50]],"name":"Test Path","mutabilityDisabled":false,"isGasLess":true}')
           })
 
-          const r = useBalances('0x3E3E2d2EF041B456eaEb53E543F92e3688bec41f')
+          const r = useBalances('0x6688ff29d36C2E12eD1F3a9bA504E4Eb5013E25C', { walletAddress: "0x92d5cE61Efa49f88e680078Da85a3487809aaE45" })
 
           console.log("BALANCES:::", r.data)
           return r.data
@@ -202,14 +203,14 @@ describe('Main', () => {
             chainId,
             provider,
             signer,
-            revPathAddress: '0xD41Fa1142E29742cbFe708C20cCcd690EC4A8E03',
-            initV2Final: true,
-            revPathMetadata: JSON.parse('{"walletList":[["0x0807c5C8Fa8a8229870CFecb6E2E71Dcb6a78261","0x5Ce5892FB75F63fB3c700ffe2Ac0Bb18F53dA80a"],["0x5Ce5892FB75F63fB3c700ffe2Ac0Bb18F53dA80a"]],"distribution":[["5","95"],[100]],"tiers":[{"matic":"0.5"}],"name":"Leo Polygon test path (1 tier) ","mutabilityDisabled":false}')
+            revPathAddress: '0x61bF4b7c55a1E44Ac0E09C9fC619A46318Cedba4',
+            initSimple: true,
+            revPathMetadata: JSON.parse('{"walletList":[["0x7001eD45D8C789417deBC101b6B0a7894Bee2337"]],"distribution":[[100]],"name":"10/2 Simple","mutabilityDisabled":false}')
           })
 
-          const r = useRevenuePathTiers('0xD41Fa1142E29742cbFe708C20cCcd690EC4A8E03')
+          const r = useRevenuePathTiers('0x61bF4b7c55a1E44Ac0E09C9fC619A46318Cedba4')
 
-          console.log("Tiers:", r.data?.[0], r.data?.[1])
+          console.log("Tiers:", r.data?.[0].available)
           return r
         },
         { wrapper }

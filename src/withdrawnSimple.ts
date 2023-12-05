@@ -2,6 +2,7 @@ import { ethers } from 'ethers'
 
 import { chainIds, tokenList } from "./constants/tokens"
 import { R3vlClient } from './client'
+import { withdrawFundsSimple } from './withdrawSimple'
 
 export type FnArgs = {
   walletAddress?: string
@@ -21,22 +22,26 @@ export async function withdrawnFundsSimple(this: R3vlClient, payload?: FnArgs) {
 
   const { walletAddress, isERC20 } = payload || { walletAddress: undefined, isERC20: undefined }
 
-  try {
-    let released = walletAddress ? await revPathSimpleRead.getTokenWithdrawn(
-      isERC20 ? tokenList[isERC20][_chainId] : AddressZero,
-      walletAddress
-    ) : await revPathSimpleRead.getTotalTokenReleased(isERC20 ? tokenList[isERC20][_chainId] : AddressZero)
+  const isTxValid = await withdrawFundsSimple.call(this, { walletAddress: walletAddress ? [walletAddress as string] : [], shouldDistribute: true, isERC20, estimateOnly: true })
 
-    if (isERC20) {
-      const decimals = await (sdk as any)[isERC20].decimals()
-  
-      released = ethers.utils.parseEther(ethers.utils.formatUnits(released.toString(), decimals))
-    }
+  if (isTxValid === -1) return isTxValid
 
-    const result = parseFloat(ethers.utils.formatEther(released))
+  let released = walletAddress ? await revPathSimpleRead.getTokenWithdrawn(
+    isERC20 ? tokenList[isERC20][_chainId] : AddressZero,
+    walletAddress
+  ) : await revPathSimpleRead.getTotalTokenReleased(isERC20 ? tokenList[isERC20][_chainId] : AddressZero)
 
-    return result
-  } catch (error) {
-    console.error(error)
+  if (isERC20) {
+    const decimals = await (sdk as any)[isERC20].decimals()
+
+    released = ethers.utils.parseEther(ethers.utils.formatUnits(released.toString(), decimals))
   }
+
+  const pF: any = await revPathSimpleRead.getGasFee()
+
+  const fee = (pF.toNumber() / 10000000)
+
+  const result = pF.toNumber() > 0 ? parseFloat(ethers.utils.formatEther(released)) + parseFloat(ethers.utils.formatEther(released)) * fee : parseFloat(ethers.utils.formatEther(released))
+
+  return result
 }

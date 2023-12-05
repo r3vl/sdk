@@ -18,7 +18,8 @@ export const chainIds = {
   hardhat: 31337,
   foundry: 31337,
   aurora: 1313161554,
-  auroraTestnet: 1313161555
+  auroraTestnet: 1313161555,
+  base: 8453
 }
 
 export const getTokenListByAddress = (chainId: number) => Object.keys(tokenList).reduce((prev, curr) => { return { ...prev, [tokenList[curr as keyof typeof tokenList][chainId]]: curr } }, {})
@@ -35,12 +36,14 @@ export const tokenList = {
     name: "Goerli",
     [chainIds.goerli]: "0x0000000000000000000000000000000000000000",
     [chainIds.mainnet]: "0x0000000000000000000000000000000000000000",
+    [chainIds.base]: "0x0000000000000000000000000000000000000000",
   },
   eth: {
     name: "Ethereum",
     [chainIds.goerli]: "0x0000000000000000000000000000000000000000",
     [chainIds.optimism]: "0x0000000000000000000000000000000000000000",
     [chainIds.mainnet]: "0x0000000000000000000000000000000000000000",
+    [chainIds.base]: "0x0000000000000000000000000000000000000000",
   },
   matic: {
     name: "Matic",
@@ -59,6 +62,7 @@ export const tokenList = {
     [chainIds.optimismGoerli]: "0x4200000000000000000000000000000000000006",
     [chainIds.arbitrumGoerli]: "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
     [chainIds.auroraTestnet]: "0xc9bdeed33cd01541e1eed10f90519d2c06fe3feb",
+    [chainIds.base]: "0xc9bdeed33cd01541e1eed10f90519d2c06fe3feb",
   },
   weth: {
     name: "Wrapped Ether",
@@ -72,6 +76,7 @@ export const tokenList = {
     [chainIds.optimismGoerli]: "0x4200000000000000000000000000000000000006",
     [chainIds.arbitrumGoerli]: "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
     [chainIds.auroraTestnet]: "0xc9bdeed33cd01541e1eed10f90519d2c06fe3feb",
+    [chainIds.base]: "0x4200000000000000000000000000000000000006",
   },
   dai: {
     name: "DAI",
@@ -85,6 +90,7 @@ export const tokenList = {
     [chainIds.optimismGoerli]: "0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1",
     [chainIds.arbitrumGoerli]: "0xda10009cbd5d07dd0cecc66161fc93d7c9000da1",
     [chainIds.auroraTestnet]: "0xe3520349F477A5F6EB06107066048508498A291b",
+    [chainIds.base]: "0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb",
   },
   usdc: {
     name: "USD Coin",
@@ -98,6 +104,7 @@ export const tokenList = {
     [chainIds.optimismGoerli]: "0x7f5c764cbc14f9669b88837ca1490cca17c31607",
     [chainIds.arbitrumGoerli]: "0xff970a61a04b1ca14834a43f5de4533ebddb5cc8",
     [chainIds.auroraTestnet]: "0xb12bfca5a55806aaf64e99521918a4bf0fc40802",
+    [chainIds.base]: "0x2e668Bb88287675e34c8dF82686dfd0b7F0c0383",
   },
 } as {
   gor: Token

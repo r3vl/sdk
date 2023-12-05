@@ -7,13 +7,13 @@ export default defineConfig({
       reveelMainV0: '0x1b5aa0D926ea3c4C4485Ba447c9ABd9A5A128967',
       reveelMainV1: '0x320becCdfbed31a84A0c6E6F678320814B400BBe',
       reveelMainV2: '0xae4EfaEB758f149f9C780268986537E45Bd57d7C',
-      reveelMainV2Final: '0x19AA1Df5c022639AE3a0c3AB621Ba0299Da743d6',
-      reveelMainSimple: '0xA1b3C49DBFAcE5aFD60A67a9387a41FA6d6899e6',
+      reveelMainV2Final: '0xc61641DEEdf811C8A1F515DEF22C1f7a04891C83',
+      reveelMainSimple: '0xBC8B684B6De76E00E4D11536b7c928B0f8011d8C',
       pathLibraryV0: '0x92582A5091A55A8Cd168A927ec100fDD13Ec0f20',
       pathLibraryV1: '0x9C23D192313b60225459bee71BC96cF49740418E',
       pathLibraryV2: '0x0000000000000000000000000000000000000000', // TODO: Get correct mainnet address
-      pathLibraryV2Final: '0x348472Dcd59A79A5Bb0969D854ce08b62ba0D171',
-      pathLibrarySimple: '0xA740004d026E0d11A9E1B21E479d8daE967beB2B',
+      pathLibraryV2Final: '0x698A4Ccd56Cf95d489Ba5d5DC00C5A2BEA9837C4',
+      pathLibrarySimple: '0x9f5808662520633DaeB0f30ef6659e64189Cb193',
       weth: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
       usdc: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
       dai: '0x6B175474E89094C44Da98b954EedeAC495271d0F'
@@ -49,12 +49,12 @@ export default defineConfig({
     polygon: {
       reveelMainV1: '0x0000000000000000000000000000000000000000',
       reveelMainV2: '0xEF44D8e4eAb1ACB4922B983253B5B50386E8668E',
-      reveelMainV2Final: '0x491D8fCf021B16b9b62501b88A2Bdd35cb72Ade0',
-      reveelMainSimple: '0xEd649b6BB53d1A2ea670aee1EC0e45A350669a78',
+      reveelMainV2Final: '0xFB20BcAeEA95a2B6619b7b64F47a00204779d03c',
+      reveelMainSimple: '0x9cFAB8430cEC3295C62f562cD2e8B76cF3AB613C',
       pathLibraryV1: '0x0000000000000000000000000000000000000000',
       pathLibraryV2: '0x81d5b18d28368636c7d3C7565025203E9dBfA00b',
-      pathLibraryV2Final: '0xEdAD0FD63FAB918D4B218b37eC22299aEBeeaFeE',
-      pathLibrarySimple: '0x4ec39Bc9A75E2265B4b23564b0B38Ff4d6ecbb20',
+      pathLibraryV2Final: '0x6e3CAC8E17a5c5642efB1a6873eDD34AfE04AB3A',
+      pathLibrarySimple: '0x3b3DB48e1291aFaBFe1755FfdF24A2159F8D8684',
       weth: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
       usdc: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
       dai: '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063'
@@ -88,12 +88,12 @@ export default defineConfig({
     optimism: {
       reveelMainV1: '0xb05Bcdfd259D08728db7517bf3c3CC4262D3b451',
       reveelMainV2: '0xEF44D8e4eAb1ACB4922B983253B5B50386E8668E',
-      reveelMainV2Final: '0xA740004d026E0d11A9E1B21E479d8daE967beB2B',
-      reveelMainSimple: '0xcE6E206716a1dd753924d7685A93E33AC4CBAfEd',
+      reveelMainV2Final: '0xA1b3C49DBFAcE5aFD60A67a9387a41FA6d6899e6',
+      reveelMainSimple: '0x698A4Ccd56Cf95d489Ba5d5DC00C5A2BEA9837C4',
       pathLibraryV1: '0x0000000000000000000000000000000000000000',
       pathLibraryV2: '0x81d5b18d28368636c7d3C7565025203E9dBfA00b',
-      pathLibraryV2Final: '0xea4dA7b550220534321C92197629b0BCa9bD451c',
-      pathLibrarySimple: '0x2cA5bcc99a4eB479F97B897BedCE46BC899fb310',
+      pathLibraryV2Final: '0x59d95a65DC0CA28588F204CB3c84f637c6A325fe',
+      pathLibrarySimple: '0x19AA1Df5c022639AE3a0c3AB621Ba0299Da743d6',
       weth: '0x4200000000000000000000000000000000000006',
       usdc: '0x7f5c764cbc14f9669b88837ca1490cca17c31607',
       dai: '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1'
@@ -136,10 +136,27 @@ export default defineConfig({
       weth: '0x0000000000000000000000000000000000000000',
       usdc: '0x0000000000000000000000000000000000000000',
       dai: '0x0000000000000000000000000000000000000000'
+    },
+    base: {
+      reveelMainV1: '0x0000000000000000000000000000000000000000',
+      reveelMainV2: '0x0000000000000000000000000000000000000000',
+      reveelMainV2Final: '0x9f5808662520633DaeB0f30ef6659e64189Cb193',
+      reveelMainSimple: '0xc61641DEEdf811C8A1F515DEF22C1f7a04891C83',
+      pathLibraryV1: '0x0000000000000000000000000000000000000000',
+      pathLibraryV2: '0x0000000000000000000000000000000000000000',
+      pathLibraryV2Final: '0x348472Dcd59A79A5Bb0969D854ce08b62ba0D171',
+      pathLibrarySimple: '0xA740004d026E0d11A9E1B21E479d8daE967beB2B',
+      weth: '0x4200000000000000000000000000000000000006',
+      usdc: '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913',
+      dai: '0x50c5725949a6f0c72e6c4a641f24049a917db0cb'
     }
+  },
+  networkIds: {
+    base: 8453
   },
   rpc: {
     arbitrumTestnet: 'https://arb-goerli.g.alchemy.com/v2/Ila4k42v7NUxN-gJnfnyzjBS-aj07z8I',
-    arbitrumOne: 'https://arb-mainnet.g.alchemy.com/v2/IzeL7B7NiRF0FAkq-LQn3aTmfKYv2QLm'
+    arbitrumOne: 'https://arb-mainnet.g.alchemy.com/v2/IzeL7B7NiRF0FAkq-LQn3aTmfKYv2QLm',
+    base: 'https://base-mainnet.g.alchemy.com/v2/PAyrpX8_xncqUvxj2UzpoddTgplTfb-j'
   },
 })

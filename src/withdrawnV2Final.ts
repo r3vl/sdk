@@ -2,6 +2,7 @@ import { ethers } from 'ethers'
 
 import { chainIds, tokenList } from "./constants/tokens"
 import { R3vlClient } from './client'
+import { withdrawFundsV2Final } from './withdrawV2Final'
 
 export type FnArgs = {
   walletAddress?: string
@@ -21,27 +22,27 @@ export async function withdrawnFundsV2Final(this: R3vlClient, payload?: FnArgs) 
 
   const { walletAddress, isERC20 } = payload || { walletAddress: undefined, isERC20: undefined }
 
-  try {
-    let released = walletAddress ? await revPathV2FinalRead.getTokenWithdrawn(
-      isERC20 ? tokenList[isERC20][_chainId] : AddressZero,
-      walletAddress
-    ) : await revPathV2FinalRead.getTotalTokenReleased(isERC20 ? tokenList[isERC20][_chainId] : AddressZero)
+  const isTxValid = await withdrawFundsV2Final.call(this, { walletAddress: [walletAddress as string], shouldDistribute: true, isERC20, estimateOnly: true })
 
-    if (isERC20) {
-      const decimals = await (sdk as any)[isERC20].decimals()
-  
-      released = ethers.utils.parseEther(ethers.utils.formatUnits(released.toString(), decimals))
-    }
+  if (isTxValid === -1) return isTxValid
 
-    const totalTiers = await revPathV2FinalRead.getTotalRevenueTiers()
+  let released = walletAddress ? await revPathV2FinalRead.getTokenWithdrawn(
+    isERC20 ? tokenList[isERC20][_chainId] : AddressZero,
+    walletAddress
+  ) : await revPathV2FinalRead.getTotalTokenReleased(isERC20 ? tokenList[isERC20][_chainId] : AddressZero)
 
-    const pF = await revPathV2FinalRead.getPlatformFee()
-    const fee = (pF.toNumber() / 10000000) + 0.0002
+  if (isERC20) {
+    const decimals = await (sdk as any)[isERC20].decimals()
 
-    const result = totalTiers.toNumber() > 1 || pF.toNumber() > 0 ? parseFloat(ethers.utils.formatEther(released)) + parseFloat(ethers.utils.formatEther(released)) * fee : parseFloat(ethers.utils.formatEther(released))
-
-    return result
-  } catch (error) {
-    console.error(error)
+    released = ethers.utils.parseEther(ethers.utils.formatUnits(released.toString(), decimals))
   }
+
+  const isFeeRequired = await revPathV2FinalRead.getFeeRequirementStatus()
+
+  const pF = await revPathV2FinalRead.getPlatformFee()
+  const fee = (pF.toNumber() / 10000000)
+
+  const result = isFeeRequired || pF.toNumber() > 0 ? parseFloat(ethers.utils.formatEther(released)) + parseFloat(ethers.utils.formatEther(released)) * fee : parseFloat(ethers.utils.formatEther(released))
+
+  return result
 }

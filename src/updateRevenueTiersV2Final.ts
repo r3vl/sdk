@@ -30,7 +30,7 @@ export async function updateRevenueTiersV2Final(
   })
 
   revPathMetadata.distribution = revPathMetadata.distribution.map((d: number[]) => {
-    return d.map((_d: number) => _d * 100000)
+    return d.map((_d: number) => (_d * 100000).toFixed(0))
   })
 
   try {

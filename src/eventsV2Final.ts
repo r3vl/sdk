@@ -75,17 +75,17 @@ export async function getRevPathTransactionEventsV2Final(this: R3vlClient, _revP
   // const blockNumber = ownershipTransferred?.[0]?.blockNumber
 
   const depositETH = await revPathV2FinalRead.queryFilter(revPathV2FinalRead.filters.DepositETH())
-  const wethTransfersPromise = sdk?.weth.queryFilter(sdk?.weth.filters.Transfer(undefined, _revPathAddress))
-  const usdcTransfersPromise = sdk?.usdc.queryFilter(sdk?.usdc.filters.Transfer(undefined, _revPathAddress))
-  const daiTransfersPromise = sdk?.dai.queryFilter(sdk?.dai.filters.Transfer(undefined, _revPathAddress))
+  // const wethTransfersPromise = sdk?.weth.queryFilter(sdk?.weth.filters.Transfer(undefined, _revPathAddress))
+  // const usdcTransfersPromise = sdk?.usdc.queryFilter(sdk?.usdc.filters.Transfer(undefined, _revPathAddress))
+  // const daiTransfersPromise = sdk?.dai.queryFilter(sdk?.dai.filters.Transfer(undefined, _revPathAddress))
 
   let wethTransfers: any = []
   let usdcTransfers: any = []
   let daiTransfers: any = []
 
-  try { wethTransfers = await wethTransfersPromise } catch (_err) { console.log("WETH_TXS_ERROR:", _err) }
-  try { usdcTransfers = await usdcTransfersPromise } catch (_err) { console.log("USDC_TXS_ERROR:", _err) }
-  try { daiTransfers = await daiTransfersPromise } catch (_err) { console.log("DAI_TXS_ERROR:", _err) }
+  // try { wethTransfers = await wethTransfersPromise } catch (_err) { console.log("WETH_TXS_ERROR:", _err) }
+  // try { usdcTransfers = await usdcTransfersPromise } catch (_err) { console.log("USDC_TXS_ERROR:", _err) }
+  // try { daiTransfers = await daiTransfersPromise } catch (_err) { console.log("DAI_TXS_ERROR:", _err) }
 
   return {
     ownershipTransferred,
@@ -97,9 +97,9 @@ export async function getRevPathTransactionEventsV2Final(this: R3vlClient, _revP
     usdcTransfers,
     daiTransfers,
     erc20s: {
-      [sdk?.weth.address]: await sdk?.weth.symbol(),
-      [sdk?.usdc.address]: await sdk?.usdc.symbol(),
-      [sdk?.dai.address]: await sdk?.dai.symbol()
+      [sdk?.weth.address]: "WETH",
+      [sdk?.usdc.address]: "USDC",
+      [sdk?.dai.address]: "DAI"
     }
   }
 }

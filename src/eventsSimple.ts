@@ -76,16 +76,17 @@ export async function getRevPathTransactionEventsSimple(this: R3vlClient, _revPa
   // const blockNumber = ownershipTransferred?.[0]?.blockNumber
 
   const depositETHPromise = revPathSimpleRead.queryFilter(revPathSimpleRead.filters.DepositETH())
-  const wethTransfersPromise = sdk?.weth.queryFilter(sdk?.weth.filters.Transfer(undefined, _revPathAddress))
-  const usdcTransfersPromise = sdk?.usdc.queryFilter(sdk?.usdc.filters.Transfer(undefined, _revPathAddress))
-  const daiTransfersPromise = sdk?.dai.queryFilter(sdk?.dai.filters.Transfer(undefined, _revPathAddress))
+  const depositETH = await depositETHPromise
+  // const wethTransfersPromise = sdk?.weth.queryFilter(sdk?.weth.filters.Transfer(undefined, _revPathAddress))
+  // const usdcTransfersPromise = sdk?.usdc.queryFilter(sdk?.usdc.filters.Transfer(undefined, _revPathAddress))
+  // const daiTransfersPromise = sdk?.dai.queryFilter(sdk?.dai.filters.Transfer(undefined, _revPathAddress))
 
-  const [
-    depositETH,
-    wethTransfers,
-    usdcTransfers,
-    daiTransfers
-  ] = await Promise.all([depositETHPromise, wethTransfersPromise, usdcTransfersPromise, daiTransfersPromise])
+  // const [
+  //   depositETH,
+  //   wethTransfers,
+  //   usdcTransfers,
+  //   daiTransfers
+  // ] = await Promise.all([depositETHPromise, wethTransfersPromise, usdcTransfersPromise, daiTransfersPromise])
 
   return {
     ownershipTransferred,
@@ -93,13 +94,13 @@ export async function getRevPathTransactionEventsSimple(this: R3vlClient, _revPa
     eRC20PaymentReleased,
     tokenDistributed,
     depositETH,
-    wethTransfers,
-    usdcTransfers,
-    daiTransfers,
+    wethTransfers: [],
+    usdcTransfers: [],
+    daiTransfers: [],
     erc20s: {
-      [sdk?.weth.address]: await sdk?.weth.symbol(),
-      [sdk?.usdc.address]: await sdk?.usdc.symbol(),
-      [sdk?.dai.address]: await sdk?.dai.symbol()
+      [sdk?.weth.address]: "WETH",
+      [sdk?.usdc.address]: "USDC",
+      [sdk?.dai.address]: "DAI"
     }
   }
 }

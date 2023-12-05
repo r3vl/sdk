@@ -30,12 +30,10 @@ export const useBalances = (revPathAddress: AddressInput, filter: {
     filter?.blockNumber,
     client,
   ], async () => {
-    if (!client) throw new Error("No client found.")
-
     const earnings = client?.withdrawable ? await client?.withdrawable(filter) || 0 : 0 // TODO: Rename to received
     const _withdrawn = await client?.withdrawn?.(filter) || 0
-    const withdrawn = _withdrawn > earnings ? earnings : _withdrawn
-    const withdrawable = earnings - withdrawn < 0.0001 ? 0 : earnings - withdrawn
+    const withdrawn = _withdrawn > earnings ? earnings : _withdrawn === -1 ? 0 : _withdrawn
+    const withdrawable = _withdrawn === -1 ? 0 : earnings - withdrawn
 
     return {
       withdrawn,
@@ -45,6 +43,7 @@ export const useBalances = (revPathAddress: AddressInput, filter: {
     }
   }, {
     ...queryOpts,
+    enabled: typeof queryOpts?.enabled !== "undefined" ? queryOpts.enabled && !!client : !!client,
     retryDelay: 400,
   } as any)
 
